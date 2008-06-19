@@ -1,0 +1,68 @@
+8
+
+dir
+2
+http://nevrast.utumno.pl/svn/gsoc/icons
+http://nevrast.utumno.pl/svn/gsoc
+
+
+
+2008-06-18T19:42:38.943236Z
+2
+gislan
+
+
+svn:special svn:externals svn:needs-lock
+
+groupopen.png
+file
+
+
+
+
+2008-06-18T15:58:02.000000Z
+5f6d63dfd8b445437fd0166818d309a0
+2008-06-18T19:42:38.943236Z
+2
+gislan
+has-props
+
+history.png
+file
+
+
+
+
+2008-06-18T18:06:02.000000Z
+785f4df3c8d0df07ce5c9b238f4b287c
+2008-06-18T19:42:38.943236Z
+2
+gislan
+has-props
+
+groupclose.png
+file
+
+
+
+
+2008-06-18T15:58:02.000000Z
+b60ab851ae0979d616f0f2f47c034d9e
+2008-06-18T19:42:38.943236Z
+2
+gislan
+has-props
+
+send.png
+file
+
+
+
+
+2008-06-18T18:10:29.000000Z
+dd46fe007c3288f78e0a3c947ff8df16
+2008-06-18T19:42:38.943236Z
+2
+gislan
+has-props
+
