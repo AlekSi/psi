@@ -15,13 +15,19 @@ namespace Roster {
 
 			const QString& getName() const;
 			const QString& getJid() const;
+			const QIcon& getIcon() const;
+			const QIcon& getAvatar() const;
 
 			void setName(const QString& name);
 			void setJid(const QString& jid);
+			void setIcon(const QIcon& icon);
+			void setAvatar(const QIcon& avatar);
 
 		private:
 			QString name_;
 			QString jid_;
+			QIcon icon_;
+			QIcon avatar_;
 	};
 }
 

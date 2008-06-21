@@ -22,12 +22,16 @@ namespace Roster {
 			void menuSendMessage();
 			void menuSendMessageToGroup();
 			void menuRenameGroup();
+			void menuXmlConsole();
+			void menuGoOnline();
+			void menuGoOffline();
 
 		private:
 			Item* getItem(const QModelIndex& index) const;
 
 			QAction *sendMessageAct_, *historyAct_; // Contact menu
 			QAction *sendMessageToGroupAct_, *renameGroupAct_; // Group menu
+			QAction *goOnlineAct_, *goOfflineAct_, *xmlConsoleAct_; // Roster menu
     };
 }
 

@@ -33,6 +33,12 @@ namespace Roster {
 		connect(sendMessageToGroupAct_, SIGNAL(triggered()), this, SLOT(menuSendMessageToGroup()));
 		renameGroupAct_ = new QAction(tr("Re&name"), this);
 		connect(renameGroupAct_, SIGNAL(triggered()), this, SLOT(menuRenameGroup()));
+		goOnlineAct_ = new QAction(tr("Online"), this);
+		connect(goOnlineAct_, SIGNAL(triggered()), this, SLOT(menuGoOnline()));
+		goOfflineAct_ = new QAction(tr("Offline"), this);
+		connect(goOfflineAct_, SIGNAL(triggered()), this, SLOT(menuGoOffline()));
+		xmlConsoleAct_ = new QAction(tr("&XML Console"), this);
+		connect(xmlConsoleAct_, SIGNAL(triggered()), this, SLOT(menuXmlConsole()));
 
 		/* view signals */
 		connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(showContextMenu(const QPoint&)));
@@ -70,6 +76,17 @@ namespace Roster {
 		} else if ( dynamic_cast<Roster*>(item) ) {
 			Roster* roster = dynamic_cast<Roster*>(item);
 			qDebug() << "Context menu opened for roster" << roster->getName();
+
+			QMenu* statusMenu = new QMenu(tr("&Status"));
+			goOnlineAct_->setData(QVariant::fromValue<Item*>(item));
+			statusMenu->addAction(goOnlineAct_);
+			goOfflineAct_->setData(QVariant::fromValue<Item*>(item));
+			statusMenu->addAction(goOfflineAct_);
+			menu->addMenu(statusMenu);
+
+			xmlConsoleAct_->setData(QVariant::fromValue<Item*>(item));
+			menu->addAction(xmlConsoleAct_);
+			
 		}
 
 		menu->popup( this->mapToGlobal(position) );
@@ -118,6 +135,27 @@ namespace Roster {
 		QAction* action = static_cast<QAction*>(sender());
 		Group* group = static_cast<Group*>(action->data().value<Item*>());
 		qDebug() << "rename group" << group->getName();
+	}
+
+	/* menu action for (roster)->status->online */
+	void View::menuGoOnline() {
+		QAction* action = static_cast<QAction*>(sender());
+		Roster* roster = static_cast<Roster*>(action->data().value<Item*>());
+		qDebug() << "go online on roster" << roster->getName();
+	}
+
+	/* menu action for (roster)->status->offline */
+	void View::menuGoOffline() {
+		QAction* action = static_cast<QAction*>(sender());
+		Roster* roster = static_cast<Roster*>(action->data().value<Item*>());
+		qDebug() << "go offline on roster" << roster->getName();
+	}
+
+	/* menu action for (roster)->xml console */
+	void View::menuXmlConsole() {
+		QAction* action = static_cast<QAction*>(sender());
+		Roster* roster = static_cast<Roster*>(action->data().value<Item*>());
+		qDebug() << "xml console on roster" << roster->getName();
 	}
 }
 

@@ -36,8 +36,10 @@ namespace Roster {
 			return "Oops";
 		} else if ( role == Qt::DecorationRole ) {
 			if ( dynamic_cast<Group*>(item) ) {
-				//return QVariant();
-				return QIcon("icons/history.png");
+				return QVariant();
+//				return QIcon("icons/history.png");
+			} else if ( dynamic_cast<Contact*>(item) ) {
+				return dynamic_cast<Contact*>(item)->getIcon();
 			} else {
 				return QVariant();
 			}
@@ -86,8 +88,13 @@ namespace Roster {
 	}
 
 	Qt::ItemFlags Model::flags(const QModelIndex& index) const {
-		Q_UNUSED(index);
-		return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+		Item* item = index.data(Qt::UserRole).value<Item*>();
+
+		if ( dynamic_cast<Contact*>(item) ) {
+			return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsSelectable;
+		} else {
+			return Qt::ItemIsEnabled;
+		}
 	}
 
 	int Model::columnCount(const QModelIndex& index) const {

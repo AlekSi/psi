@@ -1,3 +1,5 @@
+#include <QIcon>
+
 #include "Contact.h"
 
 namespace Roster {
@@ -24,5 +26,20 @@ namespace Roster {
 		jid_ = jid;
 	}
 
+	const QIcon& Contact::getIcon() const {
+		return icon_;
+	}
+
+	void Contact::setIcon(const QIcon& icon) {
+		icon_ = icon;
+	}
+
+	const QIcon& Contact::getAvatar() const {
+		return avatar_;
+	}
+
+	void Contact::setAvatar(const QIcon& avatar) {
+		avatar_ = avatar;
+	}
 }
 
