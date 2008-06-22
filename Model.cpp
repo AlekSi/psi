@@ -36,10 +36,15 @@ namespace Roster {
 			return "Oops";
 		} else if ( role == Qt::DecorationRole ) {
 			if ( dynamic_cast<Group*>(item) ) {
-				return QVariant();
-//				return QIcon("icons/history.png");
+				if ( dynamic_cast<Group*>(item)->isOpen() ) {
+					return QIcon("icons/groupopen.png");
+				} else {
+					return QIcon("icons/groupclose.png");
+				}
 			} else if ( dynamic_cast<Contact*>(item) ) {
 				return dynamic_cast<Contact*>(item)->getIcon();
+			} else if ( dynamic_cast<Roster*>(item) ) {
+				return dynamic_cast<Roster*>(item)->getIcon();
 			} else {
 				return QVariant();
 			}

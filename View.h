@@ -26,6 +26,10 @@ namespace Roster {
 			void menuGoOnline();
 			void menuGoOffline();
 
+		private slots:
+			void itemExpanded(const QModelIndex& index);
+			void itemCollapsed(const QModelIndex& index);
+
 		private:
 			Item* getItem(const QModelIndex& index) const;
 

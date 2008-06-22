@@ -16,5 +16,12 @@ namespace Roster {
 		name_ = name;
 	}
 
+	const QIcon& Roster::getIcon() const {
+		return icon_;
+	}
+
+	void Roster::setIcon(const QIcon& icon) {
+		icon_ = icon;
+	}
 }
 

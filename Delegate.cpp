@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QFontMetrics>
+#include <QStyledItemDelegate>
 
 #include "Delegate.h"
 #include "Item.h"
@@ -17,19 +18,20 @@
 namespace Roster {
 	void Delegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const {
 		Item* item = index.data(Qt::UserRole).value<Item*>();
+
 		if ( dynamic_cast<Contact*>(item) ) {
 			Contact* contact = dynamic_cast<Contact*>(item);
 
 			painter->save();
 
-			int height = 20;
-			if ( ! contact->getAvatar().isNull() ) {
-				height = 34;
-			}
-
 			if ( option.state & QStyle::State_Selected ) {
 				painter->fillRect(option.rect, option.palette.highlight());
 				painter->setPen(option.palette.highlightedText().color());
+			}
+
+			int height = 20;
+			if ( ! contact->getAvatar().isNull() ) {
+				height = 34;
 			}
 
 			/* icon first */
@@ -51,7 +53,7 @@ namespace Roster {
 			painter->restore();
 		} else {
 			/* just fall back to Qt's default delegate if there's no need for special painting */
-			QItemDelegate::paint(painter, option, index);
+			QStyledItemDelegate::paint(painter, option, index);
 		}
 	}
 

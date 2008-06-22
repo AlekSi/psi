@@ -14,10 +14,14 @@ namespace Roster {
 			~Group();
 
 			const QString& getName() const;
+			const bool isOpen() const;
+
 			void setName(const QString& name);
+			void setOpen(const bool open);
 
 		private:
 			QString name_;
+			bool open_;
 	};
 }
 

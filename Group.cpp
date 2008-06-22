@@ -4,7 +4,7 @@
 
 namespace Roster {
 
-	Group::Group(const QString& name) : name_(name) {
+	Group::Group(const QString& name) : name_(name), open_(true) {
 	}
 
 	Group::~Group() {
@@ -18,4 +18,11 @@ namespace Roster {
 		name_ = name;
 	}
 
+	const bool Group::isOpen() const {
+		return open_;
+	}
+
+	void Group::setOpen(const bool open) {
+		open_ = open;
+	}
 }

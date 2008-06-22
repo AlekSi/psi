@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
 	c2->setIcon(QIcon("icons/offline.png"));
 	roster->addItem(c1);
 	roster->addItem(c2);
+	roster->setIcon(QIcon("icons/online.png"));
 
 	roster->setName("gislan@utumno.pl");
 
@@ -49,7 +50,7 @@ int main(int argc, char* argv[]) {
     view->setModel(model);
 
 	view->expandAll();
-	view->resize(150, 300);
+	view->resize(200, 350);
 	view->resizeColumnToContents(0);
     view->show();
 

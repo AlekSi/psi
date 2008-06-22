@@ -18,8 +18,7 @@ namespace Roster {
 		setDragEnabled(true);
 		setAcceptDrops(true);
 		setSelectionMode(ExtendedSelection);
-		header()->hide();
-//		setHeaderHidden(true); // QT 4.4 required
+		setHeaderHidden(true);
 
 		setStyleSheet("QTreeView::branch { image: none; width: 0px }"); // FIXME: externalize this
 		setIndentation(2);
@@ -43,6 +42,9 @@ namespace Roster {
 		/* view signals */
 		connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(showContextMenu(const QPoint&)));
 		connect(this, SIGNAL(activated(const QModelIndex&)), SLOT(doActivated(const QModelIndex&)));
+
+		connect(this, SIGNAL(expanded(const QModelIndex&)), SLOT(itemExpanded(const QModelIndex&)));
+		connect(this, SIGNAL(collapsed(const QModelIndex&)), SLOT(itemCollapsed(const QModelIndex&)));
 	}
 
 	/* build and display context menu */
@@ -57,7 +59,9 @@ namespace Roster {
 		Q_ASSERT(index.data(Qt::UserRole).canConvert<Item*>());
 		Item* item = index.data(Qt::UserRole).value<Item*>();
 
-		if ( dynamic_cast<Group*>(item) ) { 
+		if ( selectedIndexes().size() > 1 ) { // multiple items selected
+			menu->addAction( tr("whoops, nothing here") );
+		} else if ( dynamic_cast<Group*>(item) ) { 
 			Group* group = dynamic_cast<Group*>(item);
 			qDebug() << "Context menu opened for group" << group->getName();
 
@@ -106,6 +110,22 @@ namespace Roster {
 		} else if ( dynamic_cast<Roster*>(item) ) {
 			Roster* roster = dynamic_cast<Roster*>(item);
 			qDebug() << "Default action triggered on roster" << roster->getName();
+		}
+	}
+
+	/* slot triggered when user expands item */
+	void View::itemExpanded(const QModelIndex& index) {
+		Item* item = index.data(Qt::UserRole).value<Item*>();
+		if ( dynamic_cast<Group*>(item) ) {
+			dynamic_cast<Group*>(item)->setOpen(true);
+		}
+	}
+
+	/* slot triggered when user collapses item */
+	void View::itemCollapsed(const QModelIndex& index) {
+		Item* item = index.data(Qt::UserRole).value<Item*>();
+		if ( dynamic_cast<Group*>(item) ) {
+			dynamic_cast<Group*>(item)->setOpen(false);
 		}
 	}
 
