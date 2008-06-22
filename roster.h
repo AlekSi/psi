@@ -4,7 +4,7 @@
 #include <QString>
 #include <QIcon>
 
-#include "GroupItem.h"
+#include "groupitem.h"
 
 namespace Roster {
 

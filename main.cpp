@@ -1,12 +1,12 @@
 #include <QtGui>
 
-#include "Model.h"
-#include "Roster.h"
-#include "RosterList.h"
-#include "Delegate.h"
-#include "Contact.h"
-#include "View.h"
-#include "Group.h"
+#include "model.h"
+#include "roster.h"
+#include "rosterlist.h"
+#include "delegate.h"
+#include "contact.h"
+#include "view.h"
+#include "group.h"
 
 using Roster::Contact;
 using Roster::Group;

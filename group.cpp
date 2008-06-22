@@ -1,6 +1,6 @@
 #include <QString>
 
-#include "Group.h"
+#include "group.h"
 
 namespace Roster {
 

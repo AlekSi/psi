@@ -4,11 +4,11 @@
 #include <QVariant>
 #include <QHeaderView>
 
-#include "View.h"
-#include "Model.h"
-#include "Group.h"
-#include "Contact.h"
-#include "Roster.h"
+#include "view.h"
+#include "model.h"
+#include "group.h"
+#include "contact.h"
+#include "roster.h"
 
 namespace Roster {
 

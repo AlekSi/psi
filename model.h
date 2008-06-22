@@ -5,7 +5,7 @@
 #include <QVariant>
 #include <QModelIndex>
 
-#include "Item.h"
+#include "item.h"
 
 namespace Roster {
 	class RosterList;

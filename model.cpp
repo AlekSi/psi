@@ -5,13 +5,13 @@
 #include <QAction>
 #include <QMimeData>
 
-#include "Roster.h"
-#include "RosterList.h"
-#include "Model.h"
-#include "GroupItem.h"
-#include "Item.h"
-#include "Contact.h"
-#include "Group.h"
+#include "roster.h"
+#include "rosterlist.h"
+#include "model.h"
+#include "groupitem.h"
+#include "item.h"
+#include "contact.h"
+#include "group.h"
 
 namespace Roster {
 

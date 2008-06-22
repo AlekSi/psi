@@ -3,7 +3,7 @@
 
 #include <QString>
 
-#include "GroupItem.h"
+#include "groupitem.h"
 
 namespace Roster {
 

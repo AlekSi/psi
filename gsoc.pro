@@ -1,25 +1,25 @@
 DEPENDPATH *= $$PWD
 
 HEADERS += \
-	$$PWD/Model.h \
-	$$PWD/Contact.h \
-	$$PWD/GroupItem.h \
-	$$PWD/Item.h \
-	$$PWD/Roster.h \
-	$$PWD/Group.h \
-	$$PWD/View.h \
-	$$PWD/Delegate.h \
-	$$PWD/RosterList.h 
+	$$PWD/model.h \
+	$$PWD/contact.h \
+	$$PWD/groupitem.h \
+	$$PWD/item.h \
+	$$PWD/roster.h \
+	$$PWD/group.h \
+	$$PWD/view.h \
+	$$PWD/delegate.h \
+	$$PWD/rosterlist.h 
 
 SOURCES += \
 	$$PWD/main.cpp \
-	$$PWD/Model.cpp \
-	$$PWD/Contact.cpp \
-	$$PWD/Item.cpp \
-	$$PWD/Roster.cpp \
-	$$PWD/Group.cpp \
-	$$PWD/GroupItem.cpp \
-	$$PWD/View.cpp \
-	$$PWD/Delegate.cpp \
-	$$PWD/RosterList.cpp
+	$$PWD/model.cpp \
+	$$PWD/contact.cpp \
+	$$PWD/item.cpp \
+	$$PWD/roster.cpp \
+	$$PWD/group.cpp \
+	$$PWD/groupitem.cpp \
+	$$PWD/view.cpp \
+	$$PWD/delegate.cpp \
+	$$PWD/rosterlist.cpp
 

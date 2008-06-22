@@ -3,7 +3,7 @@
 
 #include <QList>
 
-#include "Item.h"
+#include "item.h"
 
 namespace Roster {
 

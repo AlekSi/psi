@@ -1,6 +1,6 @@
 #include <QIcon>
 
-#include "Contact.h"
+#include "contact.h"
 
 namespace Roster {
 

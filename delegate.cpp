@@ -4,11 +4,11 @@
 #include <QFontMetrics>
 #include <QStyledItemDelegate>
 
-#include "Delegate.h"
-#include "Item.h"
-#include "Contact.h"
-#include "Roster.h"
-#include "Group.h"
+#include "delegate.h"
+#include "item.h"
+#include "contact.h"
+#include "roster.h"
+#include "group.h"
 
 /* FILE TODO:
  * + add more magic numbers

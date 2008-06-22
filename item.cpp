@@ -1,5 +1,5 @@
-#include "Item.h"
-#include "GroupItem.h"
+#include "item.h"
+#include "groupitem.h"
 
 namespace Roster {
 
