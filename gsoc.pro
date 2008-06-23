@@ -12,7 +12,8 @@ HEADERS += \
 	$$PWD/group.h \
 	$$PWD/view.h \
 	$$PWD/delegate.h \
-	$$PWD/rosterlist.h 
+	$$PWD/rosterlist.h \
+	$$PWD/mainwindow.h
 
 SOURCES += \
 	$$PWD/main.cpp \
@@ -24,5 +25,6 @@ SOURCES += \
 	$$PWD/groupitem.cpp \
 	$$PWD/view.cpp \
 	$$PWD/delegate.cpp \
-	$$PWD/rosterlist.cpp
+	$$PWD/rosterlist.cpp \
+	$$PWD/mainwindow.cpp
 
