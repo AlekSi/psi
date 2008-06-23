@@ -19,6 +19,7 @@ namespace Roster {
 		setAcceptDrops(true);
 		setSelectionMode(ExtendedSelection);
 		setHeaderHidden(true);
+		setRootIsDecorated(false);
 
 		setStyleSheet("QTreeView::branch { image: none; width: 0px }"); // FIXME: externalize this
 		setIndentation(2);
