@@ -34,12 +34,19 @@ int main(int argc, char* argv[]) {
 	Group* g1 = new Group("grupa");
 	roster->addItem(g1);
 
+
 	Contact* c3 = new Contact("aaa", "wolowa");
 	c3->setIcon(QIcon("icons/online.png"));
 	Contact* c4 = new Contact("bbb", "zupa");
 	c4->setIcon(QIcon("icons/online.png"));
 	g1->addItem(c3);
 	g1->addItem(c4);
+
+	Group* g2 = new Group("grupa");
+	g1->addItem(g2);
+	Contact* c5 = new Contact("me@somewhere.com", "fdas");
+	c5->setIcon(QIcon("icons/online.png"));
+	g2->addItem(c5);
 
 	RosterList* rl = new RosterList;
 	rl->addItem(roster);
