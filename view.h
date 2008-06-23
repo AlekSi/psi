@@ -25,6 +25,7 @@ namespace Roster {
 			void menuXmlConsole();
 			void menuGoOnline();
 			void menuGoOffline();
+			void menuSendToAll();
 
 		private slots:
 			void itemExpanded(const QModelIndex& index);
@@ -36,6 +37,7 @@ namespace Roster {
 			QAction *sendMessageAct_, *historyAct_; // Contact menu
 			QAction *sendMessageToGroupAct_, *renameGroupAct_; // Group menu
 			QAction *goOnlineAct_, *goOfflineAct_, *xmlConsoleAct_; // Roster menu
+			QAction *sendToAllAct_; // Multiple contacts menu
     };
 }
 

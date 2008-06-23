@@ -38,6 +38,8 @@ namespace Roster {
 		connect(goOfflineAct_, SIGNAL(triggered()), this, SLOT(menuGoOffline()));
 		xmlConsoleAct_ = new QAction(tr("&XML Console"), this);
 		connect(xmlConsoleAct_, SIGNAL(triggered()), this, SLOT(menuXmlConsole()));
+		sendToAllAct_ = new QAction(QIcon("icons/send.png"), tr("&Send to all"), this);
+		connect(sendToAllAct_, SIGNAL(triggered()), this, SLOT(menuSendToAll()));
 
 		/* view signals */
 		connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(showContextMenu(const QPoint&)));
@@ -60,7 +62,9 @@ namespace Roster {
 		Item* item = index.data(Qt::UserRole).value<Item*>();
 
 		if ( selectedIndexes().size() > 1 ) { // multiple items selected
-			menu->addAction( tr("whoops, nothing here") );
+			qDebug() << "Context menu opened for multiple contacts";
+
+			menu->addAction(sendToAllAct_); 
 		} else if ( dynamic_cast<Group*>(item) ) { 
 			Group* group = dynamic_cast<Group*>(item);
 			qDebug() << "Context menu opened for group" << group->getName();
@@ -176,6 +180,16 @@ namespace Roster {
 		QAction* action = static_cast<QAction*>(sender());
 		Roster* roster = static_cast<Roster*>(action->data().value<Item*>());
 		qDebug() << "xml console on roster" << roster->getName();
+	}
+
+	/* menu action for (contacts)->send to all */
+	void View::menuSendToAll() {
+		qDebug() << "Send to all for following contacts";
+		foreach(QModelIndex index, selectedIndexes()) {
+			Item* item = index.data(Qt::UserRole).value<Item*>();
+			Contact* contact = dynamic_cast<Contact*>(item);
+			qDebug() << " + " << contact->getName();
+		}
 	}
 }
 
