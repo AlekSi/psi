@@ -64,6 +64,9 @@ namespace Roster {
 		c1->setAvatar(QIcon("icons/avatar.png"));
 		c2->setAvatar(QIcon("icons/remko.jpg"));
 
+		c1->setStatus("working on GSoC");
+		c4->setStatus("relaxing");
+
 		Group* g1 = new Group("Group #1");
 		Group* g2 = new Group("Subgroup #2");
 	

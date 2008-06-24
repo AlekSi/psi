@@ -29,25 +29,42 @@ namespace Roster {
 				painter->setPen(option.palette.highlightedText().color());
 			}
 
-			int height = 20;
-			if ( ! contact->getAvatar().isNull() ) {
-				height = 34;
+			QRect rect(option.rect);
+
+			/* icon */
+			QRect iconRect(QPoint(rect.left(), rect.top()), QSize(20, rect.height()));
+			contact->getIcon().paint(painter, iconRect, Qt::AlignVCenter | Qt::AlignHCenter);
+			rect.adjust(20, 0, 0, 0);
+
+			/* avatar (if present) */
+			if ( ! contact->getAvatar().isNull() and showAvatars_ ) {
+				QRect avatarRect(QPoint(rect.right()-32, rect.top()), QSize(32, 34));
+				contact->getAvatar().paint(painter, avatarRect, Qt::AlignVCenter | Qt::AlignHCenter);
+				rect.adjust(0, 0, -32, 0);
 			}
 
-			/* icon first */
-			QRect iconRect(option.rect.topLeft(), QSize(20, height));
-			contact->getIcon().paint(painter, iconRect, Qt::AlignVCenter | Qt::AlignHCenter);
+			/* name */
+			QRect textRect(rect);
+			if ( showStatus_ and ! contact->getStatus().isEmpty() ) {
+				textRect.setHeight(16);
+				rect.adjust(0, 16, 0, 0);
+			}
 
-			/* then text */
-			QRect textRect(iconRect.topRight(), option.rect.size() - QSize(52, 0));
 			QFontMetrics fm = painter->fontMetrics();
 			QString name = fm.elidedText(contact->getName(), Qt::ElideRight, textRect.width());
-			painter->drawText(textRect, Qt::AlignVCenter | Qt::ElideRight, name);
+			painter->drawText(textRect, Qt::AlignVCenter, name);
 
-			/* and avatar (if present) */
-			if ( ! contact->getAvatar().isNull() and showAvatars_ ) {
-				QRect avatarRect(textRect.topRight(), QSize(32, height));
-				contact->getAvatar().paint(painter, avatarRect, Qt::AlignVCenter | Qt::AlignHCenter);
+			/* status message */
+			if ( showStatus_ and ! contact->getStatus().isEmpty() ) {
+				QFont statusFont;
+				statusFont.setItalic(true);
+				statusFont.setPointSize(8);
+
+				QFontMetrics statusFm(statusFont);
+				QRect statusRect(rect);
+				QString status = statusFm.elidedText(contact->getStatus(), Qt::ElideRight, statusRect.width());
+				painter->setFont(statusFont);
+				painter->drawText(statusRect, Qt::AlignVCenter, status);
 			}
 
 			painter->restore();
@@ -64,10 +81,10 @@ namespace Roster {
 
 		if ( dynamic_cast<Contact*>(item) ) {
 			Contact* contact = dynamic_cast<Contact*>(item);
-			if ( contact->getAvatar().isNull() ) {
-				return QSize(1, 20);
-			} else {
+			if ( (showAvatars_ and ! contact->getAvatar().isNull()) or (showStatus_ and ! contact->getStatus().isEmpty()) ) {
 				return QSize(1, 34);
+			} else {
+				return QSize(1, 20);
 			}
 		} else {
 			return QSize(1, 20);

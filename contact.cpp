@@ -41,5 +41,12 @@ namespace Roster {
 	void Contact::setAvatar(const QIcon& avatar) {
 		avatar_ = avatar;
 	}
+	const QString& Contact::getStatus() const {
+		return status_;
+	}
+
+	void Contact::setStatus(const QString& status) {
+		status_ = status;
+	}
 }
 
