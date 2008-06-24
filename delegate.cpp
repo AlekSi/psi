@@ -99,3 +99,4 @@ namespace Roster {
 		showStatus_ = showStatus;
 	}
 }
+

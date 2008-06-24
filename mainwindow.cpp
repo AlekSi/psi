@@ -40,6 +40,8 @@ namespace Roster {
 
 		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), view_->itemDelegate(), SLOT(setShowAvatars(bool)));
 		connect(toggleStatusAct_, SIGNAL(toggled(bool)), view_->itemDelegate(), SLOT(setShowStatus(bool)));
+		connect(toggleAvatarsAct_, SIGNAL(triggered()), model_, SLOT(updateLayout()));
+		connect(toggleStatusAct_, SIGNAL(triggered()), model_, SLOT(updateLayout()));
 
 		QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
 		viewMenu->addAction(toggleAvatarsAct_);

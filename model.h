@@ -28,6 +28,9 @@ namespace Roster {
 		
 			Item* getItem(const QModelIndex& index) const;
 
+		public slots:
+			void updateLayout();
+
 		private:
 			RosterList* rosterlist_;
 	};

@@ -187,5 +187,9 @@ namespace Roster {
 		return true;
 	}
 
+	/* dirty hack for updating view's layout from view */
+	void Model::updateLayout() {
+		emit layoutChanged();
+	}
 }
 
