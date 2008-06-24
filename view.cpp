@@ -21,8 +21,9 @@ namespace Roster {
 		setSelectionMode(ExtendedSelection);
 		setHeaderHidden(true);
 		setRootIsDecorated(false);
+		setAlternatingRowColors(true);
 
-		setStyleSheet("QTreeView::branch { image: none; width: 0px }"); // FIXME: externalize this
+		setStyleSheet("QTreeView::branch { image: none; width: 0px } QTreeView { alternate-background-color: #D6EEFF; }"); // FIXME: externalize this
 		setIndentation(2);
 
 		/* context menu */
