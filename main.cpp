@@ -3,10 +3,10 @@
 #include "mainwindow.h"
 
 int main(int argc, char* argv[]) {
-    QApplication app(argc, argv);
+	QApplication app(argc, argv);
 
 	Roster::MainWindow mw;
 	mw.show();
 
-    return app.exec();
+	return app.exec();
 }

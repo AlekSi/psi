@@ -45,7 +45,7 @@ namespace Roster {
 			painter->drawText(textRect, Qt::AlignVCenter | Qt::ElideRight, name);
 
 			/* and avatar (if present) */
-			if ( ! contact->getAvatar().isNull() ) {
+			if ( ! contact->getAvatar().isNull() and showAvatars_ ) {
 				QRect avatarRect(textRect.topRight(), QSize(32, height));
 				contact->getAvatar().paint(painter, avatarRect, Qt::AlignVCenter | Qt::AlignHCenter);
 			}
@@ -72,5 +72,13 @@ namespace Roster {
 		} else {
 			return QSize(1, 20);
 		}
+	}
+
+	void Delegate::setShowAvatars(bool showAvatars) {
+		showAvatars_ = showAvatars;
+	}
+
+	void Delegate::setShowStatus(bool showStatus) {
+		showStatus_ = showStatus;
 	}
 }

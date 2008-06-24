@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QVariant>
 #include <QHeaderView>
+#include <QMenuBar>
 
 #include "view.h"
 #include "model.h"

@@ -17,10 +17,13 @@ namespace Roster {
 
 		private:
 			void setupTestData();
+			void setupMenus();
 
 			QAbstractItemModel* model_;
 			QTreeView* view_;
 			RosterList* data_;
+
+			QAction *toggleAvatarsAct_, *toggleStatusAct_;
 	};
 }
 

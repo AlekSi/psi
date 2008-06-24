@@ -1,4 +1,6 @@
-#include <QTextEdit>
+#include <QMenu>
+#include <QMenuBar>
+#include <QDebug>
 
 #include "mainwindow.h"
 #include "model.h"
@@ -20,10 +22,28 @@ namespace Roster {
 		view_->setModel(model_);
 
 		setCentralWidget(view_);
+		setupMenus();
 
 		view_->expandAll();
 		view_->resizeColumnToContents(0);
 		resize(200, 350);
+	}
+
+	void MainWindow::setupMenus() {
+		toggleAvatarsAct_ = new QAction(tr("Show avatars"), this);
+		toggleStatusAct_ = new QAction(tr("Show status messages"), this);
+
+		toggleAvatarsAct_->setCheckable(true);
+		toggleAvatarsAct_->setChecked(true);
+		toggleStatusAct_->setCheckable(true);
+		toggleStatusAct_->setChecked(true);
+
+		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), view_->itemDelegate(), SLOT(setShowAvatars(bool)));
+		connect(toggleStatusAct_, SIGNAL(toggled(bool)), view_->itemDelegate(), SLOT(setShowStatus(bool)));
+
+		QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
+		viewMenu->addAction(toggleAvatarsAct_);
+		viewMenu->addAction(toggleStatusAct_);
 	}
 
 	void MainWindow::setupTestData() {
