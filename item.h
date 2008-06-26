@@ -12,6 +12,7 @@ namespace Roster {
 			virtual ~Item();
 
 			GroupItem* getParent() const;
+			unsigned int getId() const;
 
 			void setParent(GroupItem* parent);
 

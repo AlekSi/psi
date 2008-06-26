@@ -23,8 +23,10 @@ namespace Roster {
 			QModelIndex parent(const QModelIndex& index) const;
 			QModelIndex index(int row, int column, const QModelIndex& parent) const;
 			QMimeData* mimeData(const QModelIndexList &indexes) const;
-//			bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
+			bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
 			Qt::DropActions supportedDropActions() const;
+			QStringList mimeTypes() const;
+
 		
 			Item* getItem(const QModelIndex& index) const;
 

@@ -20,4 +20,9 @@ namespace Roster {
 		parent_ = parent;
 	}
 
+	// FIXME: this won't be unique if one item will appear more than once on roster
+	unsigned int Item::getId() const {
+		return (unsigned int)(this);
+	}
+
 }
