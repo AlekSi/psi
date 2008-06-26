@@ -4,6 +4,7 @@
 #include <QVariant>
 #include <QHeaderView>
 #include <QMenuBar>
+#include <QDropEvent>
 
 #include "view.h"
 #include "model.h"
@@ -193,6 +194,38 @@ namespace Roster {
 			Contact* contact = dynamic_cast<Contact*>(item);
 			qDebug() << " + " << contact->getName();
 		}
+	}
+
+	void View::dropEvent(QDropEvent* event) {
+		QAction moveAct(tr("Move here"), this);
+		QAction copyAct(tr("Copy here"), this);
+
+		QModelIndex dropIndex = indexAt(event->pos());
+		if (!dropIndex.isValid()) {
+			return;
+		}
+
+		QMenu menu;
+		menu.addAction(&moveAct);
+		menu.addAction(&copyAct);
+
+		QAction* action = menu.exec(mapToGlobal(event->pos()));
+
+		if ( action == &moveAct ) {
+//			event->setDropAction(Qt::MoveAction);
+			qDebug() << "Move following contact to" << dropIndex.data().toString();
+		} else if ( action == &copyAct ) {
+//			event->setDropAction(Qt::CopyAction);
+			qDebug() << "Copy following contact to" << dropIndex.data().toString();
+		} else {
+			return;
+		}
+
+		foreach(QModelIndex index, selectedIndexes()) {
+			qDebug() << "+" << index.data().toString();
+		}
+
+		//QTreeView::dropEvent(event);
 	}
 }
 

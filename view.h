@@ -15,6 +15,8 @@ namespace Roster {
 		public:
 			View();
 
+			void dropEvent(QDropEvent* event);
+
 		public slots:
 			void showContextMenu(const QPoint& position);
 			void doActivated(const QModelIndex& index);

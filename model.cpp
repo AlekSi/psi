@@ -98,7 +98,7 @@ namespace Roster {
 		if ( dynamic_cast<Contact*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsSelectable;
 		} else {
-			return Qt::ItemIsEnabled;
+			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
 		}
 	}
 
@@ -142,29 +142,26 @@ namespace Roster {
 		}
 	}
 
-	QStringList Model::mimeTypes() const {
-		QStringList types;
-		types << "application/vnd.text.list";
-		return types;
-	}
-
 	QMimeData* Model::mimeData(const QModelIndexList &indexes) const {
-		QMimeData *mimeData = new QMimeData();
-		QByteArray encodedData;
+		QMimeData* mimeData = QAbstractItemModel::mimeData(indexes);
 
-		QDataStream stream(&encodedData, QIODevice::WriteOnly);
+		QByteArray encodedText;
+		QDataStream textStream(&encodedText, QIODevice::WriteOnly);
 
 		foreach (QModelIndex index, indexes) {
 			if (index.isValid()) {
-				stream << "foo";
+				Item* item = index.data(Qt::UserRole).value<Item*>();
+				if ( dynamic_cast<Contact*>(item) ) {
+					textStream << dynamic_cast<Contact*>(item)->getName();
+				}
 			}
 		}
 
-		mimeData->setData("application/vnd.text.list", encodedData);
+		mimeData->setData("application/vnd.text.list", encodedText);
 		return mimeData;
 	}
 
-	bool Model::dropMimeData(const QMimeData* data,	Qt::DropAction action, int row, int column, const QModelIndex& parent) {
+/*	bool Model::dropMimeData(const QMimeData* data,	Qt::DropAction action, int row, int column, const QModelIndex& parent) {
 		Q_UNUSED(column);
 		Q_UNUSED(parent);
 		Q_UNUSED(row);
@@ -175,16 +172,26 @@ namespace Roster {
 		if (!data->hasFormat("application/vnd.text.list"))
 			return false;
 
+		qDebug() << row << column;
+		QModelIndex idx = index(row, column, parent);
+			
 		QByteArray encodedData = data->data("application/vnd.text.list");
 		QDataStream stream(&encodedData, QIODevice::ReadOnly);
+
+		
 
 		while (!stream.atEnd()) {
 			QString text;
 			stream >> text;
+
 			qDebug() << text;
 		}
 
 		return true;
+	}*/
+
+	Qt::DropActions Model::supportedDropActions() const {
+		return Qt::CopyAction | Qt::MoveAction;
 	}
 
 	/* dirty hack for updating view's layout from view */
