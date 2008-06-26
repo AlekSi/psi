@@ -32,6 +32,8 @@ namespace Roster {
 			void updateLayout();
 
 		private:
+			QVariant makeToolTip(const QModelIndex& index) const;
+
 			RosterList* rosterlist_;
 	};
 };

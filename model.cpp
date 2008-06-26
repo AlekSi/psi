@@ -66,9 +66,38 @@ namespace Roster {
 			} else {
 				return QVariant();
 			}
+		} else if ( role == Qt::ToolTipRole ) {
+			return makeToolTip(index);
 		} else {
 			return QVariant();
 		}
+	}
+
+	QVariant Model::makeToolTip(const QModelIndex& index) const {
+		Item* item = index.data(Qt::UserRole).value<Item*>();
+		QString tip;
+
+		if ( dynamic_cast<Contact*>(item) ) {
+			Contact* contact = dynamic_cast<Contact*>(item);
+			tip += "<div style=\"white-space: pre\">";
+
+			tip += QString("%1 &lt;%2&gt;\n").arg(contact->getName(), contact->getJid());
+			tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg("resource", "5");
+			
+			if (! contact->getStatus().isEmpty()) {
+				tip += "<u>Status message</u>\n";
+				tip += contact->getStatus() + "\n";
+			}
+
+			tip += "</div>";
+		} else if ( dynamic_cast<Roster*>(item) ) {
+			Roster* roster = dynamic_cast<Roster*>(item);
+			tip += roster->getName();
+		} else {
+			return QVariant();
+		}
+
+		return tip;
 	}
 
 	int Model::rowCount(const QModelIndex &parent) const {

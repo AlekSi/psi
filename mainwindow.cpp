@@ -51,11 +51,11 @@ namespace Roster {
 	void MainWindow::setupTestData() {
 		data_ = new RosterList;
 
-		Contact* c1 = new Contact("gislan@utumno.pl", "w/e");
-		Contact* c2 = new Contact("remko@el-tramo.be", "w/e");
-		Contact* c3 = new Contact("you@jabber.org", "w/e");
-		Contact* c4 = new Contact("me@jabber.org", "w/e");
-		Contact* c5 = new Contact("romeo@monteki.com", "w/e");
+		Contact* c1 = new Contact("Gislan", "gislan@utumno.pl");
+		Contact* c2 = new Contact("Remko", "remko@el-tramo.be");
+		Contact* c3 = new Contact("you@jabber.org", "you@jabber.org");
+		Contact* c4 = new Contact("me@jabber.org", "me@jabber.org");
+		Contact* c5 = new Contact("Romeo", "romeo@monteki.com");
 		
 		c1->setIcon(QIcon("icons/online.png"));
 		c2->setIcon(QIcon("icons/online.png"));
@@ -68,6 +68,7 @@ namespace Roster {
 
 		c1->setStatus("working on GSoC");
 		c4->setStatus("relaxing");
+		c5->setStatus("<3 Juliet");
 
 		Group* g1 = new Group("Group #1");
 		Group* g2 = new Group("Subgroup #2");
