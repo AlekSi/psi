@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QAction>
 #include <QMimeData>
+#include <QTextDocument>
 
 #include "roster.h"
 #include "rosterlist.h"
@@ -91,12 +92,12 @@ namespace Roster {
 			Contact* contact = dynamic_cast<Contact*>(item);
 			tip += "<div style=\"white-space: pre\">";
 
-			tip += QString("%1 &lt;%2&gt;\n").arg(contact->getName(), contact->getJid());
+			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid()));
 			tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg("resource", "5");
 			
 			if (! contact->getStatus().isEmpty()) {
 				tip += "<u>Status message</u>\n";
-				tip += contact->getStatus() + "\n";
+				tip += Qt::escape(contact->getStatus()) + "\n";
 			}
 
 			tip += "</div>";
