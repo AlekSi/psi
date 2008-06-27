@@ -9,6 +9,7 @@
 #include "contact.h"
 #include "roster.h"
 #include "group.h"
+#include "model.h"
 
 /* FILE TODO:
  * + add more magic numbers
@@ -20,8 +21,6 @@ namespace Roster {
 		Item* item = index.data(Qt::UserRole).value<Item*>();
 
 		if ( dynamic_cast<Contact*>(item) ) {
-			Contact* contact = dynamic_cast<Contact*>(item);
-
 			painter->save();
 
 			if ( option.state & QStyle::State_Selected ) {
@@ -33,36 +32,36 @@ namespace Roster {
 
 			/* icon */
 			QRect iconRect(QPoint(rect.left(), rect.top()), QSize(20, rect.height()));
-			contact->getIcon().paint(painter, iconRect, Qt::AlignVCenter | Qt::AlignHCenter);
+			index.data(Qt::DecorationRole).value<QIcon>().paint(painter, iconRect, Qt::AlignVCenter | Qt::AlignHCenter);
 			rect.adjust(20, 0, 0, 0);
 
 			/* avatar (if present) */
-			if ( ! contact->getAvatar().isNull() and showAvatars_ ) {
+			if ( ! index.data(AvatarRole).value<QIcon>().isNull() ) {
 				QRect avatarRect(QPoint(rect.right()-32, rect.top()), QSize(32, 34));
-				contact->getAvatar().paint(painter, avatarRect, Qt::AlignVCenter | Qt::AlignHCenter);
+				index.data(AvatarRole).value<QIcon>().paint(painter, avatarRect, Qt::AlignVCenter | Qt::AlignHCenter);
 				rect.adjust(0, 0, -32, 0);
 			}
 
 			/* name */
 			QRect textRect(rect);
-			if ( showStatus_ and ! contact->getStatus().isEmpty() ) {
+			if ( ! index.data(StatusRole).toString().isEmpty() ) {
 				textRect.setHeight(16);
 				rect.adjust(0, 16, 0, 0);
 			}
 
 			QFontMetrics fm = painter->fontMetrics();
-			QString name = fm.elidedText(contact->getName(), Qt::ElideRight, textRect.width());
+			QString name = fm.elidedText(index.data(Qt::DisplayRole).toString(), Qt::ElideRight, textRect.width());
 			painter->drawText(textRect, Qt::AlignVCenter, name);
 
 			/* status message */
-			if ( showStatus_ and ! contact->getStatus().isEmpty() ) {
+			if ( ! index.data(StatusRole).toString().isEmpty() ) {
 				QFont statusFont;
 				statusFont.setItalic(true);
 				statusFont.setPointSize(8);
 
 				QFontMetrics statusFm(statusFont);
 				QRect statusRect(rect);
-				QString status = statusFm.elidedText(contact->getStatus(), Qt::ElideRight, statusRect.width());
+				QString status = statusFm.elidedText(index.data(StatusRole).toString(), Qt::ElideRight, statusRect.width());
 				painter->setFont(statusFont);
 				painter->drawText(statusRect, Qt::AlignVCenter, status);
 			}
@@ -74,29 +73,5 @@ namespace Roster {
 		}
 	}
 
-	QSize Delegate::sizeHint ( const QStyleOptionViewItem& option, const QModelIndex& index ) const {
-		Q_UNUSED(option);
-
-		Item* item = index.data(Qt::UserRole).value<Item*>();
-
-		if ( dynamic_cast<Contact*>(item) ) {
-			Contact* contact = dynamic_cast<Contact*>(item);
-			if ( (showAvatars_ and ! contact->getAvatar().isNull()) or (showStatus_ and ! contact->getStatus().isEmpty()) ) {
-				return QSize(1, 34);
-			} else {
-				return QSize(1, 20);
-			}
-		} else {
-			return QSize(1, 20);
-		}
-	}
-
-	void Delegate::setShowAvatars(bool showAvatars) {
-		showAvatars_ = showAvatars;
-	}
-
-	void Delegate::setShowStatus(bool showStatus) {
-		showStatus_ = showStatus;
-	}
 }
 

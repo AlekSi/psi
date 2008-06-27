@@ -9,18 +9,9 @@ namespace Roster {
 		Q_OBJECT
 
 		public:
-			Delegate(QWidget *parent = 0) : QStyledItemDelegate(parent), showAvatars_(true), showStatus_(true) {}
+			Delegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
 
 			void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
-			QSize sizeHint (const QStyleOptionViewItem& option, const QModelIndex& index) const;
-
-		public slots:
-			void setShowAvatars(bool showAvatars);
-			void setShowStatus(bool shotStatus);
-
-
-		private:
-			bool showAvatars_, showStatus_;
 	};
 }
 

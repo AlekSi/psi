@@ -10,6 +10,13 @@
 namespace Roster {
 	class RosterList;
 
+	enum Roles {
+		ItemRole = Qt::UserRole,
+		IdRole = Qt::UserRole + 1,
+		AvatarRole = Qt::UserRole + 2,
+		StatusRole = Qt::UserRole + 3
+	};
+
 	class Model : public QAbstractItemModel	{
 		Q_OBJECT
 
@@ -27,16 +34,17 @@ namespace Roster {
 			Qt::DropActions supportedDropActions() const;
 			QStringList mimeTypes() const;
 
-		
 			Item* getItem(const QModelIndex& index) const;
 
 		public slots:
-			void updateLayout();
+			void setShowAvatars(bool showAvatars);
+			void setShowStatus(bool showStatus);
 
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;
 
 			RosterList* rosterlist_;
+			bool showAvatars_, showStatus_;
 	};
 };
 

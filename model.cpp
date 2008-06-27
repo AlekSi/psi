@@ -14,14 +14,7 @@
 #include "group.h"
 
 namespace Roster {
-	enum Roles {
-		ItemRole = Qt::UserRole,
-		IdRole = Qt::UserRole + 1
-	};
-
-
-
-	Model::Model(RosterList* rosterlist) : rosterlist_(rosterlist) {
+	Model::Model(RosterList* rosterlist) : rosterlist_(rosterlist), showAvatars_(true), showStatus_(true) {
 	}
 
 	QVariant Model::data(const QModelIndex &index, int role) const {
@@ -31,7 +24,7 @@ namespace Roster {
 
 		Item* item = static_cast<Item*>(index.internalPointer());
 
-		if ( role == Qt::DisplayRole ) {
+		if ( role == Qt::DisplayRole ) { // name
 			if ( dynamic_cast<Roster*>(item) ) {
 				return dynamic_cast<Roster*>(item)->getName();
 			} else if ( dynamic_cast<Group*>(item) ) {
@@ -39,8 +32,7 @@ namespace Roster {
 			} else if ( dynamic_cast<Contact*>(item) ) {
 				return dynamic_cast<Contact*>(item)->getName();
 			}
-			return "Oops";
-		} else if ( role == Qt::DecorationRole ) {
+		} else if ( role == Qt::DecorationRole ) { // left icon
 			if ( dynamic_cast<Group*>(item) ) {
 				if ( dynamic_cast<Group*>(item)->isOpen() ) {
 					return QIcon("icons/groupopen.png");
@@ -51,34 +43,44 @@ namespace Roster {
 				return dynamic_cast<Contact*>(item)->getIcon();
 			} else if ( dynamic_cast<Roster*>(item) ) {
 				return dynamic_cast<Roster*>(item)->getIcon();
-			} else {
-				return QVariant();
 			}
-		} else if ( role == ItemRole ) {
+		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
-		} else if ( role == Qt::BackgroundRole ) { // FIXME: colors from options
+		} else if ( role == Qt::BackgroundRole ) { // background color
 			if ( dynamic_cast<Roster*>(item) ) {
-				return QBrush( QColor(150, 150, 150), Qt::SolidPattern );
+				return QBrush( QColor(150, 150, 150), Qt::SolidPattern ); // FIXME: colors from options
 			} else if ( dynamic_cast<Group*>(item) ) {
 				return QBrush( QColor(240, 240, 240), Qt::SolidPattern );
-			} else {
-				return QVariant();
 			}
-		} else if ( role == Qt::ForegroundRole ) {
+		} else if ( role == Qt::ForegroundRole ) { // text color
 			if ( dynamic_cast<Roster*>(item) ) {
 				return QBrush( Qt::white, Qt::SolidPattern );
 			} else if ( dynamic_cast<Group*>(item) ) {
 				return QBrush( QColor(90, 90, 90), Qt::SolidPattern );
-			} else {
-				return QVariant();
 			}
-		} else if ( role == Qt::ToolTipRole ) {
+		} else if ( role == Qt::ToolTipRole ) { // tooltip
 			return makeToolTip(index);
-		} else if ( role == IdRole ) {
+		} else if ( role == IdRole ) { // unique id
 			return item->getId();
-		} else {
-			return QVariant();
+		} else if ( role == AvatarRole and showAvatars_ ) { // avatar image
+			if ( dynamic_cast<Contact*>(item) ) {
+				return dynamic_cast<Contact*>(item)->getAvatar(); 
+			}
+		} else if ( role == StatusRole and showStatus_ ) { // status text
+			if ( dynamic_cast<Contact*>(item) ) {
+				return dynamic_cast<Contact*>(item)->getStatus();
+			}
+		} else if ( role == Qt::SizeHintRole ) { // size of item
+			if ( !index.data(AvatarRole).value<QIcon>().isNull() ) {
+				return QSize(1, 34);
+			} else if ( !index.data(StatusRole).toString().isEmpty() ) {
+				return QSize(1, 34);
+			} else {
+				return QSize(1, 20);
+			}
 		}
+
+		return QVariant();
 	}
 
 	QVariant Model::makeToolTip(const QModelIndex& index) const {
@@ -267,9 +269,15 @@ namespace Roster {
 		return types;
 	}
 
-	/* dirty hack for updating view's layout from view */
-	void Model::updateLayout() {
+	void Model::setShowAvatars(bool showAvatars) {
+		showAvatars_ = showAvatars;
 		emit layoutChanged();
 	}
+
+	void Model::setShowStatus(bool showStatus) {
+		showStatus_ = showStatus;
+		emit layoutChanged();
+	}
+
 }
 
