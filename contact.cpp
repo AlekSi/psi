@@ -1,6 +1,7 @@
 #include <QIcon>
 
 #include "contact.h"
+#include "resource.h"
 
 namespace Roster {
 
@@ -41,8 +42,21 @@ namespace Roster {
 	void Contact::setAvatar(const QIcon& avatar) {
 		avatar_ = avatar;
 	}
-	const QString& Contact::getStatus() const {
-		return status_;
+
+	const QString Contact::getStatus() const {
+		int maxPriority = -1;
+		QString status;
+		
+		foreach(Item* item, items_) {
+			Resource* resource = dynamic_cast<Resource*>(item);
+
+			if ( maxPriority < resource->getPriority() ) {
+				status = resource->getStatus();
+				maxPriority = resource->getPriority();
+			}
+		}
+
+		return status;
 	}
 
 	void Contact::setStatus(const QString& status) {

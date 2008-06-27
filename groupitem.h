@@ -19,7 +19,7 @@ namespace Roster {
 			virtual void removeItem(Item* item);
 			virtual void addItem(Item* item);
 
-		private:
+		protected:
 			QList<Item*> items_;
 	};
 

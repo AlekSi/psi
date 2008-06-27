@@ -11,6 +11,7 @@
 #include "roster.h"
 #include "group.h"
 #include "contact.h"
+#include "resource.h"
 
 namespace Roster {
 	MainWindow::MainWindow() {
@@ -25,6 +26,11 @@ namespace Roster {
 		setupMenus();
 
 		view_->expandAll();
+
+		// FIXME: hide resources by default ;-)
+		view_->collapse(model_->index(0, 0, model_->index(0, 0)));
+		view_->collapse(model_->match(model_->index(0, 0), Qt::DisplayRole, "Romeo", 1, Qt::MatchRecursive).at(0));
+
 		view_->resizeColumnToContents(0);
 		resize(200, 350);
 	}
@@ -67,6 +73,21 @@ namespace Roster {
 		c1->setStatus("working on GSoC");
 		c4->setStatus("relaxing");
 		c5->setStatus("<3 Juliet");
+
+		Resource* r1 = new Resource("Home", 6);
+		Resource* r2 = new Resource("Work", 4);
+		Resource* r3 = new Resource("Verona", 6);
+
+		r1->setIcon(QIcon("icons/online.png"));
+		r2->setIcon(QIcon("icons/online.png"));
+		r3->setIcon(QIcon("icons/online.png"));
+
+		r1->setStatus("Working on GSoC");
+		r3->setStatus("<3 Juliet");
+
+		c1->addItem(r1);
+		c1->addItem(r2);
+		c5->addItem(r3);
 
 		Group* g1 = new Group("Group #1");
 		Group* g2 = new Group("Subgroup #2");

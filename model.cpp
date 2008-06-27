@@ -13,6 +13,7 @@
 #include "item.h"
 #include "contact.h"
 #include "group.h"
+#include "resource.h"
 
 namespace Roster {
 	Model::Model(RosterList* rosterlist) : rosterlist_(rosterlist), showAvatars_(true), showStatus_(true) {
@@ -32,6 +33,8 @@ namespace Roster {
 				return dynamic_cast<Group*>(item)->getName();
 			} else if ( dynamic_cast<Contact*>(item) ) {
 				return dynamic_cast<Contact*>(item)->getName();
+			} else if ( dynamic_cast<Resource*>(item) ) {
+				return QString("%1 (%2)").arg(dynamic_cast<Resource*>(item)->getName(), QString::number(dynamic_cast<Resource*>(item)->getPriority()));
 			}
 		} else if ( role == Qt::DecorationRole ) { // left icon
 			if ( dynamic_cast<Group*>(item) ) {
@@ -44,6 +47,8 @@ namespace Roster {
 				return dynamic_cast<Contact*>(item)->getIcon();
 			} else if ( dynamic_cast<Roster*>(item) ) {
 				return dynamic_cast<Roster*>(item)->getIcon();
+			} else if ( dynamic_cast<Resource*>(item) ) {
+				return dynamic_cast<Resource*>(item)->getIcon();
 			}
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
@@ -58,6 +63,8 @@ namespace Roster {
 				return QBrush( Qt::white, Qt::SolidPattern );
 			} else if ( dynamic_cast<Group*>(item) ) {
 				return QBrush( QColor(90, 90, 90), Qt::SolidPattern );
+			} else if ( dynamic_cast<Resource*>(item) ) {
+				return QBrush(Qt::gray);
 			}
 		} else if ( role == Qt::ToolTipRole ) { // tooltip
 			return makeToolTip(index);
@@ -70,6 +77,8 @@ namespace Roster {
 		} else if ( role == StatusRole and showStatus_ ) { // status text
 			if ( dynamic_cast<Contact*>(item) ) {
 				return dynamic_cast<Contact*>(item)->getStatus();
+			} else if ( dynamic_cast<Resource*>(item) ) {
+				return dynamic_cast<Resource*>(item)->getStatus();
 			}
 		} else if ( role == Qt::SizeHintRole ) { // size of item
 			if ( !index.data(AvatarRole).value<QIcon>().isNull() ) {
@@ -137,6 +146,8 @@ namespace Roster {
 
 		if ( dynamic_cast<Contact*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsSelectable;
+		} else if ( dynamic_cast<Resource*>(item) ) {
+			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else {
 			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
 		}

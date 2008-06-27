@@ -22,10 +22,11 @@ namespace Roster {
 		setSelectionMode(ExtendedSelection);
 		setHeaderHidden(true);
 		setRootIsDecorated(false);
-		setAlternatingRowColors(true);
+		//setAlternatingRowColors(true);
+		setExpandsOnDoubleClick(false);
 
 		setStyleSheet("QTreeView::branch { image: none; width: 0px } QTreeView { alternate-background-color: #D6EEFF; }"); // FIXME: externalize this
-		setIndentation(2);
+		setIndentation(5);
 
 		/* context menu */
 		sendMessageAct_ = new QAction(QIcon("icons/send.png"), tr("Send &message"), this);
@@ -112,10 +113,12 @@ namespace Roster {
 		if ( dynamic_cast<Group*>(item) ) {
 			Group* group = dynamic_cast<Group*>(item);
 			qDebug() << "Default action triggered on group" << group->getName();
+			setExpanded(index, !isExpanded(index));
 		} else if ( dynamic_cast<Contact*>(item) ) {
 			Contact* contact = dynamic_cast<Contact*>(item);
 			qDebug() << "Default action triggered on contact" << contact->getName();
 		} else if ( dynamic_cast<Roster*>(item) ) {
+			setExpanded(index, !isExpanded(index));
 			Roster* roster = dynamic_cast<Roster*>(item);
 			qDebug() << "Default action triggered on roster" << roster->getName();
 		}

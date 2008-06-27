@@ -3,12 +3,12 @@
 
 #include <QString>
 
-#include "item.h"
+#include "groupitem.h"
 
 namespace Roster {
 
 	// single contact on roster
-	class Contact : public Item {
+	class Contact : public GroupItem {
 		public:
 			Contact(const QString& name, const QString& jid);
 			~Contact();
@@ -17,7 +17,7 @@ namespace Roster {
 			const QString& getJid() const;
 			const QIcon& getIcon() const;
 			const QIcon& getAvatar() const;
-			const QString& getStatus() const;
+			const QString getStatus() const;
 
 			void setName(const QString& name);
 			void setJid(const QString& jid);
