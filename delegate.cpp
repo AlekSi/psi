@@ -4,6 +4,8 @@
 #include <QFontMetrics>
 #include <QStyledItemDelegate>
 
+#include <QLineEdit>
+
 #include "delegate.h"
 #include "item.h"
 #include "contact.h"
@@ -19,6 +21,7 @@
 namespace Roster {
 	void Delegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const {
 		painter->save();
+		painter->setClipping(false);
 
 		if ( option.state & QStyle::State_Selected ) {
 			painter->fillRect(option.rect, option.palette.highlight());
@@ -71,5 +74,46 @@ namespace Roster {
 		painter->restore();
 	}
 
+	/* 
+	 * Returns QRect on which item's name (Qt::DisplayRole) is drawn
+	 * Used to correctly place inline editor
+	 * Not nice, but hey, it works ;-)
+	 */
+	QRect Delegate::nameRect(const QStyleOptionViewItem& option, const QModelIndex& index) const {
+		QRect rect(option.rect);
+		rect.adjust(20, 0, 0, 0);
+
+		if ( ! index.data(AvatarRole).value<QIcon>().isNull() ) {
+			rect.adjust(0, 0, -32, 0);
+		}
+
+		if ( ! index.data(StatusRole).toString().isEmpty() ) {
+			rect.setHeight(16);
+		}
+
+		return rect;
+	}
+
+	QWidget* Delegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+		Q_UNUSED(option);
+		Q_UNUSED(index)
+
+		QLineEdit* editor = new QLineEdit(parent);
+		return editor;
+	}
+
+	void Delegate::setEditorData(QWidget* editor, const QModelIndex& index) const {
+		static_cast<QLineEdit*>(editor)->setText(index.data(Qt::EditRole).toString());
+	}
+
+	void Delegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+		editor->setGeometry(nameRect(option, index));
+	}
+
+	void Delegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const {
+		Q_UNUSED(model);
+
+		qDebug() << "Renaming" << index.data().toString() << "to" << static_cast<QLineEdit*>(editor)->text();
+	}
 }
 

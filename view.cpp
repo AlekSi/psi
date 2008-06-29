@@ -22,11 +22,12 @@ namespace Roster {
 		setSelectionMode(ExtendedSelection);
 		setHeaderHidden(true);
 		setRootIsDecorated(false);
-		//setAlternatingRowColors(true);
 		setExpandsOnDoubleClick(false);
+		setEditTriggers(QAbstractItemView::EditKeyPressed);
 
 		setStyleSheet("QTreeView::branch { image: none; width: 0px } QTreeView { alternate-background-color: #D6EEFF; }"); // FIXME: externalize this
 		setIndentation(5);
+		//setAlternatingRowColors(true);
 
 		initMenu();		
 
@@ -44,7 +45,7 @@ namespace Roster {
 		sendMessageToGroupAct_ = new QAction(QIcon("icons/send.png"), tr("Send message to group"), this);
 		connect(sendMessageToGroupAct_, SIGNAL(triggered()), this, SLOT(menuSendMessageToGroup()));
 		renameGroupAct_ = new QAction(tr("Re&name"), this);
-		connect(renameGroupAct_, SIGNAL(triggered()), this, SLOT(menuRenameGroup()));
+		connect(renameGroupAct_, SIGNAL(triggered()), this, SLOT(menuRename()));
 
 		/* contact */
 		sendMessageAct_ = new QAction(QIcon("icons/send.png"), tr("Send &message"), this);
@@ -55,6 +56,8 @@ namespace Roster {
 		connect(showResourcesAct_, SIGNAL(triggered()), this, SLOT(menuShowResources()));
 		hideResourcesAct_ = new QAction(tr("Hide resources"), this);
 		connect(hideResourcesAct_, SIGNAL(triggered()), this, SLOT(menuHideResources()));
+		renameContactAct_ = new QAction(tr("Re&name"), this);
+		connect(renameContactAct_, SIGNAL(triggered()), this, SLOT(menuRename()));
 
 		/* roster */
 		xmlConsoleAct_ = new QAction(tr("&XML Console"), this);
@@ -108,6 +111,8 @@ namespace Roster {
 				showResourcesAct_->setData(QVariant::fromValue<Item*>(item));
 				menu->addAction(showResourcesAct_);
 			}
+			renameContactAct_->setData(QVariant::fromValue<Item*>(item));
+			menu->addAction(renameContactAct_);
 		} else if ( dynamic_cast<Roster*>(item) ) {
 			Roster* roster = dynamic_cast<Roster*>(item);
 			qDebug() << "Context menu opened for roster" << roster->getName();
@@ -148,16 +153,16 @@ namespace Roster {
 	/* slot triggered when user expands item */
 	void View::itemExpanded(const QModelIndex& index) {
 		Item* item = index.data(Qt::UserRole).value<Item*>();
-		if ( dynamic_cast<Group*>(item) ) {
-			dynamic_cast<Group*>(item)->setOpen(true);
+		if ( Group* group = dynamic_cast<Group*>(item) ) {
+			group->setOpen(true);
 		}
 	}
 
 	/* slot triggered when user collapses item */
 	void View::itemCollapsed(const QModelIndex& index) {
 		Item* item = index.data(Qt::UserRole).value<Item*>();
-		if ( dynamic_cast<Group*>(item) ) {
-			dynamic_cast<Group*>(item)->setOpen(false);
+		if ( Group* group = dynamic_cast<Group*>(item) ) {
+			group->setOpen(false);
 		}
 	}
 
@@ -182,11 +187,9 @@ namespace Roster {
 		qDebug() << "send message to group" << group->getName();
 	}
 
-	/* menu action for (group)->rename */
-	void View::menuRenameGroup() {
-		QAction* action = static_cast<QAction*>(sender());
-		Group* group = static_cast<Group*>(action->data().value<Item*>());
-		qDebug() << "rename group" << group->getName();
+	/* menu action for (contact/group)->rename */
+	void View::menuRename() {
+		edit(senderItemIndex());
 	}
 
 	/* menu action for (roster)->status->online */

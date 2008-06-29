@@ -26,7 +26,7 @@ namespace Roster {
 
 		Item* item = static_cast<Item*>(index.internalPointer());
 
-		if ( role == Qt::DisplayRole ) { // name
+		if ( role == Qt::DisplayRole or role == Qt::EditRole ) { // name
 			if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
 				return roster->getName();
 			} else if ( Group* group = dynamic_cast<Group*>(item) ) {
@@ -143,9 +143,11 @@ namespace Roster {
 		Item* item = index.data(ItemRole).value<Item*>();
 
 		if ( dynamic_cast<Contact*>(item) ) {
-			return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsSelectable;
+			return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 		} else if ( dynamic_cast<Resource*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+		} else if ( dynamic_cast<Group*>(item) ) {
+			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable;
 		} else {
 			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
 		}

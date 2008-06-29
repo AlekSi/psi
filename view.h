@@ -21,7 +21,7 @@ namespace Roster {
 			void menuHistory();
 			void menuSendMessage();
 			void menuSendMessageToGroup();
-			void menuRenameGroup();
+			void menuRename();
 			void menuXmlConsole();
 			void menuGoOnline();
 			void menuGoOffline();
@@ -38,7 +38,7 @@ namespace Roster {
 			QModelIndex senderItemIndex() const;
 			void initMenu();
 
-			QAction *sendMessageAct_, *historyAct_, *showResourcesAct_, *hideResourcesAct_; // Contact menu
+			QAction *sendMessageAct_, *historyAct_, *showResourcesAct_, *hideResourcesAct_, *renameContactAct_; // Contact menu
 			QAction *sendMessageToGroupAct_, *renameGroupAct_; // Group menu
 			QAction *goOnlineAct_, *goOfflineAct_, *xmlConsoleAct_; // Roster menu
 			QAction *sendToAllAct_; // Multiple contacts menu
