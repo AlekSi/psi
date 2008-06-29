@@ -28,23 +28,7 @@ namespace Roster {
 		setStyleSheet("QTreeView::branch { image: none; width: 0px } QTreeView { alternate-background-color: #D6EEFF; }"); // FIXME: externalize this
 		setIndentation(5);
 
-		/* context menu */
-		sendMessageAct_ = new QAction(QIcon("icons/send.png"), tr("Send &message"), this);
-		connect(sendMessageAct_, SIGNAL(triggered()), this, SLOT(menuSendMessage()));
-		historyAct_ = new QAction(QIcon("icons/history.png"), tr("&History"), this);
-		connect(historyAct_, SIGNAL(triggered()), this, SLOT(menuHistory()));
-		sendMessageToGroupAct_ = new QAction(QIcon("icons/send.png"), tr("Send message to group"), this);
-		connect(sendMessageToGroupAct_, SIGNAL(triggered()), this, SLOT(menuSendMessageToGroup()));
-		renameGroupAct_ = new QAction(tr("Re&name"), this);
-		connect(renameGroupAct_, SIGNAL(triggered()), this, SLOT(menuRenameGroup()));
-		goOnlineAct_ = new QAction(tr("Online"), this);
-		connect(goOnlineAct_, SIGNAL(triggered()), this, SLOT(menuGoOnline()));
-		goOfflineAct_ = new QAction(tr("Offline"), this);
-		connect(goOfflineAct_, SIGNAL(triggered()), this, SLOT(menuGoOffline()));
-		xmlConsoleAct_ = new QAction(tr("&XML Console"), this);
-		connect(xmlConsoleAct_, SIGNAL(triggered()), this, SLOT(menuXmlConsole()));
-		sendToAllAct_ = new QAction(QIcon("icons/send.png"), tr("&Send to all"), this);
-		connect(sendToAllAct_, SIGNAL(triggered()), this, SLOT(menuSendToAll()));
+		initMenu();		
 
 		/* view signals */
 		connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(showContextMenu(const QPoint&)));
@@ -52,6 +36,37 @@ namespace Roster {
 
 		connect(this, SIGNAL(expanded(const QModelIndex&)), SLOT(itemExpanded(const QModelIndex&)));
 		connect(this, SIGNAL(collapsed(const QModelIndex&)), SLOT(itemCollapsed(const QModelIndex&)));
+	}
+
+	/* initialize context menu actions */
+	void View::initMenu() {
+		/* group */
+		sendMessageToGroupAct_ = new QAction(QIcon("icons/send.png"), tr("Send message to group"), this);
+		connect(sendMessageToGroupAct_, SIGNAL(triggered()), this, SLOT(menuSendMessageToGroup()));
+		renameGroupAct_ = new QAction(tr("Re&name"), this);
+		connect(renameGroupAct_, SIGNAL(triggered()), this, SLOT(menuRenameGroup()));
+
+		/* contact */
+		sendMessageAct_ = new QAction(QIcon("icons/send.png"), tr("Send &message"), this);
+		connect(sendMessageAct_, SIGNAL(triggered()), this, SLOT(menuSendMessage()));
+		historyAct_ = new QAction(QIcon("icons/history.png"), tr("&History"), this);
+		connect(historyAct_, SIGNAL(triggered()), this, SLOT(menuHistory()));
+		showResourcesAct_ = new QAction(tr("Show resources"), this);
+		connect(showResourcesAct_, SIGNAL(triggered()), this, SLOT(menuShowResources()));
+		hideResourcesAct_ = new QAction(tr("Hide resources"), this);
+		connect(hideResourcesAct_, SIGNAL(triggered()), this, SLOT(menuHideResources()));
+
+		/* roster */
+		xmlConsoleAct_ = new QAction(tr("&XML Console"), this);
+		connect(xmlConsoleAct_, SIGNAL(triggered()), this, SLOT(menuXmlConsole()));
+		goOnlineAct_ = new QAction(tr("Online"), this);
+		connect(goOnlineAct_, SIGNAL(triggered()), this, SLOT(menuGoOnline()));
+		goOfflineAct_ = new QAction(tr("Offline"), this);
+		connect(goOfflineAct_, SIGNAL(triggered()), this, SLOT(menuGoOffline()));
+
+		/* multiple contacts */
+		sendToAllAct_ = new QAction(QIcon("icons/send.png"), tr("&Send to all"), this);
+		connect(sendToAllAct_, SIGNAL(triggered()), this, SLOT(menuSendToAll()));
 	}
 
 	/* build and display context menu */
@@ -86,6 +101,13 @@ namespace Roster {
 			menu->addAction(sendMessageAct_);
 			historyAct_->setData(QVariant::fromValue<Item*>(item));
 			menu->addAction(historyAct_);
+			if ( isExpanded(index) ) {
+				hideResourcesAct_->setData(QVariant::fromValue<Item*>(item));
+				menu->addAction(hideResourcesAct_);
+			} else {
+				showResourcesAct_->setData(QVariant::fromValue<Item*>(item));
+				menu->addAction(showResourcesAct_);
+			}
 		} else if ( dynamic_cast<Roster*>(item) ) {
 			Roster* roster = dynamic_cast<Roster*>(item);
 			qDebug() << "Context menu opened for roster" << roster->getName();
@@ -99,7 +121,6 @@ namespace Roster {
 
 			xmlConsoleAct_->setData(QVariant::fromValue<Item*>(item));
 			menu->addAction(xmlConsoleAct_);
-			
 		}
 
 		menu->popup( this->mapToGlobal(position) );
@@ -197,6 +218,33 @@ namespace Roster {
 			Contact* contact = dynamic_cast<Contact*>(item);
 			qDebug() << " + " << contact->getName();
 		}
+	}
+
+	void View::menuShowResources() {
+		QModelIndex index = senderItemIndex();
+		expand(index);
+	}
+
+	void View::menuHideResources() {
+		QModelIndex index = senderItemIndex();
+		collapse(index);
+	}
+
+	/* 
+	 * returns QModelIndex of item on which context menu was called 
+	 * it is NOT safe to call it if sender() is not QAction or if it doesn't contain Roster::Item* object inside
+	 * returned index is not valid if item is already gone
+	 */
+	QModelIndex View::senderItemIndex() const {
+		QAction* action = static_cast<QAction*>(sender());
+		QModelIndex index;
+
+		unsigned int id = action->data().value<Item*>()->getId();
+		QModelIndexList indexList = model()->match(model()->index(0, 0, QModelIndex()), IdRole, id, 1, Qt::MatchWrap | Qt::MatchExactly | Qt::MatchRecursive);
+		if ( ! indexList.isEmpty() ) {
+			index = indexList.at(0);
+		}
+		return index;
 	}
 }
 
