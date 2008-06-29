@@ -27,28 +27,28 @@ namespace Roster {
 		Item* item = static_cast<Item*>(index.internalPointer());
 
 		if ( role == Qt::DisplayRole ) { // name
-			if ( dynamic_cast<Roster*>(item) ) {
-				return dynamic_cast<Roster*>(item)->getName();
-			} else if ( dynamic_cast<Group*>(item) ) {
-				return dynamic_cast<Group*>(item)->getName();
-			} else if ( dynamic_cast<Contact*>(item) ) {
-				return dynamic_cast<Contact*>(item)->getName();
-			} else if ( dynamic_cast<Resource*>(item) ) {
-				return QString("%1 (%2)").arg(dynamic_cast<Resource*>(item)->getName(), QString::number(dynamic_cast<Resource*>(item)->getPriority()));
+			if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
+				return roster->getName();
+			} else if ( Group* group = dynamic_cast<Group*>(item) ) {
+				return group->getName();
+			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+				return contact->getName();
+			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
+				return QString("%1 (%2)").arg(resource->getName(), QString::number(resource->getPriority()));
 			}
 		} else if ( role == Qt::DecorationRole ) { // left icon
-			if ( dynamic_cast<Group*>(item) ) {
-				if ( dynamic_cast<Group*>(item)->isOpen() ) {
+			if ( Group* group = dynamic_cast<Group*>(item) ) {
+				if ( group->isOpen() ) {
 					return QIcon("icons/groupopen.png");
 				} else {
 					return QIcon("icons/groupclose.png");
 				}
-			} else if ( dynamic_cast<Contact*>(item) ) {
-				return dynamic_cast<Contact*>(item)->getIcon();
-			} else if ( dynamic_cast<Roster*>(item) ) {
-				return dynamic_cast<Roster*>(item)->getIcon();
-			} else if ( dynamic_cast<Resource*>(item) ) {
-				return dynamic_cast<Resource*>(item)->getIcon();
+			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+				return contact->getIcon();
+			} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
+				return roster->getIcon();
+			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
+				return resource->getIcon();
 			}
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
@@ -71,14 +71,14 @@ namespace Roster {
 		} else if ( role == IdRole ) { // unique id
 			return item->getId();
 		} else if ( role == AvatarRole and showAvatars_ ) { // avatar image
-			if ( dynamic_cast<Contact*>(item) ) {
-				return dynamic_cast<Contact*>(item)->getAvatar(); 
+			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+				return contact->getAvatar(); 
 			}
 		} else if ( role == StatusRole and showStatus_ ) { // status text
-			if ( dynamic_cast<Contact*>(item) ) {
-				return dynamic_cast<Contact*>(item)->getStatus();
-			} else if ( dynamic_cast<Resource*>(item) ) {
-				return dynamic_cast<Resource*>(item)->getStatus();
+			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+				return contact->getStatus();
+			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
+				return resource->getStatus();
 			}
 		} else if ( role == Qt::SizeHintRole ) { // size of item
 			if ( !index.data(AvatarRole).value<QIcon>().isNull() ) {
@@ -97,8 +97,7 @@ namespace Roster {
 		Item* item = index.data(ItemRole).value<Item*>();
 		QString tip;
 
-		if ( dynamic_cast<Contact*>(item) ) {
-			Contact* contact = dynamic_cast<Contact*>(item);
+		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 			tip += "<div style=\"white-space: pre\">";
 
 			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid()));
@@ -110,8 +109,7 @@ namespace Roster {
 			}
 
 			tip += "</div>";
-		} else if ( dynamic_cast<Roster*>(item) ) {
-			Roster* roster = dynamic_cast<Roster*>(item);
+		} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
 			tip += roster->getName();
 		} else {
 			return QVariant();
@@ -206,8 +204,8 @@ namespace Roster {
 			if (index.isValid()) {
 				Item* item = index.data(ItemRole).value<Item*>();
 				idStream << index.data(IdRole).value<unsigned int>();
-				if ( dynamic_cast<Contact*>(item) ) {
-					textStream << dynamic_cast<Contact*>(item)->getName();
+				if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+					textStream << contact->getName();
 				}
 			}
 		}
@@ -231,12 +229,12 @@ namespace Roster {
 
 		Item* parentItem = parent.data(ItemRole).value<Item*>();
 
-		if ( dynamic_cast<Contact*>(parentItem) ) {
-			qDebug() << "Following items has been dropped on contact" << dynamic_cast<Contact*>(parentItem)->getName();
-		} else if ( dynamic_cast<Group*>(parentItem) ) {
-			qDebug() << "Following items has been dropped on group" << dynamic_cast<Group*>(parentItem)->getName();
-		} else if ( dynamic_cast<Roster*>(parentItem) ) {
-			qDebug() << "Following items has been dropped on roster" << dynamic_cast<Roster*>(parentItem)->getName();
+		if ( Contact* contact = dynamic_cast<Contact*>(parentItem) ) {
+			qDebug() << "Following items has been dropped on contact" << contact->getName();
+		} else if ( Group* group = dynamic_cast<Group*>(parentItem) ) {
+			qDebug() << "Following items has been dropped on group" << group->getName();
+		} else if ( Roster* roster = dynamic_cast<Roster*>(parentItem) ) {
+			qDebug() << "Following items has been dropped on roster" << roster->getName();
 		}
 		
 		QByteArray encodedData = data->data("application/x-psi-rosteritem");
@@ -255,10 +253,10 @@ namespace Roster {
 			QModelIndex index = indexList.at(0);
 		
 			Item* item = index.data(ItemRole).value<Item*>();
-			if ( dynamic_cast<Contact*>(item) ) {
-				qDebug() << "+ contact" << dynamic_cast<Contact*>(item)->getName();
-			} else if ( dynamic_cast<Group*>(item) ) {
-				qDebug() << "+ group" << dynamic_cast<Group*>(item)->getName();
+			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+				qDebug() << "+ contact" << contact->getName();
+			} else if ( Group* group = dynamic_cast<Group*>(item) ) {
+				qDebug() << "+ group" << group->getName();
 			} 
 		}
 
