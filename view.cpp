@@ -46,6 +46,11 @@ namespace Roster {
 		connect(sendMessageToGroupAct_, SIGNAL(triggered()), this, SLOT(menuSendMessageToGroup()));
 		renameGroupAct_ = new QAction(tr("Re&name"), this);
 		connect(renameGroupAct_, SIGNAL(triggered()), this, SLOT(menuRename()));
+		removeGroupAct_ = new QAction(QIcon("icons/remove.png"), tr("Remove group"), this);
+		connect(removeGroupAct_, SIGNAL(triggered()), this, SLOT(menuRemoveGroup()));
+		removeGroupAndContactsAct_ = new QAction(QIcon("icons/remove.png"),tr("Remove group and contacts"), this);
+		connect(removeGroupAndContactsAct_, SIGNAL(triggered()), this, SLOT(menuRemoveGroupAndContacts()));
+
 
 		/* contact */
 		sendMessageAct_ = new QAction(QIcon("icons/send.png"), tr("Send &message"), this);
@@ -88,46 +93,40 @@ namespace Roster {
 			qDebug() << "Context menu opened for multiple contacts";
 
 			menu->addAction(sendToAllAct_); 
-		} else if ( dynamic_cast<Group*>(item) ) { 
-			Group* group = dynamic_cast<Group*>(item);
+		} else if ( Group* group = dynamic_cast<Group*>(item) ) { 
 			qDebug() << "Context menu opened for group" << group->getName();
-
-			sendMessageToGroupAct_->setData(QVariant::fromValue<Item*>(item));
+			// FIXME: disable removing / renaming if that's not user group (i.e. generic)
 			menu->addAction(sendMessageToGroupAct_);
-			renameGroupAct_->setData(QVariant::fromValue<Item*>(item));
 			menu->addAction(renameGroupAct_);
-		} else if ( dynamic_cast<Contact*>(item) ) { 
-			Contact* contact = dynamic_cast<Contact*>(item);
+			menu->addSeparator();
+			menu->addAction(removeGroupAct_);
+			menu->addAction(removeGroupAndContactsAct_);
+		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) { 
 			qDebug() << "Context menu opened for contact" << contact->getName();
 
-			sendMessageAct_->setData(QVariant::fromValue<Item*>(item));
 			menu->addAction(sendMessageAct_);
-			historyAct_->setData(QVariant::fromValue<Item*>(item));
 			menu->addAction(historyAct_);
 			if ( isExpanded(index) ) {
-				hideResourcesAct_->setData(QVariant::fromValue<Item*>(item));
 				menu->addAction(hideResourcesAct_);
 			} else {
-				showResourcesAct_->setData(QVariant::fromValue<Item*>(item));
 				menu->addAction(showResourcesAct_);
 			}
-			renameContactAct_->setData(QVariant::fromValue<Item*>(item));
 			menu->addAction(renameContactAct_);
-		} else if ( dynamic_cast<Roster*>(item) ) {
-			Roster* roster = dynamic_cast<Roster*>(item);
+		} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
 			qDebug() << "Context menu opened for roster" << roster->getName();
 
 			QMenu* statusMenu = new QMenu(tr("&Status"));
-			goOnlineAct_->setData(QVariant::fromValue<Item*>(item));
 			statusMenu->addAction(goOnlineAct_);
-			goOfflineAct_->setData(QVariant::fromValue<Item*>(item));
 			statusMenu->addAction(goOfflineAct_);
 			menu->addMenu(statusMenu);
 
-			xmlConsoleAct_->setData(QVariant::fromValue<Item*>(item));
 			menu->addAction(xmlConsoleAct_);
 		}
 
+		foreach(QAction* action, menu->actions()) {
+			action->setData(QVariant::fromValue<Item*>(item));
+		}
+			
 		menu->popup( this->mapToGlobal(position) );
 	}
 
@@ -231,6 +230,12 @@ namespace Roster {
 	void View::menuHideResources() {
 		QModelIndex index = senderItemIndex();
 		collapse(index);
+	}
+
+	void View::menuRemoveGroup() {
+	}
+
+	void View::menuRemoveGroupAndContacts() {
 	}
 
 	/* 

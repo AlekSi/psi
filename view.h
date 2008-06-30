@@ -28,6 +28,8 @@ namespace Roster {
 			void menuSendToAll();
 			void menuShowResources();
 			void menuHideResources();
+			void menuRemoveGroup();
+			void menuRemoveGroupAndContacts();
 
 		private slots:
 			void itemExpanded(const QModelIndex& index);
@@ -39,7 +41,7 @@ namespace Roster {
 			void initMenu();
 
 			QAction *sendMessageAct_, *historyAct_, *showResourcesAct_, *hideResourcesAct_, *renameContactAct_; // Contact menu
-			QAction *sendMessageToGroupAct_, *renameGroupAct_; // Group menu
+			QAction *sendMessageToGroupAct_, *renameGroupAct_, *removeGroupAct_, *removeGroupAndContactsAct_; // Group menu
 			QAction *goOnlineAct_, *goOfflineAct_, *xmlConsoleAct_; // Roster menu
 			QAction *sendToAllAct_; // Multiple contacts menu
     };
