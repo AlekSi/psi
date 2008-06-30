@@ -47,9 +47,7 @@ namespace Roster {
 		int maxPriority = -1;
 		QString status;
 		
-		foreach(Item* item, items_) {
-			Resource* resource = dynamic_cast<Resource*>(item);
-
+		foreach(Resource* resource, resources_) {
 			if ( maxPriority < resource->getPriority() ) {
 				status = resource->getStatus();
 				maxPriority = resource->getPriority();
@@ -59,8 +57,13 @@ namespace Roster {
 		return status;
 	}
 
-	void Contact::setStatus(const QString& status) {
-		status_ = status;
+	const QList<Resource*>& Contact::getResources() const {
+		return resources_;
+	}
+
+	void Contact::addResource(Resource* resource) {
+		resource->setParent(this);
+		resources_.append(resource);
 	}
 }
 

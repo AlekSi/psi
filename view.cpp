@@ -11,6 +11,7 @@
 #include "group.h"
 #include "contact.h"
 #include "roster.h"
+#include "resource.h"
 
 namespace Roster {
 
@@ -50,7 +51,12 @@ namespace Roster {
 		connect(removeGroupAct_, SIGNAL(triggered()), this, SLOT(menuRemoveGroup()));
 		removeGroupAndContactsAct_ = new QAction(QIcon("icons/remove.png"),tr("Remove group and contacts"), this);
 		connect(removeGroupAndContactsAct_, SIGNAL(triggered()), this, SLOT(menuRemoveGroupAndContacts()));
-
+		openChatAct_ = new QAction(QIcon("icons/start-chat.png"), tr("Open &chat window"), this);
+		connect(openChatAct_, SIGNAL(triggered()), this, SLOT(menuOpenChat()));
+		sendFileAct_ = new QAction(QIcon("icons/upload.png"), tr("Send file"), this);
+		connect(sendFileAct_, SIGNAL(triggered()), this, SLOT(menuSendFile()));
+		removeContactAct_ = new QAction(QIcon("icons/remove.png"), tr("Rem&ove"), this);
+		connect(removeContactAct_, SIGNAL(triggered()), this, SLOT(menuRemoveContact()));
 
 		/* contact */
 		sendMessageAct_ = new QAction(QIcon("icons/send.png"), tr("Send &message"), this);
@@ -71,6 +77,14 @@ namespace Roster {
 		connect(goOnlineAct_, SIGNAL(triggered()), this, SLOT(menuGoOnline()));
 		goOfflineAct_ = new QAction(tr("Offline"), this);
 		connect(goOfflineAct_, SIGNAL(triggered()), this, SLOT(menuGoOffline()));
+
+		/* resource */
+		sendMessageToResourceAct_ = new QAction(QIcon("icons/send.png"), tr("Send &message"), this);
+		connect(sendMessageToResourceAct_, SIGNAL(triggered()), this, SLOT(menuSendMessageToResource()));
+		openChatToResourceAct_ = new QAction(QIcon("icons/start-chat.png"), tr("Open &chat window"), this);
+		connect(openChatToResourceAct_, SIGNAL(triggered()), this, SLOT(menuOpenChatToResource()));
+		sendFileToResourceAct_ = new QAction(QIcon("icons/upload.png"), tr("Send file"), this);
+		connect(sendFileToResourceAct_, SIGNAL(triggered()), this, SLOT(menuSendFileToResource()));
 
 		/* multiple contacts */
 		sendToAllAct_ = new QAction(QIcon("icons/send.png"), tr("&Send to all"), this);
@@ -105,13 +119,19 @@ namespace Roster {
 			qDebug() << "Context menu opened for contact" << contact->getName();
 
 			menu->addAction(sendMessageAct_);
-			menu->addAction(historyAct_);
+			menu->addAction(openChatAct_);
+			menu->addSeparator();
+			menu->addAction(sendFileAct_);
+			menu->addSeparator();
+			menu->addAction(renameContactAct_);
+			menu->addAction(removeContactAct_);
 			if ( isExpanded(index) ) {
 				menu->addAction(hideResourcesAct_);
 			} else {
 				menu->addAction(showResourcesAct_);
 			}
-			menu->addAction(renameContactAct_);
+			menu->addSeparator();
+			menu->addAction(historyAct_);
 		} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
 			qDebug() << "Context menu opened for roster" << roster->getName();
 
@@ -121,6 +141,12 @@ namespace Roster {
 			menu->addMenu(statusMenu);
 
 			menu->addAction(xmlConsoleAct_);
+		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
+			qDebug() << "Context menu opened for resource " << resource->getName();
+
+			menu->addAction(sendMessageToResourceAct_);
+			menu->addAction(openChatToResourceAct_);
+			menu->addAction(sendFileToResourceAct_);
 		}
 
 		foreach(QAction* action, menu->actions()) {
@@ -135,17 +161,16 @@ namespace Roster {
 		Q_ASSERT(index.data(Qt::UserRole).canConvert<Item*>());
 		Item* item = index.data(Qt::UserRole).value<Item*>();
 
-		if ( dynamic_cast<Group*>(item) ) {
-			Group* group = dynamic_cast<Group*>(item);
+		if ( Group* group = dynamic_cast<Group*>(item) ) {
 			qDebug() << "Default action triggered on group" << group->getName();
 			setExpanded(index, !isExpanded(index));
-		} else if ( dynamic_cast<Contact*>(item) ) {
-			Contact* contact = dynamic_cast<Contact*>(item);
+		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 			qDebug() << "Default action triggered on contact" << contact->getName();
-		} else if ( dynamic_cast<Roster*>(item) ) {
+		} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
 			setExpanded(index, !isExpanded(index));
-			Roster* roster = dynamic_cast<Roster*>(item);
 			qDebug() << "Default action triggered on roster" << roster->getName();
+		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
+			qDebug() << "Default action triggered on resource" << resource->getName();
 		}
 	}
 
@@ -232,7 +257,25 @@ namespace Roster {
 		collapse(index);
 	}
 
+	void View::menuSendFileToResource() {
+	}
+
+	void View::menuOpenChatToResource() {
+	}
+
+	void View::menuSendMessageToResource() {
+	}
+
 	void View::menuRemoveGroup() {
+	}
+
+	void View::menuRemoveContact() {
+	}
+
+	void View::menuSendFile() {
+	}
+
+	void View::menuOpenChat() {
 	}
 
 	void View::menuRemoveGroupAndContacts() {

@@ -95,41 +95,53 @@ namespace Roster {
 
 	QVariant Model::makeToolTip(const QModelIndex& index) const {
 		Item* item = index.data(ItemRole).value<Item*>();
-		QString tip;
+		QString tip("<div style=\"white-space: pre\">");
 
 		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-			tip += "<div style=\"white-space: pre\">";
-
 			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid()));
-			tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg("resource", "5");
-			
-			if (! contact->getStatus().isEmpty()) {
-				tip += "<u>Status message</u>\n";
-				tip += Qt::escape(contact->getStatus()) + "\n";
-			}
 
-			tip += "</div>";
+			foreach(Resource* resource, contact->getResources()) {
+				tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg(resource->getName(), QString::number(resource->getPriority()));
+
+				if (! resource->getStatus().isEmpty()) {
+					tip += "<u>Status message</u>\n";
+					tip += Qt::escape(resource->getStatus()) + "\n";
+				}
+			}
 		} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
 			tip += roster->getName();
+		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
+			Contact* parent = dynamic_cast<Contact*>(item->getParent());
+			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(parent->getName()), Qt::escape(parent->getJid()));
+			tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg(resource->getName(), QString::number(resource->getPriority()));
+
+			if (! resource->getStatus().isEmpty()) {
+				tip += "<u>Status message</u>\n";
+				tip += Qt::escape(resource->getStatus()) + "\n";
+			}
 		} else {
 			return QVariant();
 		}
 
+		tip += "</div>";
 		return tip;
 	}
 
 	int Model::rowCount(const QModelIndex &parent) const {
-		GroupItem* parentItem;
+		int num = 0;
 
 		if (parent.isValid()) {
 			Item* item = static_cast<Item*>(parent.internalPointer());
-			parentItem = dynamic_cast<GroupItem*>(item);
-		}
-		else {
-			parentItem = rosterlist_;
+			if ( GroupItem* parentItem = dynamic_cast<GroupItem*>(item) ) {
+				num = parentItem->getNbItems();
+			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+				num = contact->getResources().size();
+			}
+		} else {
+			num = rosterlist_->getNbItems();
 		}
 
-		return (parentItem ? parentItem->getNbItems() : 0);
+		return num;
 	}
 
 	QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -159,21 +171,27 @@ namespace Roster {
 	}
 
 	QModelIndex Model::index(int row, int column, const QModelIndex& parent) const {
-		GroupItem* parentItem;
-		if (parent.isValid()) {
-			parentItem = static_cast<GroupItem*>(parent.internalPointer());
-		} 
-		else {
-			parentItem = rosterlist_;
+		Item* item = static_cast<Item*>(parent.internalPointer());
+		if ( parent.isValid() and dynamic_cast<Contact*>(item) ) {
+			Contact* contact = dynamic_cast<Contact*>(item);
+			if ( row < contact->getResources().size() ) {
+				return createIndex(row, column, contact->getResources().at(row));
+			}
+		} else {
+			GroupItem* parentItem;
+			if (parent.isValid()) {
+				parentItem = dynamic_cast<GroupItem*>(item);
+			} 
+			else {
+				parentItem = rosterlist_;
+			}
+
+			if ( row < parentItem->getNbItems() ) {
+				return createIndex(row, column, parentItem->getItem(row));
+			}
 		}
 
-		if ( row < parentItem->getNbItems() ) {
-			Item* item = parentItem->getItem(row);
-			return (item ? createIndex(row, column, item) : QModelIndex());
-		}
-		else {
-			return QModelIndex();
-		}
+		return QModelIndex();
 	}
 
 	QModelIndex Model::parent(const QModelIndex& index) const {
@@ -182,19 +200,18 @@ namespace Roster {
 		}
 
 		Item* item = static_cast<Item*>(index.internalPointer());
-		GroupItem* parent = item->getParent();
+		Item* parent = item->getParent();
 
 		if (parent == rosterlist_) {
 			return QModelIndex();
 		}
 		else {
-			GroupItem* grandparent = parent->getParent();
+			GroupItem* grandparent = dynamic_cast<GroupItem*>(parent->getParent());
 			return createIndex(grandparent->getIndexOf(parent), 0, parent);
 		}
 	}
 
 	QMimeData* Model::mimeData(const QModelIndexList &indexes) const {
-		//QMimeData* mimeData = QAbstractItemModel::mimeData(indexes);
 		QMimeData* mimeData = new QMimeData();
 
 		QByteArray encodedText, encodedIds;

@@ -1,28 +1,25 @@
 #include "item.h"
-#include "groupitem.h"
 
 namespace Roster {
 
 	Item::Item() : parent_(NULL) {
+		static unsigned int nextId = 0;
+		id_ = nextId++;
 	}
 
 	Item::~Item() {
-		if ( parent_ ) {
-			parent_->removeItem(this);
-		}
 	}
 
-	GroupItem* Item::getParent() const {
+	Item* Item::getParent() const {
 		return parent_;
 	}
 
-	void Item::setParent(GroupItem* parent) {
+	void Item::setParent(Item* parent) {
 		parent_ = parent;
 	}
 
-	// FIXME: this won't be unique if one item will appear more than once on roster
 	unsigned int Item::getId() const {
-		return (unsigned int)(this);
+		return id_;
 	}
 
 }

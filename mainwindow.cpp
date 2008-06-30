@@ -70,9 +70,9 @@ namespace Roster {
 		c1->setAvatar(QIcon("icons/avatar.png"));
 		c2->setAvatar(QIcon("icons/remko.jpg"));
 
-		c1->setStatus("working on GSoC");
-		c4->setStatus("relaxing");
-		c5->setStatus("<3 Juliet");
+//		c1->setStatus("working on GSoC");
+//		c4->setStatus("relaxing");
+//		c5->setStatus("<3 Juliet");
 
 		Resource* r1 = new Resource("Home", 6);
 		Resource* r2 = new Resource("Work", 4);
@@ -85,9 +85,9 @@ namespace Roster {
 		r1->setStatus("Working on GSoC");
 		r3->setStatus("<3 Juliet");
 
-		c1->addItem(r1);
-		c1->addItem(r2);
-		c5->addItem(r3);
+		c1->addResource(r1);
+		c1->addResource(r2);
+		c5->addResource(r3);
 
 		Group* g1 = new Group("Group #1");
 		Group* g2 = new Group("Subgroup #2");

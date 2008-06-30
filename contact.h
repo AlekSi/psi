@@ -6,9 +6,10 @@
 #include "groupitem.h"
 
 namespace Roster {
-
+	class Resource;
+	
 	// single contact on roster
-	class Contact : public GroupItem {
+	class Contact : public Item {
 		public:
 			Contact(const QString& name, const QString& jid);
 			~Contact();
@@ -18,12 +19,14 @@ namespace Roster {
 			const QIcon& getIcon() const;
 			const QIcon& getAvatar() const;
 			const QString getStatus() const;
+			const QList<Resource*>& getResources() const;
 
 			void setName(const QString& name);
 			void setJid(const QString& jid);
 			void setIcon(const QIcon& icon);
 			void setAvatar(const QIcon& avatar);
-			void setStatus(const QString& status);
+
+			void addResource(Resource* resource);
 
 		private:
 			QString name_;
@@ -31,6 +34,7 @@ namespace Roster {
 			QString status_;
 			QIcon icon_;
 			QIcon avatar_;
+			QList<Resource*> resources_;
 	};
 }
 
