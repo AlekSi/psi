@@ -6,9 +6,6 @@ namespace Roster {
 	}
 
 	GroupItem::~GroupItem() {
-		    while (!items_.isEmpty()) {
-				delete items_.takeFirst();
-			}
 	}
 
 	int GroupItem::getNbItems() const {

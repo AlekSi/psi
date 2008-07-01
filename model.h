@@ -46,6 +46,8 @@ namespace Roster {
 
 			void itemUpdated(Item* item);
 			void itemAdded(Item* item);
+			void itemRemoved(Item* item);
+			void itemToBeRemoved(Item* item);
 
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;

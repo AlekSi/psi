@@ -23,7 +23,9 @@ namespace Roster {
 		view_->setItemDelegate(new Delegate);
 		model_ = new Model(data_);
 		view_->setModel(model_);
+
 		model_->setManager(manager_);
+		view_->setManager(manager_);
 
 		setCentralWidget(view_);
 		setupMenus();

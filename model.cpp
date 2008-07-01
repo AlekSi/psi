@@ -26,6 +26,7 @@ namespace Roster {
 		}
 
 		Item* item = static_cast<Item*>(index.internalPointer());
+		Q_ASSERT(item);
 
 		if ( role == Qt::DisplayRole or role == Qt::EditRole ) { // name
 			if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
@@ -173,6 +174,7 @@ namespace Roster {
 
 	QModelIndex Model::index(int row, int column, const QModelIndex& parent) const {
 		Item* item = static_cast<Item*>(parent.internalPointer());
+		Q_ASSERT(item or !parent.isValid());
 		if ( parent.isValid() and dynamic_cast<Contact*>(item) ) {
 			Contact* contact = dynamic_cast<Contact*>(item);
 			if ( row < contact->getResources().size() ) {
@@ -201,6 +203,7 @@ namespace Roster {
 		}
 
 		Item* item = static_cast<Item*>(index.internalPointer());
+		Q_ASSERT(item);
 		Item* parent = item->getParent();
 
 		if (parent == rosterlist_) {
@@ -277,6 +280,8 @@ namespace Roster {
 				if ( contact ) {
 					if ( action == Qt::CopyAction ) {
 						manager_->copyContact(contact, parentGroup);
+					} else if ( action == Qt::MoveAction ) {
+						manager_->moveContact(contact, parentGroup);
 					}
 				}
 			}
@@ -319,6 +324,8 @@ namespace Roster {
 		manager_ = manager;
 		connect(manager_, SIGNAL(itemUpdated(Item*)), SLOT(itemUpdated(Item*)));
 		connect(manager_, SIGNAL(itemAdded(Item*)), SLOT(itemAdded(Item*)));
+		connect(manager_, SIGNAL(itemRemoved(Item*)), SLOT(itemRemoved(Item*)));
+		connect(manager_, SIGNAL(itemToBeRemoved(Item*)), SLOT(itemToBeRemoved(Item*)));
 	}
 
 	Manager* Model::getManager() const {
@@ -344,6 +351,16 @@ namespace Roster {
 	void Model::itemAdded(Item* item) {
 		Q_UNUSED(item);
 		emit layoutChanged();
+	}
+
+	void Model::itemToBeRemoved(Item* item) {
+		QModelIndex index = getIndex(item->getId());
+		beginRemoveRows(index.parent(), index.row(), index.row());
+	}
+
+	void Model::itemRemoved(Item* item) {
+		Q_UNUSED(item);
+		endRemoveRows();
 	}
 }
 

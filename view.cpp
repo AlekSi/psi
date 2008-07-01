@@ -12,6 +12,7 @@
 #include "contact.h"
 #include "roster.h"
 #include "resource.h"
+#include "manager.h"
 
 namespace Roster {
 
@@ -38,6 +39,10 @@ namespace Roster {
 
 		connect(this, SIGNAL(expanded(const QModelIndex&)), SLOT(itemExpanded(const QModelIndex&)));
 		connect(this, SIGNAL(collapsed(const QModelIndex&)), SLOT(itemCollapsed(const QModelIndex&)));
+	}
+
+	void View::setManager(Manager* manager) {
+		manager_ = manager;
 	}
 
 	/* initialize context menu actions */
@@ -270,6 +275,13 @@ namespace Roster {
 	}
 
 	void View::menuRemoveContact() {
+		qDebug() << "removing contact";
+		Item* item = senderItemIndex().data(ItemRole).value<Item*>();
+		qDebug() << "blah blah";
+		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+			manager_->removeContact(contact);
+		}
+		qDebug() << "aaa";
 	}
 
 	void View::menuSendFile() {

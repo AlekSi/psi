@@ -5,15 +5,17 @@
 #include <QObject>
 #include <QModelIndex>
 
-#include "item.h"
-
 namespace Roster {
+	class Item;
+	class Manager;
 
     class View : public QTreeView {
 		Q_OBJECT
 
 		public:
 			View();
+
+			void setManager(Manager* manager);
 
 		public slots:
 			void showContextMenu(const QPoint& position);
@@ -43,7 +45,6 @@ namespace Roster {
 			void itemCollapsed(const QModelIndex& index);
 
 		private:
-			Item* getItem(const QModelIndex& index) const;
 			QModelIndex senderItemIndex() const;
 			void initMenu();
 
@@ -52,6 +53,8 @@ namespace Roster {
 			QAction *goOnlineAct_, *goOfflineAct_, *xmlConsoleAct_; // Roster menu
 			QAction *sendToAllAct_; // Multiple contacts menu
 			QAction *sendMessageToResourceAct_, *openChatToResourceAct_, *sendFileToResourceAct_; // Resource menu
+
+			Manager* manager_;
     };
 }
 
