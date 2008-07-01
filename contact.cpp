@@ -5,7 +5,15 @@
 
 namespace Roster {
 
-	Contact::Contact(const QString& name, const QString& jid) : name_(name), jid_(jid) {
+	Contact::Contact(const QString& name, const QString& jid) : Item(), name_(name), jid_(jid) {
+	}
+
+	Contact::Contact(const Contact& c) : Item() {
+		name_ = c.name_;
+		jid_ = c.jid_;
+		icon_ = c.icon_;
+		avatar_ = c.avatar_;	
+		resources_ = c.resources_;
 	}
 
 	Contact::~Contact() {

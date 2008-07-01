@@ -247,19 +247,11 @@ namespace Roster {
 			return false;
 		}
 
-		Item* parentItem = parent.data(ItemRole).value<Item*>();
-
-		if ( Contact* contact = dynamic_cast<Contact*>(parentItem) ) {
-			qDebug() << "Following items has been dropped on contact" << contact->getName();
-		} else if ( Group* group = dynamic_cast<Group*>(parentItem) ) {
-			qDebug() << "Following items has been dropped on group" << group->getName();
-		} else if ( Roster* roster = dynamic_cast<Roster*>(parentItem) ) {
-			qDebug() << "Following items has been dropped on roster" << roster->getName();
-		}
-		
+		/* get indexes for dragged items */
 		QByteArray encodedData = data->data("application/x-psi-rosteritem");
 		QDataStream stream(&encodedData, QIODevice::ReadOnly);
 
+		QList<Item*> items;
 		while (!stream.atEnd()) {
 			unsigned int id;
 			stream >> id;
@@ -271,14 +263,28 @@ namespace Roster {
 			}
 
 			QModelIndex index = indexList.at(0);
-		
 			Item* item = index.data(ItemRole).value<Item*>();
-			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-				qDebug() << "+ contact" << contact->getName();
-			} else if ( Group* group = dynamic_cast<Group*>(item) ) {
-				qDebug() << "+ group" << group->getName();
-			} 
+			items.append(item);
 		}
+		
+		Item* parentItem = parent.data(ItemRole).value<Item*>();
+
+		if ( Contact* parentContact = dynamic_cast<Contact*>(parentItem) ) {
+			qDebug() << items.size() << "item(s) has been dropped on contact" << parentContact->getName();
+		} else if ( Group* parentGroup = dynamic_cast<Group*>(parentItem) ) {
+			foreach(Item* item, items) {
+				Contact* contact = dynamic_cast<Contact*>(item);
+				if ( contact ) {
+					if ( action == Qt::CopyAction ) {
+						manager_->copyContact(contact, parentGroup);
+					}
+				}
+			}
+			qDebug() << "Following items has been dropped on group" << parentGroup->getName();
+		} else if ( Roster* parentRoster = dynamic_cast<Roster*>(parentItem) ) {
+			qDebug() << items.size() << "item(s) has been dropped on roster" << parentRoster->getName();
+		}
+		
 
 		if ( action == Qt::CopyAction ) {
 			qDebug() << "action was 'copy'";
@@ -312,6 +318,7 @@ namespace Roster {
 	void Model::setManager(Manager* manager) {
 		manager_ = manager;
 		connect(manager_, SIGNAL(itemUpdated(Item*)), SLOT(itemUpdated(Item*)));
+		connect(manager_, SIGNAL(itemAdded(Item*)), SLOT(itemAdded(Item*)));
 	}
 
 	Manager* Model::getManager() const {
@@ -332,6 +339,11 @@ namespace Roster {
 		if ( index.isValid() ) {
 			emit dataChanged(index, index);
 		}
+	}
+
+	void Model::itemAdded(Item* item) {
+		Q_UNUSED(item);
+		emit layoutChanged();
 	}
 }
 

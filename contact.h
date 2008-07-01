@@ -13,6 +13,7 @@ namespace Roster {
 	class Contact : public Item {
 		public:
 			Contact(const QString& name, const QString& jid);
+			Contact(const Contact& c);
 			~Contact();
 
 			const QString& getName() const;
@@ -32,7 +33,6 @@ namespace Roster {
 		private:
 			QString name_;
 			QString jid_;
-			QString status_;
 			QIcon icon_;
 			QIcon avatar_;
 			QList<Resource*> resources_;

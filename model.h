@@ -45,6 +45,7 @@ namespace Roster {
 			void setShowStatus(bool showStatus);
 
 			void itemUpdated(Item* item);
+			void itemAdded(Item* item);
 
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;
