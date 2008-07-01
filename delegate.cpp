@@ -12,6 +12,7 @@
 #include "roster.h"
 #include "group.h"
 #include "model.h"
+#include "manager.h"
 
 /* FILE TODO:
  * + add more magic numbers
@@ -111,9 +112,15 @@ namespace Roster {
 	}
 
 	void Delegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const {
-		Q_UNUSED(model);
+		Manager* manager = static_cast<Model*>(model)->getManager();
+		Item* item = index.data(ItemRole).value<Item*>();
 
-		qDebug() << "Renaming" << index.data().toString() << "to" << static_cast<QLineEdit*>(editor)->text();
+		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+			manager->renameContact(contact, static_cast<QLineEdit*>(editor)->text());
+		} else if ( Group* group = dynamic_cast<Group*>(item) ) {
+			Q_UNUSED(group);
+			qDebug() << "Renaming" << index.data().toString() << "to" << static_cast<QLineEdit*>(editor)->text();
+		}
 	}
 }
 

@@ -14,7 +14,8 @@ HEADERS += \
 	$$PWD/delegate.h \
 	$$PWD/rosterlist.h \
 	$$PWD/mainwindow.h \
-	$$PWD/resource.h
+	$$PWD/resource.h \
+	$$PWD/manager.h
 
 SOURCES += \
 	$$PWD/main.cpp \
@@ -28,5 +29,6 @@ SOURCES += \
 	$$PWD/delegate.cpp \
 	$$PWD/rosterlist.cpp \
 	$$PWD/mainwindow.cpp \
-	$$PWD/resource.cpp
+	$$PWD/resource.cpp \
+	$$PWD/manager.cpp
 

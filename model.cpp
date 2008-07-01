@@ -14,6 +14,7 @@
 #include "contact.h"
 #include "group.h"
 #include "resource.h"
+#include "manager.h"
 
 namespace Roster {
 	Model::Model(RosterList* rosterlist) : rosterlist_(rosterlist), showAvatars_(true), showStatus_(true) {
@@ -306,6 +307,31 @@ namespace Roster {
 	void Model::setShowStatus(bool showStatus) {
 		showStatus_ = showStatus;
 		emit layoutChanged();
+	}
+
+	void Model::setManager(Manager* manager) {
+		manager_ = manager;
+		connect(manager_, SIGNAL(itemUpdated(Item*)), SLOT(itemUpdated(Item*)));
+	}
+
+	Manager* Model::getManager() const {
+		return manager_;
+	}
+
+	QModelIndex Model::getIndex(const unsigned int id) const {
+			QModelIndexList indexList = match(index(0, 0, QModelIndex()), IdRole, id, 1, Qt::MatchWrap | Qt::MatchExactly | Qt::MatchRecursive);
+			if ( indexList.isEmpty() ) {
+				return QModelIndex();
+			}
+
+			return indexList.at(0);
+	}
+
+	void Model::itemUpdated(Item* item) {
+		QModelIndex index = getIndex(item->getId());
+		if ( index.isValid() ) {
+			emit dataChanged(index, index);
+		}
 	}
 }
 

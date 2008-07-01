@@ -8,6 +8,9 @@ class QTreeView;
 
 namespace Roster {
 	class RosterList;
+	class Manager;
+	class Model;
+	class View;
 
 	class MainWindow : public QMainWindow {
 		Q_OBJECT
@@ -19,9 +22,10 @@ namespace Roster {
 			void setupTestData();
 			void setupMenus();
 
-			QAbstractItemModel* model_;
-			QTreeView* view_;
+			Model* model_;
+			View* view_;
 			RosterList* data_;
+			Manager* manager_;
 
 			QAction *toggleAvatarsAct_, *toggleStatusAct_;
 	};

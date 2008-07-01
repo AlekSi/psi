@@ -9,6 +9,7 @@
 
 namespace Roster {
 	class RosterList;
+	class Manager;
 
 	enum Roles {
 		ItemRole = Qt::UserRole,
@@ -28,22 +29,28 @@ namespace Roster {
 			QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 			int columnCount(const QModelIndex& index) const;
 			QModelIndex parent(const QModelIndex& index) const;
-			QModelIndex index(int row, int column, const QModelIndex& parent) const;
+			QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
 			QMimeData* mimeData(const QModelIndexList &indexes) const;
 			bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
 			Qt::DropActions supportedDropActions() const;
 			QStringList mimeTypes() const;
 
 			Item* getItem(const QModelIndex& index) const;
+			QModelIndex getIndex(const unsigned int id) const;
+			void setManager(Manager* manager);
+			Manager* getManager() const;
 
 		public slots:
 			void setShowAvatars(bool showAvatars);
 			void setShowStatus(bool showStatus);
 
+			void itemUpdated(Item* item);
+
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;
 
 			RosterList* rosterlist_;
+			Manager* manager_;
 			bool showAvatars_, showStatus_;
 	};
 };

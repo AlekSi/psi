@@ -12,15 +12,18 @@
 #include "group.h"
 #include "contact.h"
 #include "resource.h"
+#include "manager.h"
 
 namespace Roster {
 	MainWindow::MainWindow() {
 		setupTestData();
 
+		manager_ = new Manager;
 		view_ = new View;
 		view_->setItemDelegate(new Delegate);
 		model_ = new Model(data_);
 		view_->setModel(model_);
+		model_->setManager(manager_);
 
 		setCentralWidget(view_);
 		setupMenus();

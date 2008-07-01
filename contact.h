@@ -2,6 +2,7 @@
 #define ROSTER_CONTACT_H
 
 #include <QString>
+#include <QIcon>
 
 #include "groupitem.h"
 
