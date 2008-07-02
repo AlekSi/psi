@@ -362,5 +362,18 @@ namespace Roster {
 		Q_UNUSED(item);
 		endRemoveRows();
 	}
+
+	bool Model::setData(const QModelIndex& index, const QVariant& value, int role) {
+		Q_UNUSED(role);
+
+		Item* item = index.data(ItemRole).value<Item*>();
+
+		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+			manager_->renameContact(contact, value.toString());
+			return true;
+		}
+
+		return false;
+	}
 }
 

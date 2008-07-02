@@ -110,17 +110,5 @@ namespace Roster {
 	void Delegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 		editor->setGeometry(nameRect(option, index));
 	}
-
-	void Delegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const {
-		Manager* manager = static_cast<Model*>(model)->getManager();
-		Item* item = index.data(ItemRole).value<Item*>();
-
-		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-			manager->renameContact(contact, static_cast<QLineEdit*>(editor)->text());
-		} else if ( Group* group = dynamic_cast<Group*>(item) ) {
-			Q_UNUSED(group);
-			qDebug() << "Renaming" << index.data().toString() << "to" << static_cast<QLineEdit*>(editor)->text();
-		}
-	}
 }
 

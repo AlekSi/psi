@@ -34,6 +34,7 @@ namespace Roster {
 			bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
 			Qt::DropActions supportedDropActions() const;
 			QStringList mimeTypes() const;
+			bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
 			Item* getItem(const QModelIndex& index) const;
 			QModelIndex getIndex(const unsigned int id) const;
