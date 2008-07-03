@@ -7,7 +7,7 @@ class QAbstractItemModel;
 class QTreeView;
 
 namespace Roster {
-	class RosterList;
+	class RootItem;
 	class Manager;
 	class Model;
 	class View;
@@ -24,7 +24,7 @@ namespace Roster {
 
 			Model* model_;
 			View* view_;
-			RosterList* data_;
+			RootItem* data_;
 			Manager* manager_;
 
 			QAction *toggleAvatarsAct_, *toggleStatusAct_;

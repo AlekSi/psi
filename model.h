@@ -1,14 +1,13 @@
-#ifndef rosterlist_MODEL_H
-#define rosterlist_MODEL_H
+#ifndef ROSTER_MODEL_H
+#define ROSTER_MODEL_H
 
 #include <QAbstractItemModel>
 #include <QVariant>
 #include <QModelIndex>
 
-#include "item.h"
-
 namespace Roster {
-	class RosterList;
+	class Item;
+	class RootItem;
 	class Manager;
 
 	enum Roles {
@@ -22,7 +21,7 @@ namespace Roster {
 		Q_OBJECT
 
 		public:
-			Model(RosterList* rosterlist);
+			Model(RootItem* root);
 			int rowCount(const QModelIndex& parent = QModelIndex()) const;
 			QVariant data(const QModelIndex& index, int role) const;
 			Qt::ItemFlags flags(const QModelIndex& index) const;
@@ -53,7 +52,7 @@ namespace Roster {
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;
 
-			RosterList* rosterlist_;
+			RootItem* root_;
 			Manager* manager_;
 			bool showAvatars_, showStatus_;
 	};

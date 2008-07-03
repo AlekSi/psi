@@ -7,7 +7,7 @@
 #include "view.h"
 #include "delegate.h"
 
-#include "rosterlist.h"
+#include "rootitem.h"
 #include "roster.h"
 #include "group.h"
 #include "contact.h"
@@ -58,7 +58,7 @@ namespace Roster {
 	}
 
 	void MainWindow::setupTestData() {
-		data_ = new RosterList;
+		data_ = new RootItem;
 
 		Contact* c1 = new Contact("Gislan", "gislan@utumno.pl");
 		Contact* c2 = new Contact("Remko", "remko@el-tramo.be");

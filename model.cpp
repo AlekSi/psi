@@ -7,7 +7,7 @@
 #include <QTextDocument>
 
 #include "roster.h"
-#include "rosterlist.h"
+#include "rootitem.h"
 #include "model.h"
 #include "groupitem.h"
 #include "item.h"
@@ -17,7 +17,7 @@
 #include "manager.h"
 
 namespace Roster {
-	Model::Model(RosterList* rosterlist) : rosterlist_(rosterlist), showAvatars_(true), showStatus_(true) {
+	Model::Model(RootItem* root) : root_(root), showAvatars_(true), showStatus_(true) {
 	}
 
 	QVariant Model::data(const QModelIndex &index, int role) const {
@@ -140,7 +140,7 @@ namespace Roster {
 				num = contact->getResources().size();
 			}
 		} else {
-			num = rosterlist_->getNbItems();
+			num = root_->getNbItems();
 		}
 
 		return num;
@@ -186,7 +186,7 @@ namespace Roster {
 				parentItem = dynamic_cast<GroupItem*>(item);
 			} 
 			else {
-				parentItem = rosterlist_;
+				parentItem = root_;
 			}
 
 			if ( row < parentItem->getNbItems() ) {
@@ -206,7 +206,7 @@ namespace Roster {
 		Q_ASSERT(item);
 		Item* parent = item->getParent();
 
-		if (parent == rosterlist_) {
+		if (parent == root_) {
 			return QModelIndex();
 		}
 		else {
