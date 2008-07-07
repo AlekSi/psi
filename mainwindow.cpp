@@ -31,6 +31,7 @@ namespace Roster {
 
 		model_->setManager(manager_);
 		view_->setManager(manager_);
+		model_->setRosterBuilder(rb_);
 
 		setCentralWidget(view_);
 		setupMenus();
@@ -48,18 +49,23 @@ namespace Roster {
 	void MainWindow::setupMenus() {
 		toggleAvatarsAct_ = new QAction(tr("Show avatars"), this);
 		toggleStatusAct_ = new QAction(tr("Show status messages"), this);
+		toggleJoinedAccountsAct_ = new QAction(tr("Join all accounts"), this);
 
 		toggleAvatarsAct_->setCheckable(true);
 		toggleAvatarsAct_->setChecked(true);
 		toggleStatusAct_->setCheckable(true);
 		toggleStatusAct_->setChecked(true);
-
+		toggleJoinedAccountsAct_->setCheckable(true);
+		toggleJoinedAccountsAct_->setChecked(true);
+		
 		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
 		connect(toggleStatusAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowStatus(bool)));
+		connect(toggleJoinedAccountsAct_, SIGNAL(toggled(bool)), model_, SLOT(setJoinedAccounts(bool)));
 
 		QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
 		viewMenu->addAction(toggleAvatarsAct_);
 		viewMenu->addAction(toggleStatusAct_);
+		viewMenu->addAction(toggleJoinedAccountsAct_);
 	}
 
 	void MainWindow::buildTestRoster() {
@@ -86,7 +92,7 @@ namespace Roster {
 		rb_->addItem("gislan@jabster.pl", f);
 
 		rb_->buildJoinedAccounts(data_);
-		rb_->buildAllAccounts(data_);
+	//	rb_->buildAllAccounts(data_);
 	}
 
 	void MainWindow::setupTestData() {

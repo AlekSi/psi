@@ -30,7 +30,7 @@ namespace Roster {
 			Manager* manager_;
 			RosterBuilder* rb_;
 
-			QAction *toggleAvatarsAct_, *toggleStatusAct_;
+			QAction *toggleAvatarsAct_, *toggleStatusAct_, *toggleJoinedAccountsAct_;
 	};
 }
 

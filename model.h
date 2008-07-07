@@ -9,6 +9,7 @@ namespace Roster {
 	class Item;
 	class RootItem;
 	class Manager;
+	class RosterBuilder;
 
 	enum Roles {
 		ItemRole = Qt::UserRole,
@@ -39,10 +40,12 @@ namespace Roster {
 			QModelIndex getIndex(const unsigned int id) const;
 			void setManager(Manager* manager);
 			Manager* getManager() const;
+			void setRosterBuilder(RosterBuilder* rb);
 
 		public slots:
 			void setShowAvatars(bool showAvatars);
 			void setShowStatus(bool showStatus);
+			void setJoinedAccounts(bool opt);
 
 			void itemUpdated(Item* item);
 			void itemAdded(Item* item);
@@ -54,6 +57,7 @@ namespace Roster {
 
 			RootItem* root_;
 			Manager* manager_;
+			RosterBuilder* rb_;
 			bool showAvatars_, showStatus_;
 	};
 };

@@ -15,6 +15,7 @@
 #include "group.h"
 #include "resource.h"
 #include "manager.h"
+#include "rosterbuilder.h"
 
 namespace Roster {
 	Model::Model(RootItem* root) : root_(root), showAvatars_(true), showStatus_(true) {
@@ -374,6 +375,18 @@ namespace Roster {
 		}
 
 		return false;
+	}
+
+	void Model::setRosterBuilder(RosterBuilder* rb) {
+		rb_ = rb;
+	}
+
+	void Model::setJoinedAccounts(bool opt) {
+		if ( opt ) {
+			rb_->buildJoinedAccounts(root_);
+		} else {
+			rb_->buildAllAccounts(root_);
+		}
 	}
 }
 
