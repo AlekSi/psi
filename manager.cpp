@@ -3,6 +3,7 @@
 #include "contact.h"
 #include "manager.h"
 #include "group.h"
+#include "roster.h"
 
 namespace Roster {
 	void Manager::renameContact(Contact* contact, QString newName) {
@@ -26,7 +27,7 @@ namespace Roster {
 
 		emit itemRemoved(contact);
 
-		delete contact;
+		delete contact; // FIXME: shouldn't this be done in RosterBuilder?
 	}
 
 	void Manager::moveContact(Contact* contact, Group* group) {
@@ -37,6 +38,37 @@ namespace Roster {
 		
 		group->addItem(contact);
 		emit itemAdded(contact);
+	}
+
+	void Manager::addContact(Contact* contact, Group* group) {
+		group->addItem(contact);
+
+		emit itemAdded(contact);
+	}
+
+	void Manager::addGroup(Group* group, GroupItem* parent) {
+		parent->addItem(group);
+
+		emit itemAdded(group);
+	}
+
+	void Manager::addRoster(Roster* roster, GroupItem* parent) {
+		parent->addItem(roster);
+
+		emit itemAdded(roster);
+	}
+
+	void Manager::removeItem(Item* item) { 
+		// FIXME: isn't that too generic? should we use removeContact / removeGroup / etc ?
+		// FIXME: resources not supported
+		emit itemToBeRemoved(item);
+
+		GroupItem* parent = static_cast<GroupItem*>(item->getParent());
+		parent->removeItem(item);
+
+		emit itemRemoved(item);
+
+		delete item; // FIXME: shouldn't this be done in RosterBuilder?
 	}
 }
 

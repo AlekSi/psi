@@ -30,5 +30,8 @@ namespace Roster {
 		 return items_.indexOf(item);
 	}
 
+	const QList<Item*>& GroupItem::getItems() const {
+		return items_;
+	}
 }
 

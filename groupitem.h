@@ -18,6 +18,7 @@ namespace Roster {
 			virtual int getIndexOf(Item* item) const;
 			virtual void removeItem(Item* item);
 			virtual void addItem(Item* item);
+			virtual const QList<Item*>& getItems() const;
 
 		protected:
 			QList<Item*> items_;

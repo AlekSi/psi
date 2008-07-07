@@ -5,6 +5,9 @@ namespace Roster {
 	Roster::Roster() {
 	}
 
+	Roster::Roster(const QString& name) : name_(name) {
+	}
+
 	Roster::~Roster() {
 	}
 

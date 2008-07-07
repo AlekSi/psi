@@ -8,7 +8,9 @@ namespace Roster {
 	class Group;
 	class Contact;
 	class Item;
-
+	class GroupItem;
+	class Roster;
+	
 	class Manager : public QObject {
 		Q_OBJECT
 
@@ -17,6 +19,12 @@ namespace Roster {
 			void copyContact(Contact* contact, Group* group);
 			void removeContact(Contact* contact);
 			void moveContact(Contact* contact, Group* group);
+			void addContact(Contact* contact, Group* group);
+
+			void addGroup(Group* group, GroupItem* parent);
+			void addRoster(Roster* roster, GroupItem* parent);
+
+			void removeItem(Item* item);
 
 		signals:
 			void itemUpdated(Item* item);

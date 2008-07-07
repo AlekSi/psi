@@ -11,6 +11,7 @@ namespace Roster {
 	class Manager;
 	class Model;
 	class View;
+	class RosterBuilder;
 
 	class MainWindow : public QMainWindow {
 		Q_OBJECT
@@ -20,12 +21,14 @@ namespace Roster {
 
 		private:
 			void setupTestData();
+			void buildTestRoster();
 			void setupMenus();
 
 			Model* model_;
 			View* view_;
 			RootItem* data_;
 			Manager* manager_;
+			RosterBuilder* rb_;
 
 			QAction *toggleAvatarsAct_, *toggleStatusAct_;
 	};

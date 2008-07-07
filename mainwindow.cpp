@@ -13,12 +13,17 @@
 #include "contact.h"
 #include "resource.h"
 #include "manager.h"
+#include "rosterbuilder.h"
 
 namespace Roster {
 	MainWindow::MainWindow() {
-		setupTestData();
+//		setupTestData();
 
 		manager_ = new Manager;
+		rb_ = new RosterBuilder(manager_);
+
+		buildTestRoster();
+
 		view_ = new View;
 		view_->setItemDelegate(new Delegate);
 		model_ = new Model(data_);
@@ -33,8 +38,8 @@ namespace Roster {
 		view_->expandAll();
 
 		// FIXME: hide resources by default ;-)
-		view_->collapse(model_->index(0, 0, model_->index(0, 0)));
-		view_->collapse(model_->match(model_->index(0, 0), Qt::DisplayRole, "Romeo", 1, Qt::MatchRecursive).at(0));
+		//view_->collapse(model_->index(0, 0, model_->index(0, 0)));
+		//view_->collapse(model_->match(model_->index(0, 0), Qt::DisplayRole, "Romeo", 1, Qt::MatchRecursive).at(0));
 
 		view_->resizeColumnToContents(0);
 		resize(200, 350);
@@ -55,6 +60,33 @@ namespace Roster {
 		QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
 		viewMenu->addAction(toggleAvatarsAct_);
 		viewMenu->addAction(toggleStatusAct_);
+	}
+
+	void MainWindow::buildTestRoster() {
+		data_ = new RootItem;
+
+		QList<QString> generic;
+		generic << "Generic";
+		QList<QString> nested;
+		nested << "Group #1::Group #2";
+		XMPPRosterItem* a = new XMPPRosterItem("Gislan", "gislan@utumno.pl", generic);
+		XMPPRosterItem* b = new XMPPRosterItem("Remko", "remko@el-tramo.be", generic);
+		XMPPRosterItem* c = new XMPPRosterItem("Kev", "kevdadrum@jabber.ex.ac.uk", nested);
+
+		rb_->addItem("gislan@utumno.pl", a);
+		rb_->addItem("gislan@utumno.pl", b);
+		rb_->addItem("gislan@utumno.pl", c);
+
+		XMPPRosterItem* d = new XMPPRosterItem("Romeo", "romeo@jabber.org", generic);
+		XMPPRosterItem* e = new XMPPRosterItem("Juliet", "juliet@jabber.org", generic);
+		XMPPRosterItem* f = new XMPPRosterItem("Hamlet", "hamlet@jabber.org", nested);
+
+		rb_->addItem("gislan@jabster.pl", d);
+		rb_->addItem("gislan@jabster.pl", e);
+		rb_->addItem("gislan@jabster.pl", f);
+
+		rb_->buildJoinedAccounts(data_);
+		rb_->buildAllAccounts(data_);
 	}
 
 	void MainWindow::setupTestData() {

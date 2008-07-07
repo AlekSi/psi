@@ -15,7 +15,9 @@ HEADERS += \
 	$$PWD/rootitem.h \
 	$$PWD/mainwindow.h \
 	$$PWD/resource.h \
-	$$PWD/manager.h
+	$$PWD/manager.h \
+	$$PWD/xmpprosteritem.h \
+	$$PWD/rosterbuilder.h
 
 SOURCES += \
 	$$PWD/main.cpp \
@@ -30,5 +32,7 @@ SOURCES += \
 	$$PWD/rootitem.cpp \
 	$$PWD/mainwindow.cpp \
 	$$PWD/resource.cpp \
-	$$PWD/manager.cpp
+	$$PWD/manager.cpp \
+	$$PWD/xmpprosteritem.cpp \
+	$$PWD/rosterbuilder.cpp
 

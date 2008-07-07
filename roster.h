@@ -11,6 +11,7 @@ namespace Roster {
 	class Roster : public GroupItem {
 		public:
 			Roster();
+			Roster(const QString& name);
 			~Roster();
 
 			const QString& getName() const;
