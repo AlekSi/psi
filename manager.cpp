@@ -21,10 +21,7 @@ namespace Roster {
 
 	void Manager::removeContact(Contact* contact) {
 		emit itemToBeRemoved(contact);
-
-		GroupItem* parent = static_cast<GroupItem*>(contact->getParent());
-		parent->removeItem(contact);
-
+		contact->getParent()->removeItem(contact);
 		emit itemRemoved(contact);
 
 		delete contact; // FIXME: shouldn't this be done in RosterBuilder?
@@ -32,8 +29,7 @@ namespace Roster {
 
 	void Manager::moveContact(Contact* contact, Group* group) {
 		emit itemToBeRemoved(contact);
-		GroupItem* parent = static_cast<GroupItem*>(contact->getParent());
-		parent->removeItem(contact);
+		contact->getParent()->removeItem(contact);
 		emit itemRemoved(contact);
 		
 		group->addItem(contact);
@@ -60,12 +56,8 @@ namespace Roster {
 
 	void Manager::removeItem(Item* item) { 
 		// FIXME: isn't that too generic? should we use removeContact / removeGroup / etc ?
-		// FIXME: resources not supported
 		emit itemToBeRemoved(item);
-
-		GroupItem* parent = static_cast<GroupItem*>(item->getParent());
-		parent->removeItem(item);
-
+		item->getParent()->removeItem(item);
 		emit itemRemoved(item);
 
 		delete item; // FIXME: shouldn't this be done in RosterBuilder?

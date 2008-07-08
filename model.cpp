@@ -103,7 +103,8 @@ namespace Roster {
 		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid()));
 
-			foreach(Resource* resource, contact->getResources()) {
+			foreach(Item* subitem, contact->getItems()) {
+				Resource* resource = dynamic_cast<Resource*>(subitem);
 				tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg(resource->getName(), QString::number(resource->getPriority()));
 
 				if (! resource->getStatus().isEmpty()) {
@@ -134,11 +135,8 @@ namespace Roster {
 		int num = 0;
 
 		if (parent.isValid()) {
-			Item* item = static_cast<Item*>(parent.internalPointer());
-			if ( GroupItem* parentItem = dynamic_cast<GroupItem*>(item) ) {
-				num = parentItem->getNbItems();
-			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-				num = contact->getResources().size();
+			if ( GroupItem* item = static_cast<GroupItem*>(parent.internalPointer()) ) {
+				num = item->getNbItems();
 			}
 		} else {
 			num = root_->getNbItems();
@@ -174,25 +172,15 @@ namespace Roster {
 	}
 
 	QModelIndex Model::index(int row, int column, const QModelIndex& parent) const {
-		Item* item = static_cast<Item*>(parent.internalPointer());
-		Q_ASSERT(item or !parent.isValid());
-		if ( parent.isValid() and dynamic_cast<Contact*>(item) ) {
-			Contact* contact = dynamic_cast<Contact*>(item);
-			if ( row < contact->getResources().size() ) {
-				return createIndex(row, column, contact->getResources().at(row));
-			}
+		GroupItem* parentItem;
+		if ( parent.isValid() ) {
+			parentItem = static_cast<GroupItem*>(parent.internalPointer());
 		} else {
-			GroupItem* parentItem;
-			if (parent.isValid()) {
-				parentItem = dynamic_cast<GroupItem*>(item);
-			} 
-			else {
-				parentItem = root_;
-			}
+			parentItem = root_;
+		}
 
-			if ( row < parentItem->getNbItems() ) {
-				return createIndex(row, column, parentItem->getItem(row));
-			}
+		if ( row < parentItem->getNbItems() ) {
+			return createIndex(row, column, parentItem->getItem(row));
 		}
 
 		return QModelIndex();
@@ -211,7 +199,7 @@ namespace Roster {
 			return QModelIndex();
 		}
 		else {
-			GroupItem* grandparent = dynamic_cast<GroupItem*>(parent->getParent());
+			GroupItem* grandparent = parent->getParent();
 			return createIndex(grandparent->getIndexOf(parent), 0, parent);
 		}
 	}

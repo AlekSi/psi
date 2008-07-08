@@ -5,15 +5,15 @@
 
 namespace Roster {
 
-	Contact::Contact(const QString& name, const QString& jid) : Item(), name_(name), jid_(jid) {
+	Contact::Contact(const QString& name, const QString& jid) : GroupItem(), name_(name), jid_(jid) {
 	}
 
-	Contact::Contact(const Contact& c) : Item() {
+	Contact::Contact(const Contact& c) : GroupItem() {
 		name_ = c.name_;
 		jid_ = c.jid_;
 		icon_ = c.icon_;
 		avatar_ = c.avatar_;	
-		resources_ = c.resources_;
+		items_ = c.items_;
 	}
 
 	Contact::~Contact() {
@@ -55,7 +55,8 @@ namespace Roster {
 		int maxPriority = -1;
 		QString status;
 		
-		foreach(Resource* resource, resources_) {
+		foreach(Item* item, items_) {
+			Resource* resource = static_cast<Resource*>(item);
 			if ( maxPriority < resource->getPriority() ) {
 				status = resource->getStatus();
 				maxPriority = resource->getPriority();
@@ -65,13 +66,10 @@ namespace Roster {
 		return status;
 	}
 
-	const QList<Resource*>& Contact::getResources() const {
-		return resources_;
-	}
-
 	void Contact::addResource(Resource* resource) {
 		resource->setParent(this);
-		resources_.append(resource);
+		items_.append(resource);
 	}
+
 }
 

@@ -10,7 +10,7 @@ namespace Roster {
 	class Resource;
 	
 	// single contact on roster
-	class Contact : public Item {
+	class Contact : public GroupItem {
 		public:
 			Contact(const QString& name, const QString& jid);
 			Contact(const Contact& c);
@@ -21,7 +21,6 @@ namespace Roster {
 			const QIcon& getIcon() const;
 			const QIcon& getAvatar() const;
 			const QString getStatus() const;
-			const QList<Resource*>& getResources() const;
 
 			void setName(const QString& name);
 			void setJid(const QString& jid);
@@ -35,7 +34,6 @@ namespace Roster {
 			QString jid_;
 			QIcon icon_;
 			QIcon avatar_;
-			QList<Resource*> resources_;
 	};
 }
 

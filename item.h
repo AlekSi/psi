@@ -11,13 +11,13 @@ namespace Roster {
 			Item();
 			virtual ~Item();
 
-			Item* getParent() const;
+			GroupItem* getParent() const;
 			unsigned int getId() const;
 
-			void setParent(Item* parent);
+			void setParent(GroupItem* parent);
 
 		private:
-			Item* parent_;
+			GroupItem* parent_;
 			unsigned int id_;
 	};
 }

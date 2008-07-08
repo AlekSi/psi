@@ -10,11 +10,11 @@ namespace Roster {
 	Item::~Item() {
 	}
 
-	Item* Item::getParent() const {
+	GroupItem* Item::getParent() const {
 		return parent_;
 	}
 
-	void Item::setParent(Item* parent) {
+	void Item::setParent(GroupItem* parent) {
 		parent_ = parent;
 	}
 
