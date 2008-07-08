@@ -7,7 +7,7 @@
 
 namespace Roster {
 	class Item;
-	class RootItem;
+	class Roster;
 	class Manager;
 	class RosterBuilder;
 
@@ -22,7 +22,7 @@ namespace Roster {
 		Q_OBJECT
 
 		public:
-			Model(RootItem* root);
+			Model(Roster* root);
 			int rowCount(const QModelIndex& parent = QModelIndex()) const;
 			QVariant data(const QModelIndex& index, int role) const;
 			Qt::ItemFlags flags(const QModelIndex& index) const;
@@ -55,7 +55,7 @@ namespace Roster {
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;
 
-			RootItem* root_;
+			Roster* root_;
 			Manager* manager_;
 			RosterBuilder* rb_;
 			bool showAvatars_, showStatus_;

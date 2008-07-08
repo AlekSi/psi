@@ -7,7 +7,7 @@
 #include "view.h"
 #include "delegate.h"
 
-#include "rootitem.h"
+#include "roster.h"
 #include "account.h"
 #include "group.h"
 #include "contact.h"
@@ -69,7 +69,7 @@ namespace Roster {
 	}
 
 	void MainWindow::buildTestRoster() {
-		data_ = new RootItem;
+		data_ = new Roster;
 
 		QList<QString> generic;
 		generic << "Generic";
@@ -96,7 +96,7 @@ namespace Roster {
 	}
 
 	void MainWindow::setupTestData() {
-		data_ = new RootItem;
+		data_ = new Roster;
 
 		Contact* c1 = new Contact("Gislan", "gislan@utumno.pl");
 		Contact* c2 = new Contact("Remko", "remko@el-tramo.be");

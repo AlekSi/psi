@@ -12,7 +12,7 @@ HEADERS += \
 	$$PWD/group.h \
 	$$PWD/view.h \
 	$$PWD/delegate.h \
-	$$PWD/rootitem.h \
+	$$PWD/roster.h \
 	$$PWD/mainwindow.h \
 	$$PWD/resource.h \
 	$$PWD/manager.h \
@@ -29,7 +29,7 @@ SOURCES += \
 	$$PWD/groupitem.cpp \
 	$$PWD/view.cpp \
 	$$PWD/delegate.cpp \
-	$$PWD/rootitem.cpp \
+	$$PWD/roster.cpp \
 	$$PWD/mainwindow.cpp \
 	$$PWD/resource.cpp \
 	$$PWD/manager.cpp \

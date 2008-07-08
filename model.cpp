@@ -7,7 +7,7 @@
 #include <QTextDocument>
 
 #include "account.h"
-#include "rootitem.h"
+#include "roster.h"
 #include "model.h"
 #include "groupitem.h"
 #include "item.h"
@@ -18,7 +18,7 @@
 #include "rosterbuilder.h"
 
 namespace Roster {
-	Model::Model(RootItem* root) : root_(root), showAvatars_(true), showStatus_(true) {
+	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatus_(true) {
 	}
 
 	QVariant Model::data(const QModelIndex &index, int role) const {

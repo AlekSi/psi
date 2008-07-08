@@ -7,7 +7,7 @@ class QAbstractItemModel;
 class QTreeView;
 
 namespace Roster {
-	class RootItem;
+	class Roster;
 	class Manager;
 	class Model;
 	class View;
@@ -26,7 +26,7 @@ namespace Roster {
 
 			Model* model_;
 			View* view_;
-			RootItem* data_;
+			Roster* data_;
 			Manager* manager_;
 			RosterBuilder* rb_;
 
