@@ -6,7 +6,7 @@
 #include <QMimeData>
 #include <QTextDocument>
 
-#include "roster.h"
+#include "account.h"
 #include "rootitem.h"
 #include "model.h"
 #include "groupitem.h"
@@ -30,8 +30,8 @@ namespace Roster {
 		Q_ASSERT(item);
 
 		if ( role == Qt::DisplayRole or role == Qt::EditRole ) { // name
-			if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
-				return roster->getName();
+			if ( Account* account = dynamic_cast<Account*>(item) ) {
+				return account->getName();
 			} else if ( Group* group = dynamic_cast<Group*>(item) ) {
 				return group->getName();
 			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
@@ -48,21 +48,21 @@ namespace Roster {
 				}
 			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 				return contact->getIcon();
-			} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
-				return roster->getIcon();
+			} else if ( Account* account = dynamic_cast<Account*>(item) ) {
+				return account->getIcon();
 			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 				return resource->getIcon();
 			}
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
 		} else if ( role == Qt::BackgroundRole ) { // background color
-			if ( dynamic_cast<Roster*>(item) ) {
+			if ( dynamic_cast<Account*>(item) ) {
 				return QBrush( QColor(150, 150, 150), Qt::SolidPattern ); // FIXME: colors from options
 			} else if ( dynamic_cast<Group*>(item) ) {
 				return QBrush( QColor(240, 240, 240), Qt::SolidPattern );
 			}
 		} else if ( role == Qt::ForegroundRole ) { // text color
-			if ( dynamic_cast<Roster*>(item) ) {
+			if ( dynamic_cast<Account*>(item) ) {
 				return QBrush( Qt::white, Qt::SolidPattern );
 			} else if ( dynamic_cast<Group*>(item) ) {
 				return QBrush( QColor(90, 90, 90), Qt::SolidPattern );
@@ -111,8 +111,8 @@ namespace Roster {
 					tip += Qt::escape(resource->getStatus()) + "\n";
 				}
 			}
-		} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
-			tip += roster->getName();
+		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
+			tip += account->getName();
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 			Contact* parent = dynamic_cast<Contact*>(item->getParent());
 			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(parent->getName()), Qt::escape(parent->getJid()));
@@ -287,8 +287,8 @@ namespace Roster {
 				}
 			}
 			qDebug() << "Following items has been dropped on group" << parentGroup->getName();
-		} else if ( Roster* parentRoster = dynamic_cast<Roster*>(parentItem) ) {
-			qDebug() << items.size() << "item(s) has been dropped on roster" << parentRoster->getName();
+		} else if ( Account* parentAccount = dynamic_cast<Account*>(parentItem) ) {
+			qDebug() << items.size() << "item(s) has been dropped on account" << parentAccount->getName();
 		}
 		
 

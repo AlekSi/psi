@@ -3,7 +3,7 @@
 #include "contact.h"
 #include "xmpprosteritem.h"
 #include "manager.h"
-#include "roster.h"
+#include "account.h"
 
 namespace Roster {
 
@@ -22,11 +22,11 @@ namespace Roster {
 
 	void RosterBuilder::buildAllAccounts(GroupItem* root) {
 		clear(root);
-		foreach(QString account, items_.keys()) {
-			Roster* roster = new Roster(account);
-			manager_->addRoster(roster, root);
+		foreach(QString name, items_.keys()) {
+			Account* account = new Account(name);
+			manager_->addAccount(account, root);
 
-			buildRoster(account, roster);
+			buildRoster(name, account);
 		}
 	}
 
@@ -75,8 +75,8 @@ namespace Roster {
 		return static_cast<Group*>(up);
 	}
 
-	void RosterBuilder::addItem(QString account, XMPPRosterItem* item) {
-		items_[account].append(item);
+	void RosterBuilder::addItem(QString accName, XMPPRosterItem* item) {
+		items_[accName].append(item);
 	}
 
 }

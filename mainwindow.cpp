@@ -8,7 +8,7 @@
 #include "delegate.h"
 
 #include "rootitem.h"
-#include "roster.h"
+#include "account.h"
 #include "group.h"
 #include "contact.h"
 #include "resource.h"
@@ -141,14 +141,13 @@ namespace Roster {
 
 		g1->addItem(g2);
 
-		Roster* roster = new Roster();
-		roster->setName("gislan@utumno.pl");
-		roster->setIcon(QIcon("icons/online.png"));
-		roster->addItem(c1);
-		roster->addItem(c2);
-		roster->addItem(g1);
+		Account* account = new Account("gislan@utumno.pl");
+		account->setIcon(QIcon("icons/online.png"));
+		account->addItem(c1);
+		account->addItem(c2);
+		account->addItem(g1);
 
-		data_->addItem(roster);
+		data_->addItem(account);
 	}
 }
 

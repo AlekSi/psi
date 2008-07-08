@@ -1,5 +1,5 @@
-#ifndef ROSTER_ROSTER_H
-#define ROSTER_ROSTER_H
+#ifndef ROSTER_ACCOUNT_H
+#define ROSTER_ACCOUNT_H
 
 #include <QString>
 #include <QIcon>
@@ -8,11 +8,11 @@
 
 namespace Roster {
 
-	class Roster : public GroupItem {
+	class Account : public GroupItem {
 		public:
-			Roster();
-			Roster(const QString& name);
-			~Roster();
+			Account();
+			Account(const QString& name);
+			~Account();
 
 			const QString& getName() const;
 			const QIcon& getIcon() const;

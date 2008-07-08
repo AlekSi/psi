@@ -11,7 +11,6 @@ namespace Roster {
 	class Manager;
 	class Group;
 	class GroupItem;
-	class Roster;
 	class Item;
 
 	class RosterBuilder : public QObject {
@@ -23,7 +22,7 @@ namespace Roster {
 			void buildJoinedAccounts(GroupItem* root);
 			void buildAllAccounts(GroupItem* root);
 
-			void addItem(QString account, XMPPRosterItem* item);
+			void addItem(QString accName, XMPPRosterItem* item);
 			void clear(Item* item);
 			
 		private:

@@ -8,7 +8,7 @@ HEADERS += \
 	$$PWD/contact.h \
 	$$PWD/groupitem.h \
 	$$PWD/item.h \
-	$$PWD/roster.h \
+	$$PWD/account.h \
 	$$PWD/group.h \
 	$$PWD/view.h \
 	$$PWD/delegate.h \
@@ -24,7 +24,7 @@ SOURCES += \
 	$$PWD/model.cpp \
 	$$PWD/contact.cpp \
 	$$PWD/item.cpp \
-	$$PWD/roster.cpp \
+	$$PWD/account.cpp \
 	$$PWD/group.cpp \
 	$$PWD/groupitem.cpp \
 	$$PWD/view.cpp \

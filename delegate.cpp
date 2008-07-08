@@ -7,12 +7,7 @@
 #include <QLineEdit>
 
 #include "delegate.h"
-#include "item.h"
-#include "contact.h"
-#include "roster.h"
-#include "group.h"
 #include "model.h"
-#include "manager.h"
 
 /* FILE TODO:
  * + add more magic numbers

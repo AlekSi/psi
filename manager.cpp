@@ -3,7 +3,7 @@
 #include "contact.h"
 #include "manager.h"
 #include "group.h"
-#include "roster.h"
+#include "account.h"
 
 namespace Roster {
 	void Manager::renameContact(Contact* contact, QString newName) {
@@ -52,10 +52,10 @@ namespace Roster {
 		emit itemAdded(group);
 	}
 
-	void Manager::addRoster(Roster* roster, GroupItem* parent) {
-		parent->addItem(roster);
+	void Manager::addAccount(Account* account, GroupItem* parent) {
+		parent->addItem(account);
 
-		emit itemAdded(roster);
+		emit itemAdded(account);
 	}
 
 	void Manager::removeItem(Item* item) { 

@@ -10,7 +10,7 @@
 #include "model.h"
 #include "group.h"
 #include "contact.h"
-#include "roster.h"
+#include "account.h"
 #include "resource.h"
 #include "manager.h"
 
@@ -75,7 +75,7 @@ namespace Roster {
 		renameContactAct_ = new QAction(tr("Re&name"), this);
 		connect(renameContactAct_, SIGNAL(triggered()), this, SLOT(menuRename()));
 
-		/* roster */
+		/* account */
 		xmlConsoleAct_ = new QAction(tr("&XML Console"), this);
 		connect(xmlConsoleAct_, SIGNAL(triggered()), this, SLOT(menuXmlConsole()));
 		goOnlineAct_ = new QAction(tr("Online"), this);
@@ -137,8 +137,8 @@ namespace Roster {
 			}
 			menu->addSeparator();
 			menu->addAction(historyAct_);
-		} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
-			qDebug() << "Context menu opened for roster" << roster->getName();
+		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
+			qDebug() << "Context menu opened for account" << account->getName();
 
 			QMenu* statusMenu = new QMenu(tr("&Status"));
 			statusMenu->addAction(goOnlineAct_);
@@ -161,7 +161,7 @@ namespace Roster {
 		menu->popup( this->mapToGlobal(position) );
 	}
 
-	/* trigger default action when user clicks on roster item */
+	/* trigger default action when user clicks on account item */
 	void View::doActivated(const QModelIndex& index) {
 		Q_ASSERT(index.data(Qt::UserRole).canConvert<Item*>());
 		Item* item = index.data(Qt::UserRole).value<Item*>();
@@ -171,9 +171,9 @@ namespace Roster {
 			setExpanded(index, !isExpanded(index));
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 			qDebug() << "Default action triggered on contact" << contact->getName();
-		} else if ( Roster* roster = dynamic_cast<Roster*>(item) ) {
+		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
 			setExpanded(index, !isExpanded(index));
-			qDebug() << "Default action triggered on roster" << roster->getName();
+			qDebug() << "Default action triggered on account" << account->getName();
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 			qDebug() << "Default action triggered on resource" << resource->getName();
 		}
@@ -221,25 +221,25 @@ namespace Roster {
 		edit(senderItemIndex());
 	}
 
-	/* menu action for (roster)->status->online */
+	/* menu action for (account)->status->online */
 	void View::menuGoOnline() {
 		QAction* action = static_cast<QAction*>(sender());
-		Roster* roster = static_cast<Roster*>(action->data().value<Item*>());
-		qDebug() << "go online on roster" << roster->getName();
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		qDebug() << "go online on account" << account->getName();
 	}
 
-	/* menu action for (roster)->status->offline */
+	/* menu action for (account)->status->offline */
 	void View::menuGoOffline() {
 		QAction* action = static_cast<QAction*>(sender());
-		Roster* roster = static_cast<Roster*>(action->data().value<Item*>());
-		qDebug() << "go offline on roster" << roster->getName();
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		qDebug() << "go offline on account" << account->getName();
 	}
 
-	/* menu action for (roster)->xml console */
+	/* menu action for (account)->xml console */
 	void View::menuXmlConsole() {
 		QAction* action = static_cast<QAction*>(sender());
-		Roster* roster = static_cast<Roster*>(action->data().value<Item*>());
-		qDebug() << "xml console on roster" << roster->getName();
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		qDebug() << "xml console on account" << account->getName();
 	}
 
 	/* menu action for (contacts)->send to all */
