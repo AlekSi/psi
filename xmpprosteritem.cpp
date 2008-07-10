@@ -1,4 +1,5 @@
 #include "xmpprosteritem.h"
+#include "xmppresource.h"
 
 namespace Roster {
 
@@ -21,5 +22,13 @@ namespace Roster {
 
 	const QList<QString>& XMPPRosterItem::getGroups() const {
 		return groups_;
+	}
+
+	const QList<XMPPResource*> XMPPRosterItem::getResources() const {
+		return resources_.values();
+	}
+
+	void XMPPRosterItem::setResource(XMPPResource* resource) {
+		resources_.insert(resource->getName(), resource);
 	}
 }

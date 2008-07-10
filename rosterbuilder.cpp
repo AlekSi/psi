@@ -1,28 +1,49 @@
+#include <QIcon>
+
 #include "rosterbuilder.h"
 #include "group.h"
 #include "contact.h"
 #include "xmpprosteritem.h"
+#include "xmppresource.h"
 #include "manager.h"
 #include "account.h"
+#include "rosterdataservice.h"
+#include "resource.h"
 
 namespace Roster {
 
 	RosterBuilder::RosterBuilder(Manager* manager) : manager_(manager) {
 	}
 
-	void RosterBuilder::buildRoster(QString account, GroupItem* root) {
-		foreach(XMPPRosterItem* xitem, items_[account]) { 
+	void RosterBuilder::buildRoster(QString acname, GroupItem* root) {
+		RosterDataService* srv = services_[acname];
+		foreach(XMPPRosterItem* xitem, srv->getRosterItems()) { 
 			foreach(QString xgroup, xitem->getGroups()) {
 				Contact* contact = new Contact(xitem->getName(), xitem->getJid());
+				contact->setAvatar(srv->getAvatar(contact->getJid()));
+
 				Group* group = getGroupForAdd(xgroup, root);
 				manager_->addContact(contact, group);
+
+				foreach(XMPPResource* xresource, xitem->getResources()) {
+					Resource* resource = new Resource(xresource->getName(), xresource->getPriority(), xresource->getStatus());
+					// FIXME: move it to some better place
+					if ( xresource->getShow() == STATUS_ONLINE ) {
+						resource->setIcon(QIcon("icons/online.png"));
+					} else {
+						resource->setIcon(QIcon("icons/offline.png"));
+					}
+
+					manager_->addResource(resource, contact);
+				}
+
 			}
-		}		
+		}
 	}
 
 	void RosterBuilder::buildAllAccounts(GroupItem* root) {
 		clear(root);
-		foreach(QString name, items_.keys()) {
+		foreach(QString name, services_.keys()) {
 			Account* account = new Account(name);
 			manager_->addAccount(account, root);
 
@@ -32,12 +53,12 @@ namespace Roster {
 
 	void RosterBuilder::buildJoinedAccounts(GroupItem* root) {
 		clear(root);
-		foreach(QString account, items_.keys()) {
-			buildRoster(account, root);
+		foreach(QString acname, services_.keys()) {
+			buildRoster(acname, root);
 		}
 	}
 
-	void RosterBuilder::clear(Item* item) { // FIXME: no resources support
+	void RosterBuilder::clear(Item* item) {
 		if ( GroupItem* g = dynamic_cast<GroupItem*>(item) ) {
 			foreach(Item* subitem, g->getItems()) {
 				clear(subitem);
@@ -75,8 +96,9 @@ namespace Roster {
 		return static_cast<Group*>(up);
 	}
 
-	void RosterBuilder::addItem(QString accName, XMPPRosterItem* item) {
-		items_[accName].append(item);
+	void RosterBuilder::addService(const QString& acname, RosterDataService* service) {
+		services_.insert(acname, service);
 	}
 
 }
+

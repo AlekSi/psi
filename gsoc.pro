@@ -17,7 +17,10 @@ HEADERS += \
 	$$PWD/resource.h \
 	$$PWD/manager.h \
 	$$PWD/xmpprosteritem.h \
-	$$PWD/rosterbuilder.h
+	$$PWD/rosterbuilder.h \
+	$$PWD/rosterdataservice.h \
+	$$PWD/dummydataservice.h \
+	$$PWD/xmppresource.h
 
 SOURCES += \
 	$$PWD/main.cpp \
@@ -34,5 +37,7 @@ SOURCES += \
 	$$PWD/resource.cpp \
 	$$PWD/manager.cpp \
 	$$PWD/xmpprosteritem.cpp \
-	$$PWD/rosterbuilder.cpp
+	$$PWD/rosterbuilder.cpp \
+	$$PWD/dummydataservice.cpp \
+	$$PWD/xmppresource.cpp
 

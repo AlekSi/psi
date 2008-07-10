@@ -135,8 +135,9 @@ namespace Roster {
 		int num = 0;
 
 		if (parent.isValid()) {
-			if ( GroupItem* item = static_cast<GroupItem*>(parent.internalPointer()) ) {
-				num = item->getNbItems();
+			Item* item = static_cast<Item*>(parent.internalPointer());
+			if ( GroupItem* groupItem = dynamic_cast<GroupItem*>(item) ) {
+				num = groupItem->getNbItems();
 			}
 		} else {
 			num = root_->getNbItems();

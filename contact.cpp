@@ -35,8 +35,20 @@ namespace Roster {
 		jid_ = jid;
 	}
 
-	const QIcon& Contact::getIcon() const {
-		return icon_;
+	const QIcon Contact::getIcon() const {
+		// return icon_;
+		int maxPriority = -1;
+		QIcon icon("icons/offline.png");
+		
+		foreach(Item* item, items_) {
+			Resource* resource = static_cast<Resource*>(item);
+			if ( maxPriority < resource->getPriority() ) {
+				icon = resource->getIcon();
+				maxPriority = resource->getPriority();
+			}
+		}
+
+		return icon;
 	}
 
 	void Contact::setIcon(const QIcon& icon) {

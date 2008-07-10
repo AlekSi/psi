@@ -4,7 +4,7 @@
 
 namespace Roster {
 
-	Resource::Resource(const QString& name, const int priority) : name_(name), priority_(priority) {
+	Resource::Resource(const QString& name, const int priority, const QString status) : name_(name), priority_(priority), status_(status) {
 	}
 
 	Resource::~Resource() {

@@ -4,6 +4,7 @@
 #include "manager.h"
 #include "group.h"
 #include "account.h"
+#include "resource.h"
 
 namespace Roster {
 	void Manager::renameContact(Contact* contact, QString newName) {
@@ -61,6 +62,11 @@ namespace Roster {
 		emit itemRemoved(item);
 
 		delete item; // FIXME: shouldn't this be done in RosterBuilder?
+	}
+
+	void Manager::addResource(Resource* resource, Contact* contact) {
+		contact->addResource(resource);
+		emit itemAdded(resource);
 	}
 }
 

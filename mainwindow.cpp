@@ -14,15 +14,17 @@
 #include "resource.h"
 #include "manager.h"
 #include "rosterbuilder.h"
+#include "rosterdataservice.h"
+
+#include "dummydataservice.h"
 
 namespace Roster {
 	MainWindow::MainWindow() {
+		data_ = new Roster;
 //		setupTestData();
 
 		manager_ = new Manager;
 		rb_ = new RosterBuilder(manager_);
-
-		buildTestRoster();
 
 		view_ = new View;
 		view_->setItemDelegate(new Delegate);
@@ -35,6 +37,8 @@ namespace Roster {
 
 		setCentralWidget(view_);
 		setupMenus();
+
+		buildTestRoster();
 
 		view_->expandAll();
 
@@ -69,20 +73,10 @@ namespace Roster {
 	}
 
 	void MainWindow::buildTestRoster() {
-		data_ = new Roster;
+		RosterDataService* service = new DummyDataService();
+		rb_->addService("gislan@utumno.pl", service);
 
-		QList<QString> generic;
-		generic << "Generic";
-		QList<QString> nested;
-		nested << "Group #1::Group #2";
-		XMPPRosterItem* a = new XMPPRosterItem("Gislan", "gislan@utumno.pl", generic);
-		XMPPRosterItem* b = new XMPPRosterItem("Remko", "remko@el-tramo.be", generic);
-		XMPPRosterItem* c = new XMPPRosterItem("Kev", "kevdadrum@jabber.ex.ac.uk", nested);
-
-		rb_->addItem("gislan@utumno.pl", a);
-		rb_->addItem("gislan@utumno.pl", b);
-		rb_->addItem("gislan@utumno.pl", c);
-
+/*
 		XMPPRosterItem* d = new XMPPRosterItem("Romeo", "romeo@jabber.org", generic);
 		XMPPRosterItem* e = new XMPPRosterItem("Juliet", "juliet@jabber.org", generic);
 		XMPPRosterItem* f = new XMPPRosterItem("Hamlet", "hamlet@jabber.org", nested);
@@ -90,14 +84,12 @@ namespace Roster {
 		rb_->addItem("gislan@jabster.pl", d);
 		rb_->addItem("gislan@jabster.pl", e);
 		rb_->addItem("gislan@jabster.pl", f);
-
+*/
 		rb_->buildJoinedAccounts(data_);
 	//	rb_->buildAllAccounts(data_);
 	}
 
 	void MainWindow::setupTestData() {
-		data_ = new Roster;
-
 		Contact* c1 = new Contact("Gislan", "gislan@utumno.pl");
 		Contact* c2 = new Contact("Remko", "remko@el-tramo.be");
 		Contact* c3 = new Contact("you@jabber.org", "you@jabber.org");

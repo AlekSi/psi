@@ -3,8 +3,10 @@
 
 #include <QList>
 #include <QString>
+#include <QMap>
 
 namespace Roster {
+	class XMPPResource;
 
 	class XMPPRosterItem {
 		public:
@@ -15,10 +17,14 @@ namespace Roster {
 			const QString& getName() const;
 			const QString& getJid() const;
 			const QList<QString>& getGroups() const;
+			const QList<XMPPResource*> getResources() const;
+
+			void setResource(XMPPResource* resource);
 		private:
 			QString name_;
 			QString jid_;
 			QList<QString> groups_;
+			QMap<QString, XMPPResource*> resources_;
 	};
 
 }

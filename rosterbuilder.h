@@ -12,6 +12,7 @@ namespace Roster {
 	class Group;
 	class GroupItem;
 	class Item;
+	class RosterDataService;
 
 	class RosterBuilder : public QObject {
 		Q_OBJECT
@@ -22,14 +23,14 @@ namespace Roster {
 			void buildJoinedAccounts(GroupItem* root);
 			void buildAllAccounts(GroupItem* root);
 
-			void addItem(QString accName, XMPPRosterItem* item);
 			void clear(Item* item);
-			
+		
+			void addService(const QString& acname, RosterDataService* service);	
 		private:
-			void buildRoster(QString account, GroupItem* root);
+			void buildRoster(QString acname, GroupItem* root);
 			Group* getGroupForAdd(QString groupNames, GroupItem* parent);
 
-			QMap< QString, QList<XMPPRosterItem*> > items_;
+			QMap<QString, RosterDataService*> services_;
 			Manager* manager_;
 	};
 

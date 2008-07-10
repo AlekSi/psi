@@ -18,7 +18,7 @@ namespace Roster {
 
 			const QString& getName() const;
 			const QString& getJid() const;
-			const QIcon& getIcon() const;
+			const QIcon getIcon() const;
 			const QIcon& getAvatar() const;
 			const QString getStatus() const;
 

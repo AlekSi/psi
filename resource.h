@@ -10,7 +10,7 @@ namespace Roster {
 	// single contact on roster
 	class Resource : public Item {
 		public:
-			Resource(const QString& name, const int priority);
+			Resource(const QString& name, const int priority, const QString status = "");
 			~Resource();
 
 			const QString& getName() const;
@@ -25,8 +25,8 @@ namespace Roster {
 
 		private:
 			QString name_;
-			QString status_;
 			int priority_;
+			QString status_;
 			QIcon icon_;
 	};
 }

@@ -10,6 +10,7 @@ namespace Roster {
 	class Item;
 	class GroupItem;
 	class Account;
+	class Resource;
 	
 	class Manager : public QObject {
 		Q_OBJECT
@@ -22,6 +23,7 @@ namespace Roster {
 			void addContact(Contact* contact, Group* group);
 
 			void addGroup(Group* group, GroupItem* parent);
+			void addResource(Resource* resource, Contact* contact);
 			void addAccount(Account* account, GroupItem* parent);
 
 			void removeItem(Item* item);
