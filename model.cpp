@@ -370,12 +370,5 @@ namespace Roster {
 		rb_ = rb;
 	}
 
-	void Model::setJoinedAccounts(bool opt) {
-		if ( opt ) {
-			rb_->buildJoinedAccounts(root_);
-		} else {
-			rb_->buildAllAccounts(root_);
-		}
-	}
 }
 

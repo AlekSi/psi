@@ -13,25 +13,30 @@ namespace Roster {
 	class GroupItem;
 	class Item;
 	class RosterDataService;
+	class Roster;
 
 	class RosterBuilder : public QObject {
 		Q_OBJECT
 
 		public:
-			RosterBuilder(Manager* manager);
-
-			void buildJoinedAccounts(GroupItem* root);
-			void buildAllAccounts(GroupItem* root);
-
-			void clear(Item* item);
-		
+			RosterBuilder(Roster* root_, Manager* manager);
 			void addService(const QString& acname, RosterDataService* service);	
+			void rebuild();
+
+		public slots:
+			void setJoinedAccounts(bool joinedAccounts);
+		
 		private:
-			void buildRoster(QString acname, GroupItem* root);
-			Group* getGroupForAdd(QString groupNames, GroupItem* parent);
+			void buildRoster(QString acname);
+			void clear(Item* item);
+			void buildJoinedAccounts();
+			void buildAllAccounts();
+			Group* createGroup(const QString& groupName, const QString& acname);
 
 			QMap<QString, RosterDataService*> services_;
+			Roster* root_;
 			Manager* manager_;
+			bool joinedAccounts_;
 	};
 
 }

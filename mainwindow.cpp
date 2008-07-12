@@ -24,7 +24,7 @@ namespace Roster {
 //		setupTestData();
 
 		manager_ = new Manager;
-		rb_ = new RosterBuilder(manager_);
+		rb_ = new RosterBuilder(data_, manager_);
 
 		view_ = new View;
 		view_->setItemDelegate(new Delegate);
@@ -64,7 +64,7 @@ namespace Roster {
 		
 		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
 		connect(toggleStatusAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowStatus(bool)));
-		connect(toggleJoinedAccountsAct_, SIGNAL(toggled(bool)), model_, SLOT(setJoinedAccounts(bool)));
+		connect(toggleJoinedAccountsAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinedAccounts(bool)));
 
 		QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
 		viewMenu->addAction(toggleAvatarsAct_);
@@ -85,7 +85,8 @@ namespace Roster {
 		rb_->addItem("gislan@jabster.pl", e);
 		rb_->addItem("gislan@jabster.pl", f);
 */
-		rb_->buildJoinedAccounts(data_);
+		rb_->rebuild();
+		//rb_->buildJoinedAccounts(data_);
 	//	rb_->buildAllAccounts(data_);
 	}
 

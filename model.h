@@ -45,7 +45,6 @@ namespace Roster {
 		public slots:
 			void setShowAvatars(bool showAvatars);
 			void setShowStatus(bool showStatus);
-			void setJoinedAccounts(bool opt);
 
 			void itemUpdated(Item* item);
 			void itemAdded(Item* item);

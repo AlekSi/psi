@@ -1,4 +1,5 @@
 #include <QIcon>
+#include <QDebug>
 
 #include "rosterbuilder.h"
 #include "group.h"
@@ -9,20 +10,39 @@
 #include "account.h"
 #include "rosterdataservice.h"
 #include "resource.h"
+#include "roster.h"
 
 namespace Roster {
 
-	RosterBuilder::RosterBuilder(Manager* manager) : manager_(manager) {
+	RosterBuilder::RosterBuilder(Roster* root, Manager* manager) : root_(root), manager_(manager), joinedAccounts_(true) {
 	}
 
-	void RosterBuilder::buildRoster(QString acname, GroupItem* root) {
+	void RosterBuilder::rebuild() {
+		if ( joinedAccounts_ ) {
+			buildAllAccounts();
+		} else {
+			buildJoinedAccounts();
+		}
+	}
+
+	void RosterBuilder::setJoinedAccounts(bool joinedAccounts) {
+		if ( joinedAccounts == joinedAccounts_ ) {
+			return;
+		}
+
+		joinedAccounts_ = joinedAccounts;
+		rebuild();
+	}
+
+	void RosterBuilder::buildRoster(QString acname) {
 		RosterDataService* srv = services_[acname];
 		foreach(XMPPRosterItem* xitem, srv->getRosterItems()) { 
 			foreach(QString xgroup, xitem->getGroups()) {
 				Contact* contact = new Contact(xitem->getName(), xitem->getJid());
 				contact->setAvatar(srv->getAvatar(contact->getJid()));
 
-				Group* group = getGroupForAdd(xgroup, root);
+				Group* group = createGroup(xgroup, acname);
+
 				manager_->addContact(contact, group);
 
 				foreach(XMPPResource* xresource, xitem->getResources()) {
@@ -41,20 +61,20 @@ namespace Roster {
 		}
 	}
 
-	void RosterBuilder::buildAllAccounts(GroupItem* root) {
-		clear(root);
+	void RosterBuilder::buildAllAccounts() {
+		clear(root_);
 		foreach(QString name, services_.keys()) {
 			Account* account = new Account(name);
-			manager_->addAccount(account, root);
+			manager_->addAccount(account, root_);
 
-			buildRoster(name, account);
+			buildRoster(name);
 		}
 	}
 
-	void RosterBuilder::buildJoinedAccounts(GroupItem* root) {
-		clear(root);
+	void RosterBuilder::buildJoinedAccounts() {
+		clear(root_);
 		foreach(QString acname, services_.keys()) {
-			buildRoster(acname, root);
+			buildRoster(acname);
 		}
 	}
 
@@ -67,34 +87,30 @@ namespace Roster {
 		}
 	}
 
-	Group* RosterBuilder::getGroupForAdd(QString groupName, GroupItem* parent) {
-		QStringList groupNames = groupName.split("::");
+	/* create (if it doesn't exist yet) and return group with given name on given account */
+	Group* RosterBuilder::createGroup(const QString& groupName, const QString& acname) {
+		QList<QString> groupNames = groupName.split(SEPARATOR);
 
-		GroupItem* up = parent;
+		GroupItem* up = root_->findAccount(acname);
+		if ( ! up ) {
+			up = root_;
+		}
 
 		foreach(QString name, groupNames) {
-			Group* next = 0;
+			Group* next = up->findGroup(name);
 
-			foreach(Item* item, up->getItems()) {
-				if ( Group* group = dynamic_cast<Group*>(item) ) {
-					if ( group->getName() == name ) {
-						next = group;
-						break;
-					}
-				}
+			if ( ! next ) {
+				// add new group
+				next = new Group(name);
+				manager_->addGroup(next, up);
 			}
 
-			if ( next ) {
-				up = next;
-			} else {
-				Group* newGroup = new Group(name);
-				manager_->addGroup(newGroup, up);
-				up = newGroup;
-			}
+			up = next;
 		}
 
 		return static_cast<Group*>(up);
 	}
+
 
 	void RosterBuilder::addService(const QString& acname, RosterDataService* service) {
 		services_.insert(acname, service);

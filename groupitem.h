@@ -6,6 +6,8 @@
 #include "item.h"
 
 namespace Roster {
+	class Contact;
+	class Group;
 
 	// generic class for roster items that can contain other items
 	class GroupItem : public Item {
@@ -19,6 +21,8 @@ namespace Roster {
 			virtual void removeItem(Item* item);
 			virtual void addItem(Item* item);
 			virtual const QList<Item*>& getItems() const;
+			virtual Group* findGroup(const QString& name);
+			virtual Contact* findContact(const QString& name);
 
 		protected:
 			QList<Item*> items_;
