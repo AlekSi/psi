@@ -16,6 +16,7 @@
 #include "resource.h"
 #include "manager.h"
 #include "rosterbuilder.h"
+#include "metacontact.h"
 
 namespace Roster {
 	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatus_(true) {
@@ -38,6 +39,8 @@ namespace Roster {
 				return contact->getName();
 			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 				return QString("%1 (%2)").arg(resource->getName(), QString::number(resource->getPriority()));
+			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+				return metacontact->getName();
 			}
 		} else if ( role == Qt::DecorationRole ) { // left icon
 			if ( Group* group = dynamic_cast<Group*>(item) ) {
@@ -52,6 +55,8 @@ namespace Roster {
 				return account->getIcon();
 			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 				return resource->getIcon();
+			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+				return metacontact->getIcon();
 			}
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
@@ -76,12 +81,16 @@ namespace Roster {
 		} else if ( role == AvatarRole and showAvatars_ ) { // avatar image
 			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 				return contact->getAvatar(); 
+			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+				return metacontact->getAvatar();
 			}
 		} else if ( role == StatusRole and showStatus_ ) { // status text
 			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 				return contact->getStatus();
 			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 				return resource->getStatus();
+			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+				return metacontact->getStatus();
 			}
 		} else if ( role == Qt::SizeHintRole ) { // size of item
 			if ( !index.data(AvatarRole).value<QIcon>().isNull() ) {
@@ -162,6 +171,8 @@ namespace Roster {
 			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else if ( dynamic_cast<Group*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable;
+		} else if ( dynamic_cast<Metacontact*>(item) ) {
+			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable;
 		} else {
 			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
 		}

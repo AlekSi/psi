@@ -3,6 +3,7 @@
 #include "groupitem.h"
 #include "group.h"
 #include "contact.h"
+#include "metacontact.h"
 
 namespace Roster {
 
@@ -50,11 +51,23 @@ namespace Roster {
 		return 0;
 	}
 
-	Contact* GroupItem::findContact(const QString& jid) {
+	Contact* GroupItem::findContact(const QString& name) {
 		foreach(Item* item, items_) {
 			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-				if ( contact->getJid() == jid ) {
+				if ( contact->getName() == name ) {
 					return contact;
+				}
+			}
+		}
+
+		return 0;
+	}
+
+	Metacontact* GroupItem::findMetacontact(const QString& name) {
+		foreach(Item* item, items_) {
+			if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+				if ( metacontact->getName() == name ) {
+					return metacontact;
 				}
 			}
 		}

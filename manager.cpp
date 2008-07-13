@@ -5,18 +5,17 @@
 #include "group.h"
 #include "account.h"
 #include "resource.h"
+#include "metacontact.h"
 
 namespace Roster {
 	void Manager::renameContact(Contact* contact, QString newName) {
 		contact->setName(newName);
-
 		emit itemUpdated(contact);
 	}
 
-	void Manager::copyContact(Contact* contact, Group* group) {
+	void Manager::copyContact(Contact* contact, GroupItem* group) {
 		Contact* newContact = new Contact(*contact);
 		group->addItem(newContact);
-
 		emit itemAdded(newContact);
 	}
 
@@ -28,7 +27,7 @@ namespace Roster {
 		delete contact; // FIXME: shouldn't this be done in RosterBuilder?
 	}
 
-	void Manager::moveContact(Contact* contact, Group* group) {
+	void Manager::moveContact(Contact* contact, GroupItem* group) {
 		emit itemToBeRemoved(contact);
 		contact->getParent()->removeItem(contact);
 		emit itemRemoved(contact);
@@ -39,19 +38,16 @@ namespace Roster {
 
 	void Manager::addContact(Contact* contact, Group* group) {
 		group->addItem(contact);
-
 		emit itemAdded(contact);
 	}
 
 	void Manager::addGroup(Group* group, GroupItem* parent) {
 		parent->addItem(group);
-
 		emit itemAdded(group);
 	}
 
 	void Manager::addAccount(Account* account, GroupItem* parent) {
 		parent->addItem(account);
-
 		emit itemAdded(account);
 	}
 
@@ -67,6 +63,16 @@ namespace Roster {
 	void Manager::addResource(Resource* resource, Contact* contact) {
 		contact->addResource(resource);
 		emit itemAdded(resource);
+	}
+
+	void Manager::addToMetacontact(Contact* contact, Metacontact* metacontact) {
+		metacontact->addItem(contact);
+		emit itemAdded(contact);
+	}
+
+	void Manager::addMetacontact(Metacontact* metacontact, Group* group) {
+		group->addItem(metacontact);
+		emit itemAdded(metacontact);
 	}
 }
 

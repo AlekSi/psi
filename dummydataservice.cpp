@@ -11,6 +11,7 @@ namespace Roster {
 		QList<QString> nested;
 		nested << "Group #1::Group #2";
 		XMPPRosterItem* gislan = new XMPPRosterItem("Gislan", "gislan@utumno.pl", generic);
+		XMPPRosterItem* gislan2 = new XMPPRosterItem("Gislan", "gislan@jabster.pl", generic);
 		XMPPRosterItem* remko = new XMPPRosterItem("Remko", "remko@el-tramo.be", generic);
 		XMPPRosterItem* kev = new XMPPRosterItem("Kev", "kevdadrum@jabber.ex.ac.uk", nested);
 
@@ -22,7 +23,7 @@ namespace Roster {
 		gislan->setResource(work);
 		remko->setResource(psi);
 
-		items_ << gislan << remko << kev;
+		items_ << gislan << remko << kev << gislan2;
 	}
 
 	DummyDataService::~DummyDataService() {

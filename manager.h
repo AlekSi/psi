@@ -11,20 +11,23 @@ namespace Roster {
 	class GroupItem;
 	class Account;
 	class Resource;
+	class Metacontact;
 	
 	class Manager : public QObject {
 		Q_OBJECT
 
 		public:
 			void renameContact(Contact* contact, QString newName);
-			void copyContact(Contact* contact, Group* group);
+			void copyContact(Contact* contact, GroupItem* group);
 			void removeContact(Contact* contact);
-			void moveContact(Contact* contact, Group* group);
+			void moveContact(Contact* contact, GroupItem* group);
 			void addContact(Contact* contact, Group* group);
 
 			void addGroup(Group* group, GroupItem* parent);
 			void addResource(Resource* resource, Contact* contact);
 			void addAccount(Account* account, GroupItem* parent);
+			void addToMetacontact(Contact* contact, Metacontact* metacontact);
+			void addMetacontact(Metacontact* metacontact, Group* group);
 
 			void removeItem(Item* item);
 

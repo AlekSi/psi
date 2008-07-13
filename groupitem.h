@@ -8,6 +8,7 @@
 namespace Roster {
 	class Contact;
 	class Group;
+	class Metacontact;
 
 	// generic class for roster items that can contain other items
 	class GroupItem : public Item {
@@ -23,6 +24,7 @@ namespace Roster {
 			virtual const QList<Item*>& getItems() const;
 			virtual Group* findGroup(const QString& name);
 			virtual Contact* findContact(const QString& name);
+			virtual Metacontact* findMetacontact(const QString& name);
 
 		protected:
 			QList<Item*> items_;

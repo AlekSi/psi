@@ -11,10 +11,11 @@
 #include "rosterdataservice.h"
 #include "resource.h"
 #include "roster.h"
+#include "metacontact.h"
 
 namespace Roster {
 
-	RosterBuilder::RosterBuilder(Roster* root, Manager* manager) : root_(root), manager_(manager), joinedAccounts_(true) {
+	RosterBuilder::RosterBuilder(Roster* root, Manager* manager) : root_(root), manager_(manager), joinedAccounts_(true), joinByName_(true) {
 	}
 
 	void RosterBuilder::rebuild() {
@@ -43,7 +44,8 @@ namespace Roster {
 
 				Group* group = createGroup(xgroup, acname);
 
-				manager_->addContact(contact, group);
+				addContact(contact, group);
+//				manager_->addContact(contact, group);
 
 				foreach(XMPPResource* xresource, xitem->getResources()) {
 					Resource* resource = new Resource(xresource->getName(), xresource->getPriority(), xresource->getStatus());
@@ -57,6 +59,23 @@ namespace Roster {
 					manager_->addResource(resource, contact);
 				}
 
+			}
+		}
+	}
+
+	void RosterBuilder::addContact(Contact* contact, Group* group) {
+		if ( ! joinByName_ ) {
+			manager_->addContact(contact, group);
+		} else {
+			if ( Metacontact* metacontact = group->findMetacontact(contact->getName()) ) {
+				manager_->addToMetacontact(contact, metacontact);
+			} else if ( Contact* similar = group->findContact(contact->getName()) ) {
+				Metacontact* metacontact = new Metacontact(contact->getName());
+				manager_->addMetacontact(metacontact, group);
+				manager_->moveContact(similar, metacontact);
+				manager_->addToMetacontact(contact, metacontact);
+			} else {
+				manager_->addContact(contact, group);
 			}
 		}
 	}

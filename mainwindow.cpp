@@ -13,6 +13,7 @@
 #include "contact.h"
 #include "resource.h"
 #include "manager.h"
+#include "metacontact.h"
 #include "rosterbuilder.h"
 #include "rosterdataservice.h"
 
@@ -136,8 +137,14 @@ namespace Roster {
 
 		Account* account = new Account("gislan@utumno.pl");
 		account->setIcon(QIcon("icons/online.png"));
-		account->addItem(c1);
-		account->addItem(c2);
+
+		Metacontact* m1 = new Metacontact("GSoCers");
+		m1->addItem(c1);
+		m1->addItem(c2);
+		account->addItem(m1);
+
+//		account->addItem(c1);
+//		account->addItem(c2);
 		account->addItem(g1);
 
 		data_->addItem(account);

@@ -14,6 +14,7 @@ namespace Roster {
 	class Item;
 	class RosterDataService;
 	class Roster;
+	class Contact;
 
 	class RosterBuilder : public QObject {
 		Q_OBJECT
@@ -32,11 +33,13 @@ namespace Roster {
 			void buildJoinedAccounts();
 			void buildAllAccounts();
 			Group* createGroup(const QString& groupName, const QString& acname);
+			void addContact(Contact* contact, Group* group);
 
 			QMap<QString, RosterDataService*> services_;
 			Roster* root_;
 			Manager* manager_;
 			bool joinedAccounts_;
+			bool joinByName_;
 	};
 
 }

@@ -20,7 +20,8 @@ HEADERS += \
 	$$PWD/rosterbuilder.h \
 	$$PWD/rosterdataservice.h \
 	$$PWD/dummydataservice.h \
-	$$PWD/xmppresource.h
+	$$PWD/xmppresource.h \
+	$$PWD/metacontact.h
 
 SOURCES += \
 	$$PWD/main.cpp \
@@ -39,5 +40,6 @@ SOURCES += \
 	$$PWD/xmpprosteritem.cpp \
 	$$PWD/rosterbuilder.cpp \
 	$$PWD/dummydataservice.cpp \
-	$$PWD/xmppresource.cpp
+	$$PWD/xmppresource.cpp \
+	$$PWD/metacontact.cpp
 
