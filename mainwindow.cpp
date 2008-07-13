@@ -55,6 +55,7 @@ namespace Roster {
 		toggleAvatarsAct_ = new QAction(tr("Show avatars"), this);
 		toggleStatusAct_ = new QAction(tr("Show status messages"), this);
 		toggleJoinedAccountsAct_ = new QAction(tr("Join all accounts"), this);
+		toggleJoinByNameAct_ = new QAction(tr("Join contacts by name"), this);
 
 		toggleAvatarsAct_->setCheckable(true);
 		toggleAvatarsAct_->setChecked(true);
@@ -62,15 +63,19 @@ namespace Roster {
 		toggleStatusAct_->setChecked(true);
 		toggleJoinedAccountsAct_->setCheckable(true);
 		toggleJoinedAccountsAct_->setChecked(true);
+		toggleJoinByNameAct_->setCheckable(true);
+		toggleJoinByNameAct_->setChecked(true);
 		
 		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
 		connect(toggleStatusAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowStatus(bool)));
 		connect(toggleJoinedAccountsAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinedAccounts(bool)));
+		connect(toggleJoinByNameAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinByName(bool)));
 
 		QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
 		viewMenu->addAction(toggleAvatarsAct_);
 		viewMenu->addAction(toggleStatusAct_);
 		viewMenu->addAction(toggleJoinedAccountsAct_);
+		viewMenu->addAction(toggleJoinByNameAct_);
 	}
 
 	void MainWindow::buildTestRoster() {

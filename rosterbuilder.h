@@ -26,6 +26,7 @@ namespace Roster {
 
 		public slots:
 			void setJoinedAccounts(bool joinedAccounts);
+			void setJoinByName(bool joinByName);
 		
 		private:
 			void buildRoster(QString acname);

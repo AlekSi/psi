@@ -20,9 +20,9 @@ namespace Roster {
 
 	void RosterBuilder::rebuild() {
 		if ( joinedAccounts_ ) {
-			buildAllAccounts();
-		} else {
 			buildJoinedAccounts();
+		} else {
+			buildAllAccounts();
 		}
 	}
 
@@ -133,6 +133,15 @@ namespace Roster {
 
 	void RosterBuilder::addService(const QString& acname, RosterDataService* service) {
 		services_.insert(acname, service);
+	}
+
+	void RosterBuilder::setJoinByName(bool joinByName) {
+		if ( joinByName == joinByName_ ) {
+			return;
+		}
+
+		joinByName_ = joinByName;
+		rebuild();
 	}
 
 }
