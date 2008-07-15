@@ -89,7 +89,9 @@ namespace Roster {
 		
 	void MainWindow::buildTestRoster() {
 		RosterDataService* service = new DummyDataService();
+		RosterDataService* service2 = new DummyDataService();
 		rb_->addService("gislan@utumno.pl", service);
+		rb_->addService("gislan@jabster.pl", service2);
 
 /*
 		XMPPRosterItem* d = new XMPPRosterItem("Romeo", "romeo@jabber.org", generic);
