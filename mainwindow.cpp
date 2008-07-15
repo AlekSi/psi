@@ -66,9 +66,9 @@ namespace Roster {
 		toggleJoinByNameAct_->setCheckable(true);
 		toggleJoinByNameAct_->setChecked(true);
 		
-		//connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
+		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
 		connect(toggleStatusAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowStatus(bool)));
-		connect(toggleStatusAct_, SIGNAL(toggled(bool)), SLOT(testSlot(bool)));
+		//connect(toggleStatusAct_, SIGNAL(toggled(bool)), SLOT(testSlot(bool)));
 		connect(toggleJoinedAccountsAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinedAccounts(bool)));
 		connect(toggleJoinByNameAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinByName(bool)));
 
