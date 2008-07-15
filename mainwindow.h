@@ -19,6 +19,9 @@ namespace Roster {
 		public:
 			MainWindow();
 
+		public slots:
+			void testSlot(bool opt = true);
+
 		private:
 			void setupTestData();
 			void buildTestRoster();

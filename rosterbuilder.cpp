@@ -35,31 +35,34 @@ namespace Roster {
 		rebuild();
 	}
 
-	void RosterBuilder::buildRoster(QString acname) {
+	void RosterBuilder::addItem(const XMPPRosterItem* xitem, const QString& acname) {
 		RosterDataService* srv = services_[acname];
-		foreach(XMPPRosterItem* xitem, srv->getRosterItems()) { 
-			foreach(QString xgroup, xitem->getGroups()) {
-				Contact* contact = new Contact(xitem->getName(), xitem->getJid());
-				contact->setAvatar(srv->getAvatar(contact->getJid()));
+		Contact* contact = new Contact(xitem->getName(), xitem->getJid());
+		contact->setAvatar(srv->getAvatar(contact->getJid()));
 
-				Group* group = createGroup(xgroup, acname);
+		foreach(QString xgroup, xitem->getGroups()) {
+			Group* group = findGroup(xgroup, acname);
 
-				addContact(contact, group);
-//				manager_->addContact(contact, group);
+			addContact(contact, group);
 
-				foreach(XMPPResource* xresource, xitem->getResources()) {
-					Resource* resource = new Resource(xresource->getName(), xresource->getPriority(), xresource->getStatus());
-					// FIXME: move it to some better place
-					if ( xresource->getShow() == STATUS_ONLINE ) {
-						resource->setIcon(QIcon("icons/online.png"));
-					} else {
-						resource->setIcon(QIcon("icons/offline.png"));
-					}
-
-					manager_->addResource(resource, contact);
+			foreach(XMPPResource* xresource, xitem->getResources()) {
+				Resource* resource = new Resource(xresource->getName(), xresource->getPriority(), xresource->getStatus());
+				// FIXME: move it to some better place
+				if ( xresource->getShow() == STATUS_ONLINE ) {
+					resource->setIcon(QIcon("icons/online.png"));
+				} else {
+					resource->setIcon(QIcon("icons/offline.png"));
 				}
 
+				manager_->addResource(resource, contact);
 			}
+		}
+	}
+
+	void RosterBuilder::buildRoster(const QString& acname) {
+		RosterDataService* srv = services_[acname];
+		foreach(XMPPRosterItem* xitem, srv->getRosterItems()) { 
+			addItem(xitem, acname);
 		}
 	}
 
@@ -107,7 +110,7 @@ namespace Roster {
 	}
 
 	/* create (if it doesn't exist yet) and return group with given name on given account */
-	Group* RosterBuilder::createGroup(const QString& groupName, const QString& acname) {
+	Group* RosterBuilder::findGroup(const QString& groupName, const QString& acname, bool create) {
 		QList<QString> groupNames = groupName.split(SEPARATOR);
 
 		GroupItem* up = root_->findAccount(acname);
@@ -119,10 +122,15 @@ namespace Roster {
 			Group* next = up->findGroup(name);
 
 			if ( ! next ) {
-				// add new group
-				next = new Group(name);
-				manager_->addGroup(next, up);
+				if ( create ) {
+					// add new group
+					next = new Group(name);
+					manager_->addGroup(next, up);
+				} else {
+					return 0;
+				}
 			}
+
 
 			up = next;
 		}
@@ -144,5 +152,45 @@ namespace Roster {
 		rebuild();
 	}
 
+	void RosterBuilder::itemAdded(const XMPPRosterItem* xitem, const QString& acname) {
+		addItem(xitem, acname);
+	}
+
+	void RosterBuilder::itemRemoved(const XMPPRosterItem* xitem, const QString& acname) {
+		QList<Contact*> contacts = findContacts(xitem, acname);
+
+		foreach(Contact* contact, contacts) {
+			manager_->removeContact(contact);
+		}
+	}
+
+	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {
+	}
+
+	QList<Contact*> RosterBuilder::findContacts(const XMPPRosterItem* xitem, const QString& acname) {
+		QList<Contact*> contacts;
+
+		foreach(QString xgroup, xitem->getGroups()) {
+			Group* group = findGroup(xgroup, acname, false);
+
+			if ( ! group ) {
+				continue;
+			}
+
+			if ( joinByName_ ) {
+			   	if ( Metacontact* metacontact = group->findMetacontact(xitem->getName()) ) {
+					if ( Contact* contact = metacontact->findContact(xitem->getName()) ) {
+						contacts.append(contact);
+					}
+				}
+			}
+
+			if ( Contact* contact = group->findContact(xitem->getName()) ) {
+				contacts.append(contact);
+			}
+		}
+
+		return contacts;
+	}
 }
 

@@ -66,8 +66,9 @@ namespace Roster {
 		toggleJoinByNameAct_->setCheckable(true);
 		toggleJoinByNameAct_->setChecked(true);
 		
-		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
+		//connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
 		connect(toggleStatusAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowStatus(bool)));
+		connect(toggleStatusAct_, SIGNAL(toggled(bool)), SLOT(testSlot(bool)));
 		connect(toggleJoinedAccountsAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinedAccounts(bool)));
 		connect(toggleJoinByNameAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinByName(bool)));
 
@@ -78,6 +79,14 @@ namespace Roster {
 		viewMenu->addAction(toggleJoinByNameAct_);
 	}
 
+	void MainWindow::testSlot(bool opt) {
+		qDebug() << "test slot";
+		RosterDataService* service = new DummyDataService();
+
+		rb_->itemAdded(service->getRosterItems().at(0), "gislan@utumno.pl");
+		//rb_->itemRemoved(service->getRosterItems().at(0), "gislan@utumno.pl");
+	}
+		
 	void MainWindow::buildTestRoster() {
 		RosterDataService* service = new DummyDataService();
 		rb_->addService("gislan@utumno.pl", service);
