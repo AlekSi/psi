@@ -27,7 +27,7 @@ namespace Roster {
 			void addResource(Resource* resource, Contact* contact);
 			void addAccount(Account* account, GroupItem* parent);
 			void addToMetacontact(Contact* contact, Metacontact* metacontact);
-			void addMetacontact(Metacontact* metacontact, Group* group);
+			void addMetacontact(Metacontact* metacontact, GroupItem* group);
 
 			void removeItem(Item* item);
 

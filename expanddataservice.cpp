@@ -28,4 +28,16 @@ namespace Roster {
 		groups_.insert(groupName, expanded);
 	}
 
+
+	const bool ExpandDataService::isMetacontactExpanded(const QString& name, const QString& groupName) {
+		if ( metacontacts_.contains(qMakePair(name, groupName)) ) {
+			return metacontacts_[qMakePair(name, groupName)];
+		} else {
+			return false;
+		}
+	}
+
+	void ExpandDataService::setMetacontactExpanded(const QString& name, const QString& groupName, bool expanded) {
+		metacontacts_.insert(qMakePair(name, groupName), expanded);
+	}
 }

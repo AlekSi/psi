@@ -76,6 +76,24 @@ namespace Roster {
 		}
 	}
 
+	Metacontact* RosterBuilder::addMetacontact(const QString& name, const QString& acname, GroupItem* parent) {
+		Metacontact* metacontact = new Metacontact(name);
+		if ( ! joinedAccounts_ ) {
+			metacontact->setAccountName(acname);
+		}
+
+		ExpandDataService* srv;
+		if ( metacontact->getAccountName().isEmpty() ) {
+			srv = joinedExpandService_;
+		} else {
+			srv = expandServices_[acname];
+		}
+
+		metacontact->setExpanded(srv->isMetacontactExpanded(name, parent->getGroupPath()));
+		manager_->addMetacontact(metacontact, parent);
+		return metacontact;
+	}
+
 	void RosterBuilder::addContact(Contact* contact, Group* group) {
 		if ( ! joinByName_ ) {
 			manager_->addContact(contact, group);
@@ -83,12 +101,8 @@ namespace Roster {
 			if ( Metacontact* metacontact = group->findMetacontact(contact->getName()) ) {
 				manager_->addToMetacontact(contact, metacontact);
 			} else if ( Contact* similar = group->findContact(contact->getName()) ) {
-				Metacontact* metacontact = new Metacontact(contact->getName());
-				if ( ! joinedAccounts_ ) {
-					metacontact->setAccountName(contact->getAccountName());
-				}
+				Metacontact* metacontact = addMetacontact(contact->getName(), contact->getAccountName(), group);		
 
-				manager_->addMetacontact(metacontact, group);
 				manager_->moveContact(similar, metacontact);
 				manager_->addToMetacontact(contact, metacontact);
 			} else {

@@ -14,8 +14,11 @@ namespace Roster {
 			const bool isGroupExpanded(const QString& groupName) const;
 			void setGroupExpanded(const QString& groupName, bool expanded);
 
+			const bool isMetacontactExpanded(const QString& name, const QString& groupName);
+			void setMetacontactExpanded(const QString& name, const QString& groupName, bool expanded);
 		private:
 			QMap<QPair<QString, QString>, bool> contacts_;
+			QMap<QPair<QString, QString>, bool> metacontacts_;
 			QMap<QString, bool> groups_;
 	};
 

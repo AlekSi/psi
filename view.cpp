@@ -14,6 +14,7 @@
 #include "resource.h"
 #include "manager.h"
 #include "viewmanager.h"
+#include "metacontact.h"
 
 namespace Roster {
 
@@ -190,6 +191,10 @@ namespace Roster {
 			vm_->setContactExpanded(contact, expanded);
 		} else if ( Group* group = dynamic_cast<Group*>(item) ) {
 			vm_->setGroupExpanded(group, expanded);
+		} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+			vm_->setMetacontactExpanded(metacontact, expanded);
+		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
+			vm_->setAccountExpanded(account, expanded);
 		}
 	}
 

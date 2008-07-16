@@ -4,6 +4,8 @@
 #include "contact.h"
 #include "expanddataservice.h"
 #include "group.h"
+#include "metacontact.h"
+#include "account.h"
 
 namespace Roster {
 
@@ -34,5 +36,22 @@ namespace Roster {
 		group->setExpanded(expanded);
 	}
 
+	void ViewManager::setMetacontactExpanded(Metacontact* metacontact, bool expanded) {
+		ExpandDataService* srv;
+
+		if ( metacontact->getAccountName().isEmpty() ) {
+			// using joined accounts
+			srv = joinedExpandService_;
+		} else {
+			srv = expandServices_[metacontact->getAccountName()];
+		}
+
+		srv->setMetacontactExpanded(metacontact->getName(), metacontact->getGroupPath(), expanded);
+		metacontact->setExpanded(expanded);
+	}
+
+	void ViewManager::setAccountExpanded(Account* account, bool expanded) {
+		account->setExpanded(expanded);
+	}
 }
 

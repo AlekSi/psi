@@ -7,6 +7,8 @@ namespace Roster {
 	class Contact;
 	class ExpandDataService;
 	class Group;
+	class Metacontact;
+	class Account;
 
 	class ViewManager {
 		public:
@@ -15,6 +17,8 @@ namespace Roster {
 			void registerAccount(const QString& acname, ExpandDataService* expService);
 			void setContactExpanded(Contact* contact, bool expanded);
 			void setGroupExpanded(Group* group, bool expanded);
+			void setMetacontactExpanded(Metacontact* metacontact, bool expanded);
+			void setAccountExpanded(Account* account, bool expanded);
 
 		private:
 			QMap<QString, ExpandDataService*> expandServices_;

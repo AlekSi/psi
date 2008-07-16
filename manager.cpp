@@ -70,7 +70,7 @@ namespace Roster {
 		emit itemAdded(contact);
 	}
 
-	void Manager::addMetacontact(Metacontact* metacontact, Group* group) {
+	void Manager::addMetacontact(Metacontact* metacontact, GroupItem* group) {
 		group->addItem(metacontact);
 		emit itemAdded(metacontact);
 	}

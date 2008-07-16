@@ -16,6 +16,7 @@ namespace Roster {
 	class ExpandDataService;
 	class Roster;
 	class Contact;
+	class Metacontact;
 
 	class RosterBuilder : public QObject {
 		Q_OBJECT
@@ -42,6 +43,7 @@ namespace Roster {
 			QList<Contact*> findContacts(const XMPPRosterItem* xitem, const QString& acname);
 			void addContact(Contact* contact, Group* group);
 			void addItem(const XMPPRosterItem* xitem, const QString& acname);
+			Metacontact* addMetacontact(const QString& name, const QString& acname, GroupItem* parent);
 			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);
 
 			// FIXME: that's just not nice
