@@ -26,8 +26,12 @@ namespace Roster {
 			virtual Contact* findContact(const QString& name);
 			virtual Metacontact* findMetacontact(const QString& name);
 
+			virtual void setExpanded(const bool expanded);
+			virtual const bool isExpanded() const;
+
 		protected:
 			QList<Item*> items_;
+			bool expanded_;
 	};
 
 }

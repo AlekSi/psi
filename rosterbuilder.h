@@ -13,6 +13,7 @@ namespace Roster {
 	class GroupItem;
 	class Item;
 	class RosterDataService;
+	class ExpandDataService;
 	class Roster;
 	class Contact;
 
@@ -20,8 +21,8 @@ namespace Roster {
 		Q_OBJECT
 
 		public:
-			RosterBuilder(Roster* root_, Manager* manager);
-			void addService(const QString& acname, RosterDataService* service);	
+			RosterBuilder(Roster* root_, Manager* manager, ExpandDataService* joinedExpandService);
+			void registerAccount(const QString& acname, RosterDataService* rosterService, ExpandDataService* expService);
 			void rebuild();
 
 		public slots:
@@ -41,8 +42,13 @@ namespace Roster {
 			QList<Contact*> findContacts(const XMPPRosterItem* xitem, const QString& acname);
 			void addContact(Contact* contact, Group* group);
 			void addItem(const XMPPRosterItem* xitem, const QString& acname);
+			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);
 
-			QMap<QString, RosterDataService*> services_;
+			// FIXME: that's just not nice
+			QMap<QString, RosterDataService*> rosterServices_;
+			QMap<QString, ExpandDataService*> expandServices_;
+			ExpandDataService* joinedExpandService_;
+
 			Roster* root_;
 			Manager* manager_;
 			bool joinedAccounts_;

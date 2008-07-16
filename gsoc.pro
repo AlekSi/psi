@@ -21,7 +21,9 @@ HEADERS += \
 	$$PWD/rosterdataservice.h \
 	$$PWD/dummydataservice.h \
 	$$PWD/xmppresource.h \
-	$$PWD/metacontact.h
+	$$PWD/metacontact.h \
+	$$PWD/expanddataservice.h \
+	$$PWD/viewmanager.h
 
 SOURCES += \
 	$$PWD/main.cpp \
@@ -41,5 +43,7 @@ SOURCES += \
 	$$PWD/rosterbuilder.cpp \
 	$$PWD/dummydataservice.cpp \
 	$$PWD/xmppresource.cpp \
-	$$PWD/metacontact.cpp
+	$$PWD/metacontact.cpp \
+	$$PWD/expanddataservice.cpp \
+	$$PWD/viewmanager.cpp
 

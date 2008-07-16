@@ -8,6 +8,7 @@
 namespace Roster {
 	class Item;
 	class Manager;
+	class ViewManager;
 
     class View : public QTreeView {
 		Q_OBJECT
@@ -16,6 +17,7 @@ namespace Roster {
 			View();
 
 			void setManager(Manager* manager);
+			void setViewManager(ViewManager* vm);
 
 		public slots:
 			void showContextMenu(const QPoint& position);
@@ -47,6 +49,7 @@ namespace Roster {
 		private:
 			QModelIndex senderItemIndex() const;
 			void initMenu();
+			void expandWithManager(const QModelIndex& index, bool expanded);
 
 			QAction *sendMessageAct_, *historyAct_, *showResourcesAct_, *hideResourcesAct_, *renameContactAct_, *removeContactAct_, *sendFileAct_, *openChatAct_; // Contact menu
 			QAction *sendMessageToGroupAct_, *renameGroupAct_, *removeGroupAct_, *removeGroupAndContactsAct_; // Group menu
@@ -55,6 +58,7 @@ namespace Roster {
 			QAction *sendMessageToResourceAct_, *openChatToResourceAct_, *sendFileToResourceAct_; // Resource menu
 
 			Manager* manager_;
+			ViewManager* vm_;
     };
 }
 

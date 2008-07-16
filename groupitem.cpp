@@ -7,7 +7,7 @@
 
 namespace Roster {
 
-	GroupItem::GroupItem() {
+	GroupItem::GroupItem() : expanded_(true) {
 	}
 
 	GroupItem::~GroupItem() {
@@ -74,6 +74,14 @@ namespace Roster {
 		}
 
 		return 0;
+	}
+
+	void GroupItem::setExpanded(const bool expanded) {
+		expanded_ = expanded;
+	}
+
+	const bool GroupItem::isExpanded() const {
+		return expanded_;
 	}
 }
 

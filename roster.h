@@ -17,6 +17,8 @@ namespace Roster {
 
 			Account* findAccount(const QString& name);
 			Group* findNestedGroup(const QString& name, const QString& acname);
+
+			const QString getGroupPath() const;
 	};
 
 }

@@ -1,4 +1,5 @@
 #include "item.h"
+#include "groupitem.h"
 
 namespace Roster {
 
@@ -22,4 +23,15 @@ namespace Roster {
 		return id_;
 	}
 
+	void Item::setAccountName(const QString& acname) {
+		acname_ = acname;
+	}
+
+	const QString& Item::getAccountName() const {
+		return acname_;
+	}
+
+	const QString Item::getGroupPath() const {
+		return parent_->getGroupPath();
+	}
 }

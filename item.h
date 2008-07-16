@@ -13,12 +13,17 @@ namespace Roster {
 
 			GroupItem* getParent() const;
 			unsigned int getId() const;
+			const QString& getAccountName() const;
 
 			void setParent(GroupItem* parent);
+			void setAccountName(const QString& acname);
+
+			virtual const QString getGroupPath() const;
 
 		private:
 			GroupItem* parent_;
 			unsigned int id_;
+			QString acname_;
 	};
 }
 

@@ -16,6 +16,8 @@
 #include "metacontact.h"
 #include "rosterbuilder.h"
 #include "rosterdataservice.h"
+#include "expanddataservice.h"
+#include "viewmanager.h"
 
 #include "dummydataservice.h"
 
@@ -24,13 +26,20 @@ namespace Roster {
 		data_ = new Roster;
 //		setupTestData();
 
+		joinedExpandService_ = new ExpandDataService;
+
 		manager_ = new Manager;
-		rb_ = new RosterBuilder(data_, manager_);
+		rb_ = new RosterBuilder(data_, manager_, joinedExpandService_);
+		vm_ = new ViewManager(joinedExpandService_);
 
 		view_ = new View;
 		view_->setItemDelegate(new Delegate);
 		model_ = new Model(data_);
 		view_->setModel(model_);
+		view_->setViewManager(vm_);
+
+		connect(model_, SIGNAL(expand(const QModelIndex&)), view_, SLOT(expand(const QModelIndex&)));
+		connect(model_, SIGNAL(collapse(const QModelIndex&)), view_, SLOT(collapse(const QModelIndex&)));
 
 		model_->setManager(manager_);
 		view_->setManager(manager_);
@@ -41,7 +50,7 @@ namespace Roster {
 
 		buildTestRoster();
 
-		view_->expandAll();
+//		view_->expandAll();
 
 		// FIXME: hide resources by default ;-)
 		//view_->collapse(model_->index(0, 0, model_->index(0, 0)));
@@ -88,11 +97,14 @@ namespace Roster {
 	}
 		
 	void MainWindow::buildTestRoster() {
-		RosterDataService* service = new DummyDataService();
-		RosterDataService* service2 = new DummyDataService();
-		rb_->addService("gislan@utumno.pl", service);
-		rb_->addService("gislan@jabster.pl", service2);
+		RosterDataService* rosterService = new DummyDataService();
+		ExpandDataService* expService = new ExpandDataService();
+		rb_->registerAccount("gislan@utumno.pl", rosterService, expService);
+		vm_->registerAccount("gislan@utumno.pl", expService);
 
+		/*RosterDataService* service2 = new DummyDataService();
+		ExpandDataService* expService22 = new DummyExpandDataService();
+		rb_->addService("gislan@jabster.pl", service2);*/
 /*
 		XMPPRosterItem* d = new XMPPRosterItem("Romeo", "romeo@jabber.org", generic);
 		XMPPRosterItem* e = new XMPPRosterItem("Juliet", "juliet@jabber.org", generic);

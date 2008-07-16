@@ -44,7 +44,7 @@ namespace Roster {
 			}
 		} else if ( role == Qt::DecorationRole ) { // left icon
 			if ( Group* group = dynamic_cast<Group*>(item) ) {
-				if ( group->isOpen() ) {
+				if ( group->isExpanded() ) {
 					return QIcon("icons/groupopen.png");
 				} else {
 					return QIcon("icons/groupclose.png");
@@ -345,13 +345,31 @@ namespace Roster {
 	void Model::itemUpdated(Item* item) {
 		QModelIndex index = getIndex(item->getId());
 		if ( index.isValid() ) {
+			if ( GroupItem* groupItem = dynamic_cast<GroupItem*>(item) ) {
+				if ( groupItem->isExpanded() ) {
+					emit expand(index);
+				} else {
+					emit collapse(index);
+				}
+			}
+
 			emit dataChanged(index, index);
 		}
 	}
 
 	void Model::itemAdded(Item* item) {
-		Q_UNUSED(item);
-		emit layoutChanged();
+		QModelIndex index = getIndex(item->getId());
+		if ( index.isValid() ) {
+			if ( GroupItem* groupItem = dynamic_cast<GroupItem*>(item) ) {
+				if ( groupItem->isExpanded() ) {
+					emit expand(index);
+				} else {
+					emit collapse(index);
+				}
+			}
+
+			emit layoutChanged();
+		}
 	}
 
 	void Model::itemToBeRemoved(Item* item) {

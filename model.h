@@ -51,6 +51,10 @@ namespace Roster {
 			void itemRemoved(Item* item);
 			void itemToBeRemoved(Item* item);
 
+		signals:
+			void expand(const QModelIndex& index);
+			void collapse(const QModelIndex& index);
+
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;
 

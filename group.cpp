@@ -1,10 +1,11 @@
 #include <QString>
 
 #include "group.h"
+#include "roster.h"
 
 namespace Roster {
 
-	Group::Group(const QString& name) : name_(name), open_(true) {
+	Group::Group(const QString& name) : name_(name) {
 	}
 
 	Group::~Group() {
@@ -18,11 +19,13 @@ namespace Roster {
 		name_ = name;
 	}
 
-	const bool Group::isOpen() const {
-		return open_;
+	const QString Group::getGroupPath() const {
+		QString path = getParent()->getGroupPath();
+		if ( path.isEmpty() ) {
+			return name_;
+		} else {
+			return path + SEPARATOR + name_;
+		}
 	}
 
-	void Group::setOpen(const bool open) {
-		open_ = open;
-	}
 }

@@ -41,5 +41,8 @@ namespace Roster {
 		return static_cast<Group*>(item);
 	}
 
+	const QString Roster::getGroupPath() const {
+		return QString();
+	}
 }
 

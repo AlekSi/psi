@@ -13,6 +13,7 @@
 #include "account.h"
 #include "resource.h"
 #include "manager.h"
+#include "viewmanager.h"
 
 namespace Roster {
 
@@ -43,6 +44,10 @@ namespace Roster {
 
 	void View::setManager(Manager* manager) {
 		manager_ = manager;
+	}
+
+	void View::setViewManager(ViewManager* vm) {
+		vm_ = vm;
 	}
 
 	/* initialize context menu actions */
@@ -179,20 +184,23 @@ namespace Roster {
 		}
 	}
 
+	void View::expandWithManager(const QModelIndex& index, bool expanded) {
+		Item* item = index.data(Qt::UserRole).value<Item*>();
+		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+			vm_->setContactExpanded(contact, expanded);
+		} else if ( Group* group = dynamic_cast<Group*>(item) ) {
+			vm_->setGroupExpanded(group, expanded);
+		}
+	}
+
 	/* slot triggered when user expands item */
 	void View::itemExpanded(const QModelIndex& index) {
-		Item* item = index.data(Qt::UserRole).value<Item*>();
-		if ( Group* group = dynamic_cast<Group*>(item) ) {
-			group->setOpen(true);
-		}
+		expandWithManager(index, true);
 	}
 
 	/* slot triggered when user collapses item */
 	void View::itemCollapsed(const QModelIndex& index) {
-		Item* item = index.data(Qt::UserRole).value<Item*>();
-		if ( Group* group = dynamic_cast<Group*>(item) ) {
-			group->setOpen(false);
-		}
+		expandWithManager(index, false);
 	}
 
 	/* menu action for (contact)->send message */

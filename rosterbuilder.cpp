@@ -12,10 +12,16 @@
 #include "resource.h"
 #include "roster.h"
 #include "metacontact.h"
+#include "expanddataservice.h"
 
 namespace Roster {
 
-	RosterBuilder::RosterBuilder(Roster* root, Manager* manager) : root_(root), manager_(manager), joinedAccounts_(true), joinByName_(true) {
+	RosterBuilder::RosterBuilder(Roster* root, Manager* manager, ExpandDataService* joinedExpandService) : 
+																		joinedExpandService_(joinedExpandService), 
+																		root_(root), 
+																		manager_(manager), 
+																		joinedAccounts_(true), 
+																		joinByName_(true) {
 	}
 
 	void RosterBuilder::rebuild() {
@@ -36,17 +42,21 @@ namespace Roster {
 	}
 
 	void RosterBuilder::addItem(const XMPPRosterItem* xitem, const QString& acname) {
-		RosterDataService* srv = services_[acname];
-		Contact* contact = new Contact(xitem->getName(), xitem->getJid());
-		contact->setAvatar(srv->getAvatar(contact->getJid()));
+		RosterDataService* srv = rosterServices_[acname];
 
 		foreach(QString xgroup, xitem->getGroups()) {
+			Contact* contact = new Contact(xitem->getName(), xitem->getJid());
+			contact->setAccountName(acname);
+			contact->setAvatar(srv->getAvatar(contact->getJid()));
+			contact->setExpanded(expandServices_[acname]->isContactExpanded(xitem->getJid(), xgroup));
+
 			Group* group = findGroup(xgroup, acname);
 
 			addContact(contact, group);
 
 			foreach(XMPPResource* xresource, xitem->getResources()) {
 				Resource* resource = new Resource(xresource->getName(), xresource->getPriority(), xresource->getStatus());
+				resource->setAccountName(acname);
 				// FIXME: move it to some better place
 				if ( xresource->getShow() == STATUS_ONLINE ) {
 					resource->setIcon(QIcon("icons/online.png"));
@@ -60,7 +70,7 @@ namespace Roster {
 	}
 
 	void RosterBuilder::buildRoster(const QString& acname) {
-		RosterDataService* srv = services_[acname];
+		RosterDataService* srv = rosterServices_[acname];
 		foreach(XMPPRosterItem* xitem, srv->getRosterItems()) { 
 			addItem(xitem, acname);
 		}
@@ -74,6 +84,10 @@ namespace Roster {
 				manager_->addToMetacontact(contact, metacontact);
 			} else if ( Contact* similar = group->findContact(contact->getName()) ) {
 				Metacontact* metacontact = new Metacontact(contact->getName());
+				if ( ! joinedAccounts_ ) {
+					metacontact->setAccountName(contact->getAccountName());
+				}
+
 				manager_->addMetacontact(metacontact, group);
 				manager_->moveContact(similar, metacontact);
 				manager_->addToMetacontact(contact, metacontact);
@@ -85,8 +99,9 @@ namespace Roster {
 
 	void RosterBuilder::buildAllAccounts() {
 		clear(root_);
-		foreach(QString name, services_.keys()) {
+		foreach(QString name, rosterServices_.keys()) {
 			Account* account = new Account(name);
+			account->setAccountName(name);
 			manager_->addAccount(account, root_);
 
 			buildRoster(name);
@@ -95,7 +110,7 @@ namespace Roster {
 
 	void RosterBuilder::buildJoinedAccounts() {
 		clear(root_);
-		foreach(QString acname, services_.keys()) {
+		foreach(QString acname, rosterServices_.keys()) {
 			buildRoster(acname);
 		}
 	}
@@ -107,6 +122,31 @@ namespace Roster {
 				manager_->removeItem(subitem);
 			}
 		}
+	}
+
+	Group* RosterBuilder::addGroup(const QString& groupName, const QString& acname, GroupItem* parent) {
+		Group* group = new Group(groupName);
+		if ( ! joinedAccounts_ ) {
+			group->setAccountName(acname);
+		}
+
+		ExpandDataService* srv;
+		if ( group->getAccountName().isEmpty() ) {
+			srv = joinedExpandService_;
+		} else {
+			srv = expandServices_[acname];
+		}
+
+		QString fullPath = parent->getGroupPath();
+		if ( ! fullPath.isEmpty() ) {
+			fullPath += SEPARATOR;
+		}
+		fullPath += group->getName();
+
+		group->setExpanded(srv->isGroupExpanded(fullPath));
+
+		manager_->addGroup(group, parent);
+		return group;
 	}
 
 	/* create (if it doesn't exist yet) and return group with given name on given account */
@@ -123,9 +163,7 @@ namespace Roster {
 
 			if ( ! next ) {
 				if ( create ) {
-					// add new group
-					next = new Group(name);
-					manager_->addGroup(next, up);
+					next = addGroup(name, acname, up);
 				} else {
 					return 0;
 				}
@@ -138,9 +176,9 @@ namespace Roster {
 		return static_cast<Group*>(up);
 	}
 
-
-	void RosterBuilder::addService(const QString& acname, RosterDataService* service) {
-		services_.insert(acname, service);
+	void RosterBuilder::registerAccount(const QString& acname, RosterDataService* rosterService, ExpandDataService* expService) {
+		rosterServices_.insert(acname, rosterService);
+		expandServices_.insert(acname, expService);
 	}
 
 	void RosterBuilder::setJoinByName(bool joinByName) {
