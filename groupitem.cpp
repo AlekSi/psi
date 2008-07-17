@@ -52,10 +52,10 @@ namespace Roster {
 	}
 
 	// FIXME: this is wrong with metacontacts, we need to pass acname as well
-	Contact* GroupItem::findContact(const QString& name) {
+	Contact* GroupItem::findContact(const QString& name, const QString& acname) {
 		foreach(Item* item, items_) {
 			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-				if ( contact->getName() == name ) {
+				if ( contact->getName() == name and (contact->getAccountName() == acname or acname.isEmpty()) ) {
 					return contact;
 				}
 			}

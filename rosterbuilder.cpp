@@ -231,13 +231,13 @@ namespace Roster {
 
 			if ( joinByName_ ) {
 			   	if ( Metacontact* metacontact = group->findMetacontact(xitem->getName()) ) {
-					if ( Contact* contact = metacontact->findContact(xitem->getName()) ) {
+					if ( Contact* contact = metacontact->findContact(xitem->getName(), acname) ) {
 						contacts.append(contact);
 					}
 				}
 			}
 
-			if ( Contact* contact = group->findContact(xitem->getName()) ) {
+			if ( Contact* contact = group->findContact(xitem->getName(), acname) ) {
 				contacts.append(contact);
 			}
 		}

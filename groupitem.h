@@ -23,7 +23,7 @@ namespace Roster {
 			virtual void addItem(Item* item);
 			virtual const QList<Item*>& getItems() const;
 			virtual Group* findGroup(const QString& name);
-			virtual Contact* findContact(const QString& name);
+			virtual Contact* findContact(const QString& name, const QString& acname = "");
 			virtual Metacontact* findMetacontact(const QString& name);
 
 			virtual void setExpanded(const bool expanded);
