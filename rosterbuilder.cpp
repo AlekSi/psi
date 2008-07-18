@@ -21,7 +21,8 @@ namespace Roster {
 																		root_(root), 
 																		manager_(manager), 
 																		joinedAccounts_(true), 
-																		joinByName_(true) {
+																		joinByName_(true),
+																		itemFilter_(0)	{
 	}
 
 	void RosterBuilder::rebuild() {
@@ -41,8 +42,29 @@ namespace Roster {
 		rebuild();
 	}
 
+	void RosterBuilder::setShowOffline(bool show) {
+		if ( show ) {
+			setFilter(getFilter() & (~FILTER_OFFLINE));
+		} else {
+			setFilter(getFilter() | FILTER_OFFLINE);
+		}
+	}
+
+	unsigned int RosterBuilder::getFilter() {
+		return itemFilter_;
+	}
+
+	void RosterBuilder::setFilter(unsigned int itemFilter) {
+		itemFilter_ = itemFilter;
+		rebuild();
+	}
+
 	void RosterBuilder::addItem(const XMPPRosterItem* xitem, const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
+
+		if ( ! isContactVisible(xitem) ) {
+			return;
+		}
 
 		foreach(QString xgroup, xitem->getGroups()) {
 			Contact* contact = new Contact(xitem->getName(), xitem->getJid());
@@ -214,6 +236,36 @@ namespace Roster {
 		foreach(Contact* contact, contacts) {
 			manager_->removeContact(contact);
 		}
+	}
+
+	const bool RosterBuilder::isContactVisible(const XMPPRosterItem* xitem) const {
+		foreach(XMPPResource* xres, xitem->getResources()) {
+			if ( xres->getShow() == STATUS_ONLINE or xres->getShow() == STATUS_CHAT ) {
+				return true;
+			}
+
+			if ( xres->getShow() == STATUS_DND and !(itemFilter_ & FILTER_DND) ) {
+				return true;
+			}
+
+			if ( xres->getShow() == STATUS_AWAY and !(itemFilter_ & FILTER_AWAY) ) {
+				return true;
+			}
+
+			if ( xres->getShow() == STATUS_XA and !(itemFilter_ & FILTER_XA) ) {
+				return true;
+			}
+
+			if ( xres->getShow() == STATUS_OFFLINE and !(itemFilter_ & FILTER_OFFLINE) ) {
+				return true;
+			}
+		}
+
+		if ( itemFilter_ & FILTER_OFFLINE ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {

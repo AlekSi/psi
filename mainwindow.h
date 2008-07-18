@@ -21,9 +21,6 @@ namespace Roster {
 		public:
 			MainWindow();
 
-		public slots:
-			void testSlot(bool opt = true);
-
 		private:
 			void setupTestData();
 			void buildTestRoster();
@@ -37,7 +34,7 @@ namespace Roster {
 			ViewManager* vm_;
 			ExpandDataService* joinedExpandService_;
 
-			QAction *toggleAvatarsAct_, *toggleStatusAct_, *toggleJoinedAccountsAct_, *toggleJoinByNameAct_;
+			QAction *toggleAvatarsAct_, *toggleStatusAct_, *toggleJoinedAccountsAct_, *toggleJoinByNameAct_, *toggleShowOfflineAct_;
 	};
 }
 

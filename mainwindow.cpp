@@ -65,6 +65,7 @@ namespace Roster {
 		toggleStatusAct_ = new QAction(tr("Show status messages"), this);
 		toggleJoinedAccountsAct_ = new QAction(tr("Join all accounts"), this);
 		toggleJoinByNameAct_ = new QAction(tr("Join contacts by name"), this);
+		toggleShowOfflineAct_ = new QAction(tr("Show offline contacts"), this);
 
 		toggleAvatarsAct_->setCheckable(true);
 		toggleAvatarsAct_->setChecked(true);
@@ -74,27 +75,23 @@ namespace Roster {
 		toggleJoinedAccountsAct_->setChecked(true);
 		toggleJoinByNameAct_->setCheckable(true);
 		toggleJoinByNameAct_->setChecked(true);
+		toggleShowOfflineAct_->setCheckable(true);
+		toggleShowOfflineAct_->setChecked(true);
 		
 		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
 		connect(toggleStatusAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowStatus(bool)));
-		//connect(toggleStatusAct_, SIGNAL(toggled(bool)), SLOT(testSlot(bool)));
 		connect(toggleJoinedAccountsAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinedAccounts(bool)));
 		connect(toggleJoinByNameAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinByName(bool)));
+		connect(toggleShowOfflineAct_, SIGNAL(toggled(bool)), rb_, SLOT(setShowOffline(bool)));
 
 		QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
 		viewMenu->addAction(toggleAvatarsAct_);
 		viewMenu->addAction(toggleStatusAct_);
 		viewMenu->addAction(toggleJoinedAccountsAct_);
 		viewMenu->addAction(toggleJoinByNameAct_);
+		viewMenu->addAction(toggleShowOfflineAct_);
 	}
 
-	void MainWindow::testSlot(bool opt) {
-		qDebug() << "test slot";
-		RosterDataService* service = new DummyDataService();
-
-		rb_->itemAdded(service->getRosterItems().at(0), "gislan@utumno.pl");
-		//rb_->itemRemoved(service->getRosterItems().at(0), "gislan@utumno.pl");
-	}
 		
 	void MainWindow::buildTestRoster() {
 		RosterDataService* rosterService = new DummyDataService();
