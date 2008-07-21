@@ -72,11 +72,11 @@ namespace Roster {
 		toggleStatusAct_->setCheckable(true);
 		toggleStatusAct_->setChecked(true);
 		toggleJoinedAccountsAct_->setCheckable(true);
-		toggleJoinedAccountsAct_->setChecked(true);
+		toggleJoinedAccountsAct_->setChecked(false);
 		toggleJoinByNameAct_->setCheckable(true);
-		toggleJoinByNameAct_->setChecked(true);
+		toggleJoinByNameAct_->setChecked(false);
 		toggleShowOfflineAct_->setCheckable(true);
-		toggleShowOfflineAct_->setChecked(true);
+		toggleShowOfflineAct_->setChecked(false);
 		
 		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
 		connect(toggleStatusAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowStatus(bool)));
@@ -99,9 +99,10 @@ namespace Roster {
 		rb_->registerAccount("gislan@utumno.pl", rosterService, expService);
 		vm_->registerAccount("gislan@utumno.pl", expService);
 
-		/*RosterDataService* service2 = new DummyDataService();
-		ExpandDataService* expService22 = new DummyExpandDataService();
-		rb_->addService("gislan@jabster.pl", service2);*/
+		RosterDataService* rosterService2 = new DummyDataService();
+		ExpandDataService* expService2 = new ExpandDataService();
+		rb_->registerAccount("gislan@jabster.pl", rosterService2, expService2);
+		vm_->registerAccount("gislan@jabster.pl", expService2);
 /*
 		XMPPRosterItem* d = new XMPPRosterItem("Romeo", "romeo@jabber.org", generic);
 		XMPPRosterItem* e = new XMPPRosterItem("Juliet", "juliet@jabber.org", generic);

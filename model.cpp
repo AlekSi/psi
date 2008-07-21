@@ -121,6 +121,11 @@ namespace Roster {
 					tip += Qt::escape(resource->getStatus()) + "\n";
 				}
 			}
+
+			/* if we're using joined accounts, put info on which account is this contact on */
+			if ( contact->getParent()->getAccountName().isEmpty() ) {
+				tip += QString("\n(Account: %1)\n").arg(Qt::escape(contact->getAccountName()));
+			}
 		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
 			tip += account->getName();
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
@@ -131,6 +136,13 @@ namespace Roster {
 			if (! resource->getStatus().isEmpty()) {
 				tip += "<u>Status message</u>\n";
 				tip += Qt::escape(resource->getStatus()) + "\n";
+			}
+		} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+			tip += Qt::escape(metacontact->getName()) + "\n";
+
+			foreach(Item* item, metacontact->getItems()) {
+				Contact* contact = static_cast<Contact*>(item);	
+				tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid()));
 			}
 		} else {
 			return QVariant();

@@ -182,6 +182,8 @@ namespace Roster {
 			qDebug() << "Default action triggered on account" << account->getName();
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 			qDebug() << "Default action triggered on resource" << resource->getName();
+		} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+			qDebug() << "Default action triggered on metacontact" << metacontact->getName();
 		}
 	}
 

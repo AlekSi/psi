@@ -20,9 +20,9 @@ namespace Roster {
 																		joinedExpandService_(joinedExpandService), 
 																		root_(root), 
 																		manager_(manager), 
-																		joinedAccounts_(true), 
-																		joinByName_(true),
-																		itemFilter_(0)	{
+																		joinedAccounts_(false), 
+																		joinByName_(false),
+																		itemFilter_(FILTER_OFFLINE)	{
 	}
 
 	void RosterBuilder::rebuild() {
@@ -255,13 +255,9 @@ namespace Roster {
 			if ( xres->getShow() == STATUS_XA and !(itemFilter_ & FILTER_XA) ) {
 				return true;
 			}
-
-			if ( xres->getShow() == STATUS_OFFLINE and !(itemFilter_ & FILTER_OFFLINE) ) {
-				return true;
-			}
 		}
 
-		if ( itemFilter_ & FILTER_OFFLINE ) {
+		if ( ! (itemFilter_ & FILTER_OFFLINE) ) {
 			return true;
 		}
 
