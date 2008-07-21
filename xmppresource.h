@@ -3,17 +3,9 @@
 
 #include <QString>
 
+#include "globals.h"
+
 namespace Roster {
-
-	enum ShowType {
-		STATUS_ONLINE,
-		STATUS_AWAY,
-		STATUS_CHAT,
-		STATUS_DND,
-		STATUS_XA,
-		STATUS_OFFLINE
-	};
-
 
 	class XMPPResource {
 		public:

@@ -24,9 +24,22 @@ namespace Roster {
 		contact->getParent()->removeItem(contact);
 		emit itemRemoved(contact);
 
-		delete contact; // FIXME: shouldn't this be done in RosterBuilder?
+		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
+			metacontact->setStatus("");
+
+			foreach(Item* item, metacontact->getItems()) {
+				Contact* contact = static_cast<Contact*>(item);
+				if ( !contact->getStatus().isEmpty() ) {
+					metacontact->setStatus(contact->getStatus());
+					break;
+				}
+			}
+
+			emit itemUpdated(metacontact);
+		}
 	}
 
+	// FIXME: this is currently not used and should not be used (?)
 	void Manager::moveContact(Contact* contact, GroupItem* group) {
 		emit itemToBeRemoved(contact);
 		contact->getParent()->removeItem(contact);
@@ -56,8 +69,6 @@ namespace Roster {
 		emit itemToBeRemoved(item);
 		item->getParent()->removeItem(item);
 		emit itemRemoved(item);
-
-		delete item; // FIXME: shouldn't this be done in RosterBuilder?
 	}
 
 	void Manager::addResource(Resource* resource, Contact* contact) {
@@ -68,6 +79,12 @@ namespace Roster {
 	void Manager::addToMetacontact(Contact* contact, Metacontact* metacontact) {
 		metacontact->addItem(contact);
 		emit itemAdded(contact);
+
+		/* if it's the first contact in metacontact, copy status to metacontact */
+		if ( metacontact->getIndexOf(contact) == 0 and !contact->getStatus().isEmpty() ) {
+			metacontact->setStatus(contact->getStatus());
+			emit itemUpdated(metacontact);
+		}
 	}
 
 	void Manager::addMetacontact(Metacontact* metacontact, GroupItem* group) {

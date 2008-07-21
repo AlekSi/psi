@@ -5,18 +5,13 @@
 #include <QVariant>
 #include <QModelIndex>
 
+#include "globals.h"
+
 namespace Roster {
 	class Item;
 	class Roster;
 	class Manager;
 	class RosterBuilder;
-
-	enum Roles {
-		ItemRole = Qt::UserRole,
-		IdRole = Qt::UserRole + 1,
-		AvatarRole = Qt::UserRole + 2,
-		StatusRole = Qt::UserRole + 3
-	};
 
 	class Model : public QAbstractItemModel	{
 		Q_OBJECT

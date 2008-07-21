@@ -12,15 +12,7 @@ namespace Roster {
 	}
 
 	const QString Metacontact::getStatus() const {
-		// FIXME: get REAL status here
-		QString status;
-		
-		foreach(Item* item, items_) {
-			Contact* contact = static_cast<Contact*>(item);
-			status = contact->getStatus();
-		}
-
-		return status;
+		return status_;
 	}
 
 	const QIcon Metacontact::getIcon() const {
@@ -45,5 +37,9 @@ namespace Roster {
 
 	void Metacontact::setAvatar(const QIcon& avatar) {
 		avatar_ = avatar;
+	}
+
+	void Metacontact::setStatus(const QString& status) {
+		status_ = status;
 	}
 }

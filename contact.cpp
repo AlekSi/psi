@@ -11,7 +11,7 @@ namespace Roster {
 	Contact::Contact(const Contact& c) : GroupItem() {
 		name_ = c.name_;
 		jid_ = c.jid_;
-		icon_ = c.icon_;
+//		icon_ = c.icon_;
 		avatar_ = c.avatar_;	
 		items_ = c.items_;
 	}
@@ -49,10 +49,6 @@ namespace Roster {
 		}
 
 		return icon;
-	}
-
-	void Contact::setIcon(const QIcon& icon) {
-		icon_ = icon;
 	}
 
 	const QIcon& Contact::getAvatar() const {

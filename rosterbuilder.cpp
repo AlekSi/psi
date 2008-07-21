@@ -59,6 +59,13 @@ namespace Roster {
 		rebuild();
 	}
 
+	void RosterBuilder::addResource(XMPPResource* xresource, Contact* parent) {
+		Resource* resource = new Resource(xresource);
+		resource->setAccountName(parent->getAccountName());
+
+		manager_->addResource(resource, parent);
+	}
+
 	void RosterBuilder::addItem(const XMPPRosterItem* xitem, const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 
@@ -77,16 +84,7 @@ namespace Roster {
 			addContact(contact, group);
 
 			foreach(XMPPResource* xresource, xitem->getResources()) {
-				Resource* resource = new Resource(xresource->getName(), xresource->getPriority(), xresource->getStatus());
-				resource->setAccountName(acname);
-				// FIXME: move it to some better place
-				if ( xresource->getShow() == STATUS_ONLINE ) {
-					resource->setIcon(QIcon("icons/online.png"));
-				} else {
-					resource->setIcon(QIcon("icons/offline.png"));
-				}
-
-				manager_->addResource(resource, contact);
+				addResource(xresource, contact);
 			}
 		}
 	}
@@ -125,7 +123,8 @@ namespace Roster {
 			} else if ( Contact* similar = group->findContact(contact->getName()) ) {
 				Metacontact* metacontact = addMetacontact(contact->getName(), contact->getAccountName(), group);		
 
-				manager_->moveContact(similar, metacontact);
+				manager_->removeContact(similar);
+				manager_->addToMetacontact(similar, metacontact);
 				manager_->addToMetacontact(contact, metacontact);
 			} else {
 				manager_->addContact(contact, group);
@@ -156,6 +155,7 @@ namespace Roster {
 			foreach(Item* subitem, g->getItems()) {
 				clear(subitem);
 				manager_->removeItem(subitem);
+				delete subitem;
 			}
 		}
 	}
@@ -235,6 +235,7 @@ namespace Roster {
 
 		foreach(Contact* contact, contacts) {
 			manager_->removeContact(contact);
+			delete contact;
 		}
 	}
 

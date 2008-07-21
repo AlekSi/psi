@@ -56,6 +56,7 @@ namespace Roster {
 			void addItem(const XMPPRosterItem* xitem, const QString& acname);
 			Metacontact* addMetacontact(const QString& name, const QString& acname, GroupItem* parent);
 			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);
+			void addResource(XMPPResource* xresource, Contact* parent);
 
 			const bool isContactVisible(const XMPPRosterItem* xitem) const;
 

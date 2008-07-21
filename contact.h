@@ -5,6 +5,7 @@
 #include <QIcon>
 
 #include "groupitem.h"
+#include "globals.h"
 
 namespace Roster {
 	class Resource;
@@ -32,7 +33,7 @@ namespace Roster {
 		private:
 			QString name_;
 			QString jid_;
-			QIcon icon_;
+			ShowType show_;
 			QIcon avatar_;
 	};
 }

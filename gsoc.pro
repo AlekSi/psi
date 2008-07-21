@@ -23,7 +23,8 @@ HEADERS += \
 	$$PWD/xmppresource.h \
 	$$PWD/metacontact.h \
 	$$PWD/expanddataservice.h \
-	$$PWD/viewmanager.h
+	$$PWD/viewmanager.h \
+	$$PWD/globals.h
 
 SOURCES += \
 	$$PWD/main.cpp \

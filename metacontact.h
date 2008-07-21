@@ -19,8 +19,10 @@ namespace Roster {
 
 			void setName(const QString& name);
 			void setAvatar(const QIcon& avatar); 
+			void setStatus(const QString& status);
 		private:
 			QString name_;
+			QString status_;
 			QIcon avatar_;
 	};
 }

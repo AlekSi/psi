@@ -118,7 +118,7 @@ namespace Roster {
 	}
 
 	void MainWindow::setupTestData() {
-		Contact* c1 = new Contact("Gislan", "gislan@utumno.pl");
+/*		Contact* c1 = new Contact("Gislan", "gislan@utumno.pl");
 		Contact* c2 = new Contact("Remko", "remko@el-tramo.be");
 		Contact* c3 = new Contact("you@jabber.org", "you@jabber.org");
 		Contact* c4 = new Contact("me@jabber.org", "me@jabber.org");
@@ -173,7 +173,7 @@ namespace Roster {
 //		account->addItem(c2);
 		account->addItem(g1);
 
-		data_->addItem(account);
+		data_->addItem(account);*/
 	}
 }
 
