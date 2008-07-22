@@ -6,6 +6,7 @@
 #include <QMap>
 
 #include "xmpprosteritem.h"
+#include "globals.h"
 
 namespace Roster {
 	class Manager;
@@ -13,22 +14,17 @@ namespace Roster {
 	class GroupItem;
 	class Item;
 	class RosterDataService;
-	class ExpandDataService;
 	class Roster;
 	class Contact;
 	class Metacontact;
-
-	const unsigned int FILTER_OFFLINE = 1;
-	const unsigned int FILTER_DND = 2;
-	const unsigned int FILTER_AWAY = 4;
-	const unsigned int FILTER_XA = 8;
+	class ViewStateManager;
 
 	class RosterBuilder : public QObject {
 		Q_OBJECT
 
 		public:
-			RosterBuilder(Roster* root_, Manager* manager, ExpandDataService* joinedExpandService);
-			void registerAccount(const QString& acname, RosterDataService* rosterService, ExpandDataService* expService);
+			RosterBuilder(Roster* root_, Manager* manager, ViewStateManager* vms);
+			void registerAccount(const QString& acname, RosterDataService* rosterService);
 			void rebuild();
 
 			unsigned int getFilter();
@@ -60,11 +56,9 @@ namespace Roster {
 
 			const bool isContactVisible(const XMPPRosterItem* xitem) const;
 
-			// FIXME: that's just not nice
 			QMap<QString, RosterDataService*> rosterServices_;
-			QMap<QString, ExpandDataService*> expandServices_;
-			ExpandDataService* joinedExpandService_;
 
+			ViewStateManager* vsm_;
 			Roster* root_;
 			Manager* manager_;
 			bool joinedAccounts_;

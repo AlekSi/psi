@@ -8,7 +8,7 @@
 namespace Roster {
 	class Item;
 	class Manager;
-	class ViewManager;
+	class ViewStateManager;
 
     class View : public QTreeView {
 		Q_OBJECT
@@ -17,7 +17,7 @@ namespace Roster {
 			View();
 
 			void setManager(Manager* manager);
-			void setViewManager(ViewManager* vm);
+			void setViewStateManager(ViewStateManager* vsm);
 
 		public slots:
 			void showContextMenu(const QPoint& position);
@@ -58,7 +58,7 @@ namespace Roster {
 			QAction *sendMessageToResourceAct_, *openChatToResourceAct_, *sendFileToResourceAct_; // Resource menu
 
 			Manager* manager_;
-			ViewManager* vm_;
+			ViewStateManager* vsm_;
     };
 }
 

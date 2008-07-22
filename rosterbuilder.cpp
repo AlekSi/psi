@@ -12,12 +12,12 @@
 #include "resource.h"
 #include "roster.h"
 #include "metacontact.h"
-#include "expanddataservice.h"
+#include "viewstatemanager.h"
 
 namespace Roster {
 
-	RosterBuilder::RosterBuilder(Roster* root, Manager* manager, ExpandDataService* joinedExpandService) : 
-																		joinedExpandService_(joinedExpandService), 
+	RosterBuilder::RosterBuilder(Roster* root, Manager* manager, ViewStateManager* vsm) : 
+																		vsm_(vsm),
 																		root_(root), 
 																		manager_(manager), 
 																		joinedAccounts_(false), 
@@ -77,11 +77,11 @@ namespace Roster {
 			Contact* contact = new Contact(xitem->getName(), xitem->getJid());
 			contact->setAccountName(acname);
 			contact->setAvatar(srv->getAvatar(contact->getJid()));
-			contact->setExpanded(expandServices_[acname]->isContactExpanded(xitem->getJid(), xgroup));
 
 			Group* group = findGroup(xgroup, acname);
 
 			addContact(contact, group);
+			manager_->updateState(contact, vsm_->isContactExpanded(contact));
 
 			foreach(XMPPResource* xresource, xitem->getResources()) {
 				addResource(xresource, contact);
@@ -102,15 +102,8 @@ namespace Roster {
 			metacontact->setAccountName(acname);
 		}
 
-		ExpandDataService* srv;
-		if ( metacontact->getAccountName().isEmpty() ) {
-			srv = joinedExpandService_;
-		} else {
-			srv = expandServices_[acname];
-		}
-
-		metacontact->setExpanded(srv->isMetacontactExpanded(name, parent->getGroupPath()));
 		manager_->addMetacontact(metacontact, parent);
+		manager_->updateState(metacontact, vsm_->isMetacontactExpanded(metacontact));
 		return metacontact;
 	}
 
@@ -138,6 +131,7 @@ namespace Roster {
 			Account* account = new Account(name);
 			account->setAccountName(name);
 			manager_->addAccount(account, root_);
+			manager_->updateState(account, vsm_->isAccountExpanded(account));
 
 			buildRoster(name);
 		}
@@ -166,22 +160,8 @@ namespace Roster {
 			group->setAccountName(acname);
 		}
 
-		ExpandDataService* srv;
-		if ( group->getAccountName().isEmpty() ) {
-			srv = joinedExpandService_;
-		} else {
-			srv = expandServices_[acname];
-		}
-
-		QString fullPath = parent->getGroupPath();
-		if ( ! fullPath.isEmpty() ) {
-			fullPath += SEPARATOR;
-		}
-		fullPath += group->getName();
-
-		group->setExpanded(srv->isGroupExpanded(fullPath));
-
 		manager_->addGroup(group, parent);
+		manager_->updateState(group, vsm_->isGroupExpanded(group));
 		return group;
 	}
 
@@ -212,9 +192,8 @@ namespace Roster {
 		return static_cast<Group*>(up);
 	}
 
-	void RosterBuilder::registerAccount(const QString& acname, RosterDataService* rosterService, ExpandDataService* expService) {
+	void RosterBuilder::registerAccount(const QString& acname, RosterDataService* rosterService) {
 		rosterServices_.insert(acname, rosterService);
-		expandServices_.insert(acname, expService);
 	}
 
 	void RosterBuilder::setJoinByName(bool joinByName) {

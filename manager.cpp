@@ -91,5 +91,10 @@ namespace Roster {
 		group->addItem(metacontact);
 		emit itemAdded(metacontact);
 	}
+
+	void Manager::updateState(GroupItem* groupItem, bool expanded) {
+		groupItem->setExpanded(expanded);
+		emit itemUpdated(groupItem);
+	}
 }
 

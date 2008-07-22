@@ -21,6 +21,11 @@ namespace Roster {
 		STATUS_OFFLINE
 	};
 
+	const unsigned int FILTER_OFFLINE = 1;
+	const unsigned int FILTER_DND = 2;
+	const unsigned int FILTER_AWAY = 4;
+	const unsigned int FILTER_XA = 8;
+
 }
 
 #endif

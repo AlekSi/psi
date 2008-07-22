@@ -22,9 +22,8 @@ HEADERS += \
 	$$PWD/dummydataservice.h \
 	$$PWD/xmppresource.h \
 	$$PWD/metacontact.h \
-	$$PWD/expanddataservice.h \
-	$$PWD/viewmanager.h \
-	$$PWD/globals.h
+	$$PWD/globals.h \
+	$$PWD/viewstatemanager.h
 
 SOURCES += \
 	$$PWD/main.cpp \
@@ -45,6 +44,5 @@ SOURCES += \
 	$$PWD/dummydataservice.cpp \
 	$$PWD/xmppresource.cpp \
 	$$PWD/metacontact.cpp \
-	$$PWD/expanddataservice.cpp \
-	$$PWD/viewmanager.cpp
+	$$PWD/viewstatemanager.cpp
 

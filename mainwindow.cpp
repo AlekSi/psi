@@ -16,8 +16,7 @@
 #include "metacontact.h"
 #include "rosterbuilder.h"
 #include "rosterdataservice.h"
-#include "expanddataservice.h"
-#include "viewmanager.h"
+#include "viewstatemanager.h"
 
 #include "dummydataservice.h"
 
@@ -26,17 +25,15 @@ namespace Roster {
 		data_ = new Roster;
 //		setupTestData();
 
-		joinedExpandService_ = new ExpandDataService;
-
 		manager_ = new Manager;
-		rb_ = new RosterBuilder(data_, manager_, joinedExpandService_);
-		vm_ = new ViewManager(joinedExpandService_);
+		vsm_ = new ViewStateManager;
+		rb_ = new RosterBuilder(data_, manager_, vsm_);
 
 		view_ = new View;
 		view_->setItemDelegate(new Delegate);
 		model_ = new Model(data_);
 		view_->setModel(model_);
-		view_->setViewManager(vm_);
+		view_->setViewStateManager(vsm_);
 
 		connect(model_, SIGNAL(expand(const QModelIndex&)), view_, SLOT(expand(const QModelIndex&)));
 		connect(model_, SIGNAL(collapse(const QModelIndex&)), view_, SLOT(collapse(const QModelIndex&)));
@@ -95,14 +92,10 @@ namespace Roster {
 		
 	void MainWindow::buildTestRoster() {
 		RosterDataService* rosterService = new DummyDataService();
-		ExpandDataService* expService = new ExpandDataService();
-		rb_->registerAccount("gislan@utumno.pl", rosterService, expService);
-		vm_->registerAccount("gislan@utumno.pl", expService);
+		rb_->registerAccount("gislan@utumno.pl", rosterService);
 
 		RosterDataService* rosterService2 = new DummyDataService();
-		ExpandDataService* expService2 = new ExpandDataService();
-		rb_->registerAccount("gislan@jabster.pl", rosterService2, expService2);
-		vm_->registerAccount("gislan@jabster.pl", expService2);
+		rb_->registerAccount("gislan@jabster.pl", rosterService2);
 /*
 		XMPPRosterItem* d = new XMPPRosterItem("Romeo", "romeo@jabber.org", generic);
 		XMPPRosterItem* e = new XMPPRosterItem("Juliet", "juliet@jabber.org", generic);

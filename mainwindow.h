@@ -12,8 +12,7 @@ namespace Roster {
 	class Model;
 	class View;
 	class RosterBuilder;
-	class ViewManager;
-	class ExpandDataService;
+	class ViewStateManager;
 
 	class MainWindow : public QMainWindow {
 		Q_OBJECT
@@ -31,8 +30,7 @@ namespace Roster {
 			Roster* data_;
 			Manager* manager_;
 			RosterBuilder* rb_;
-			ViewManager* vm_;
-			ExpandDataService* joinedExpandService_;
+			ViewStateManager* vsm_;
 
 			QAction *toggleAvatarsAct_, *toggleStatusAct_, *toggleJoinedAccountsAct_, *toggleJoinByNameAct_, *toggleShowOfflineAct_;
 	};

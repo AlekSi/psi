@@ -13,7 +13,7 @@
 #include "account.h"
 #include "resource.h"
 #include "manager.h"
-#include "viewmanager.h"
+#include "viewstatemanager.h"
 #include "metacontact.h"
 
 namespace Roster {
@@ -47,8 +47,8 @@ namespace Roster {
 		manager_ = manager;
 	}
 
-	void View::setViewManager(ViewManager* vm) {
-		vm_ = vm;
+	void View::setViewStateManager(ViewStateManager* vsm) {
+		vsm_ = vsm;
 	}
 
 	/* initialize context menu actions */
@@ -190,24 +190,36 @@ namespace Roster {
 	void View::expandWithManager(const QModelIndex& index, bool expanded) {
 		Item* item = index.data(Qt::UserRole).value<Item*>();
 		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-			vm_->setContactExpanded(contact, expanded);
+			vsm_->setContactExpanded(contact, expanded);
 		} else if ( Group* group = dynamic_cast<Group*>(item) ) {
-			vm_->setGroupExpanded(group, expanded);
+			vsm_->setGroupExpanded(group, expanded);
 		} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
-			vm_->setMetacontactExpanded(metacontact, expanded);
+			vsm_->setMetacontactExpanded(metacontact, expanded);
 		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
-			vm_->setAccountExpanded(account, expanded);
+			vsm_->setAccountExpanded(account, expanded);
 		}
 	}
 
 	/* slot triggered when user expands item */
 	void View::itemExpanded(const QModelIndex& index) {
-		expandWithManager(index, true);
+		Item* item = index.data(ItemRole).value<Item*>();
+		GroupItem* groupItem = static_cast<GroupItem*>(item);
+
+		/* do not call if this item was already expanded */
+		if ( ! groupItem->isExpanded() ) {
+			expandWithManager(index, true);
+		};
 	}
 
 	/* slot triggered when user collapses item */
 	void View::itemCollapsed(const QModelIndex& index) {
-		expandWithManager(index, false);
+		Item* item = index.data(ItemRole).value<Item*>();
+		GroupItem* groupItem = static_cast<GroupItem*>(item);
+
+		/* do not call if this item was already expanded */
+		if ( groupItem->isExpanded() ) {
+			expandWithManager(index, false);
+		};
 	}
 
 	/* menu action for (contact)->send message */

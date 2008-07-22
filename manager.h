@@ -30,6 +30,7 @@ namespace Roster {
 			void addMetacontact(Metacontact* metacontact, GroupItem* group);
 
 			void removeItem(Item* item);
+			void updateState(GroupItem* groupItem, bool expanded);
 
 		signals:
 			void itemUpdated(Item* item);
