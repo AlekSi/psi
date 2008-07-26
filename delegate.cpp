@@ -45,7 +45,7 @@ namespace Roster {
 
 		/* name */
 		QRect textRect(rect);
-		if ( ! index.data(StatusRole).toString().isEmpty() ) {
+		if ( ! index.data(StatusMessageRole).toString().isEmpty() ) {
 			textRect.setHeight(16);
 			rect.adjust(0, 16, 0, 0);
 		}
@@ -55,14 +55,14 @@ namespace Roster {
 		painter->drawText(textRect, Qt::AlignVCenter, name);
 
 		/* status message */
-		if ( ! index.data(StatusRole).toString().isEmpty() ) {
+		if ( ! index.data(StatusMessageRole).toString().isEmpty() ) {
 			QFont statusFont;
 			statusFont.setItalic(true);
 			statusFont.setPointSize(8);
 
 			QFontMetrics statusFm(statusFont);
 			QRect statusRect(rect);
-			QString status = statusFm.elidedText(index.data(StatusRole).toString(), Qt::ElideRight, statusRect.width());
+			QString status = statusFm.elidedText(index.data(StatusMessageRole).toString(), Qt::ElideRight, statusRect.width());
 			painter->setFont(statusFont);
 			painter->drawText(statusRect, Qt::AlignVCenter, status);
 		}
@@ -83,7 +83,7 @@ namespace Roster {
 			rect.adjust(0, 0, -32, 0);
 		}
 
-		if ( ! index.data(StatusRole).toString().isEmpty() ) {
+		if ( ! index.data(StatusMessageRole).toString().isEmpty() ) {
 			rect.setHeight(16);
 		}
 

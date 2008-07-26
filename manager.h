@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QObject>
+#include <QIcon>
 
 namespace Roster {
 	class Group;
@@ -32,6 +33,7 @@ namespace Roster {
 			void removeItem(Item* item);
 			void updateState(GroupItem* groupItem, bool expanded);
 
+			void setAvatar(Contact* contact, const QIcon& avatar);
 		signals:
 			void itemUpdated(Item* item);
 			void itemAdded(Item* item);

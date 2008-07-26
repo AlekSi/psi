@@ -76,7 +76,7 @@ namespace Roster {
 		toggleShowOfflineAct_->setChecked(false);
 		
 		connect(toggleAvatarsAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowAvatars(bool)));
-		connect(toggleStatusAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowStatus(bool)));
+		connect(toggleStatusAct_, SIGNAL(toggled(bool)), model_, SLOT(setShowStatusMessages(bool)));
 		connect(toggleJoinedAccountsAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinedAccounts(bool)));
 		connect(toggleJoinByNameAct_, SIGNAL(toggled(bool)), rb_, SLOT(setJoinByName(bool)));
 		connect(toggleShowOfflineAct_, SIGNAL(toggled(bool)), rb_, SLOT(setShowOffline(bool)));

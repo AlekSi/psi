@@ -19,7 +19,7 @@
 #include "metacontact.h"
 
 namespace Roster {
-	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatus_(true) {
+	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatusMessages_(true) {
 	}
 
 	QVariant Model::data(const QModelIndex &index, int role) const {
@@ -84,18 +84,18 @@ namespace Roster {
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 				return metacontact->getAvatar();
 			}
-		} else if ( role == StatusRole and showStatus_ ) { // status text
+		} else if ( role == StatusMessageRole and showStatusMessages_ ) { // statusMessage text
 			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-				return contact->getStatus();
+				return contact->getStatusMessage();
 			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
-				return resource->getStatus();
+				return resource->getStatusMessage();
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
-				return metacontact->getStatus();
+				return metacontact->getStatusMessage();
 			}
 		} else if ( role == Qt::SizeHintRole ) { // size of item
 			if ( !index.data(AvatarRole).value<QIcon>().isNull() ) {
 				return QSize(1, 34);
-			} else if ( !index.data(StatusRole).toString().isEmpty() ) {
+			} else if ( !index.data(StatusMessageRole).toString().isEmpty() ) {
 				return QSize(1, 34);
 			} else {
 				return QSize(1, 20);
@@ -116,9 +116,9 @@ namespace Roster {
 				Resource* resource = dynamic_cast<Resource*>(subitem);
 				tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg(resource->getName(), QString::number(resource->getPriority()));
 
-				if (! resource->getStatus().isEmpty()) {
-					tip += "<u>Status message</u>\n";
-					tip += Qt::escape(resource->getStatus()) + "\n";
+				if (! resource->getStatusMessage().isEmpty()) {
+					tip += "<u>StatusMessage message</u>\n";
+					tip += Qt::escape(resource->getStatusMessage()) + "\n";
 				}
 			}
 
@@ -133,9 +133,9 @@ namespace Roster {
 			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(parent->getName()), Qt::escape(parent->getJid()));
 			tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg(resource->getName(), QString::number(resource->getPriority()));
 
-			if (! resource->getStatus().isEmpty()) {
-				tip += "<u>Status message</u>\n";
-				tip += Qt::escape(resource->getStatus()) + "\n";
+			if (! resource->getStatusMessage().isEmpty()) {
+				tip += "<u>StatusMessage message</u>\n";
+				tip += Qt::escape(resource->getStatusMessage()) + "\n";
 			}
 		} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 			tip += Qt::escape(metacontact->getName()) + "\n";
@@ -328,8 +328,8 @@ namespace Roster {
 		emit layoutChanged();
 	}
 
-	void Model::setShowStatus(bool showStatus) {
-		showStatus_ = showStatus;
+	void Model::setShowStatusMessages(bool showStatusMessages) {
+		showStatusMessages_ = showStatusMessages;
 		emit layoutChanged();
 	}
 

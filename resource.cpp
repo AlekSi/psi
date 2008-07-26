@@ -5,15 +5,15 @@
 
 namespace Roster {
 
-	Resource::Resource(const QString& name, const int priority, const ShowType show, const QString status)
-											: name_(name), priority_(priority), show_(show), status_(status) {
+	Resource::Resource(const QString& name, const int priority, const ShowType show, const QString statusMessage)
+											: name_(name), priority_(priority), show_(show), statusMessage_(statusMessage) {
 	}
 
 	Resource::Resource(const XMPPResource* xresource) {
 		name_ = xresource->getName();
 		priority_ = xresource->getPriority();
 		show_ = xresource->getShow();
-		status_ = xresource->getStatus();
+		statusMessage_ = xresource->getStatusMessage();
 	}
 
 	Resource::~Resource() {
@@ -35,12 +35,12 @@ namespace Roster {
 		priority_ = priority;
 	}
 
-	const QString& Resource::getStatus() const {
-		return status_;
+	const QString& Resource::getStatusMessage() const {
+		return statusMessage_;
 	}
 
-	void Resource::setStatus(const QString& status) {
-		status_ = status;
+	void Resource::setStatusMessage(const QString& statusMessage) {
+		statusMessage_ = statusMessage;
 	}
 
 	const QIcon Resource::getIcon() const {

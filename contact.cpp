@@ -59,19 +59,19 @@ namespace Roster {
 		avatar_ = avatar;
 	}
 
-	const QString Contact::getStatus() const {
+	const QString Contact::getStatusMessage() const {
 		int maxPriority = -1;
-		QString status;
+		QString statusMessage;
 		
 		foreach(Item* item, items_) {
 			Resource* resource = static_cast<Resource*>(item);
 			if ( maxPriority < resource->getPriority() ) {
-				status = resource->getStatus();
+				statusMessage = resource->getStatusMessage();
 				maxPriority = resource->getPriority();
 			}
 		}
 
-		return status;
+		return statusMessage;
 	}
 
 	void Contact::addResource(Resource* resource) {

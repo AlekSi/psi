@@ -21,7 +21,7 @@ namespace Roster {
 			const QString& getJid() const;
 			const QIcon getIcon() const;
 			const QIcon& getAvatar() const;
-			const QString getStatus() const;
+			const QString getStatusMessage() const;
 
 			void setName(const QString& name);
 			void setJid(const QString& jid);

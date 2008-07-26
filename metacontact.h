@@ -13,16 +13,16 @@ namespace Roster {
 			Metacontact(const QString& name);
 
 			const QString& getName() const;
-			const QString getStatus() const;
+			const QString getStatusMessage() const;
 			const QIcon getIcon() const;
 			const QIcon& getAvatar() const;
 
 			void setName(const QString& name);
 			void setAvatar(const QIcon& avatar); 
-			void setStatus(const QString& status);
+			void setStatusMessage(const QString& statusMessage);
 		private:
 			QString name_;
-			QString status_;
+			QString statusMessage_;
 			QIcon avatar_;
 	};
 }

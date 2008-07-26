@@ -9,7 +9,7 @@ namespace Roster {
 		ItemRole = Qt::UserRole,
 		IdRole = Qt::UserRole + 1,
 		AvatarRole = Qt::UserRole + 2,
-		StatusRole = Qt::UserRole + 3
+		StatusMessageRole = Qt::UserRole + 3
 	};
 
 	enum ShowType {

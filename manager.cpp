@@ -25,12 +25,12 @@ namespace Roster {
 		emit itemRemoved(contact);
 
 		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
-			metacontact->setStatus("");
+			metacontact->setStatusMessage("");
 
 			foreach(Item* item, metacontact->getItems()) {
 				Contact* contact = static_cast<Contact*>(item);
-				if ( !contact->getStatus().isEmpty() ) {
-					metacontact->setStatus(contact->getStatus());
+				if ( !contact->getStatusMessage().isEmpty() ) {
+					metacontact->setStatusMessage(contact->getStatusMessage());
 					break;
 				}
 			}
@@ -80,9 +80,10 @@ namespace Roster {
 		metacontact->addItem(contact);
 		emit itemAdded(contact);
 
-		/* if it's the first contact in metacontact, copy status to metacontact */
-		if ( metacontact->getIndexOf(contact) == 0 and !contact->getStatus().isEmpty() ) {
-			metacontact->setStatus(contact->getStatus());
+		/* if it's the first contact in metacontact, copy stuff to metacontact */
+		if ( metacontact->getIndexOf(contact) == 0 ) {
+			metacontact->setStatusMessage(contact->getStatusMessage());
+			metacontact->setAvatar(contact->getAvatar());
 			emit itemUpdated(metacontact);
 		}
 	}
@@ -95,6 +96,16 @@ namespace Roster {
 	void Manager::updateState(GroupItem* groupItem, bool expanded) {
 		groupItem->setExpanded(expanded);
 		emit itemUpdated(groupItem);
+	}
+
+	void Manager::setAvatar(Contact* contact, const QIcon& avatar) {
+		contact->setAvatar(avatar);
+		
+		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
+			if ( metacontact->getIndexOf(contact) == 0 ) {
+				metacontact->setAvatar(contact->getAvatar());
+			}
+		}
 	}
 }
 

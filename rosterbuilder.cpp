@@ -76,7 +76,8 @@ namespace Roster {
 		foreach(QString xgroup, xitem->getGroups()) {
 			Contact* contact = new Contact(xitem->getName(), xitem->getJid());
 			contact->setAccountName(acname);
-			contact->setAvatar(srv->getAvatar(contact->getJid()));
+			manager_->setAvatar(contact, srv->getAvatar(contact->getJid()));
+//			contact->setAvatar(srv->getAvatar(contact->getJid()));
 
 			Group* group = findGroup(xgroup, acname);
 

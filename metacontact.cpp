@@ -11,8 +11,8 @@ namespace Roster {
 		return name_;
 	}
 
-	const QString Metacontact::getStatus() const {
-		return status_;
+	const QString Metacontact::getStatusMessage() const {
+		return statusMessage_;
 	}
 
 	const QIcon Metacontact::getIcon() const {
@@ -39,7 +39,7 @@ namespace Roster {
 		avatar_ = avatar;
 	}
 
-	void Metacontact::setStatus(const QString& status) {
-		status_ = status;
+	void Metacontact::setStatusMessage(const QString& statusMessage) {
+		statusMessage_ = statusMessage;
 	}
 }
