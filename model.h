@@ -48,6 +48,8 @@ namespace Roster {
 			void itemRemoved(Item* item);
 			void itemToBeRemoved(Item* item);
 
+			void iconsChanged();
+
 		signals:
 			void expand(const QModelIndex& index);
 			void collapse(const QModelIndex& index);

@@ -404,12 +404,20 @@ namespace Roster {
 		return false;
 	}
 
+	void Model::iconsChanged() {
+		emit layoutChanged();
+	}
+
 	void Model::setRosterBuilder(RosterBuilder* rb) {
 		rb_ = rb;
 	}
 
 	void Model::setStatusIconProvider(StatusIconProvider* statusIconProvider) {
+		if ( statusIconProvider_ ) {
+			disconnect(statusIconProvider_, SIGNAL(updated()), this, SLOT(iconsChanged()));
+		}
 		statusIconProvider_ = statusIconProvider;
+		connect(statusIconProvider_, SIGNAL(updated()), SLOT(iconsChanged()));
 	}
 
 }

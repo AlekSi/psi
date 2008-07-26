@@ -6,10 +6,15 @@
 #include "globals.h"
 
 namespace Roster {
-	class StatusIconProvider {
+	class StatusIconProvider : public QObject {
+		Q_OBJECT
+
 		public:
 			const QIcon getIconForStatus(const StatusType status) const;
 			const QIcon getIconForGroup(const bool expanded) const;
+
+		signals:
+			void updated();	
 	};
 }
 
