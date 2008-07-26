@@ -203,10 +203,10 @@ namespace Roster {
 	/* slot triggered when user expands item */
 	void View::itemExpanded(const QModelIndex& index) {
 		Item* item = index.data(ItemRole).value<Item*>();
-		GroupItem* groupItem = static_cast<GroupItem*>(item);
+		GroupItem* groupItem = dynamic_cast<GroupItem*>(item);
 
 		/* do not call if this item was already expanded */
-		if ( ! groupItem->isExpanded() ) {
+		if ( groupItem and ! groupItem->isExpanded() ) {
 			expandWithManager(index, true);
 		};
 	}
@@ -214,10 +214,10 @@ namespace Roster {
 	/* slot triggered when user collapses item */
 	void View::itemCollapsed(const QModelIndex& index) {
 		Item* item = index.data(ItemRole).value<Item*>();
-		GroupItem* groupItem = static_cast<GroupItem*>(item);
+		GroupItem* groupItem = dynamic_cast<GroupItem*>(item);
 
 		/* do not call if this item was already expanded */
-		if ( groupItem->isExpanded() ) {
+		if ( groupItem and groupItem->isExpanded() ) {
 			expandWithManager(index, false);
 		};
 	}
