@@ -13,6 +13,7 @@ namespace Roster {
 	class View;
 	class RosterBuilder;
 	class ViewStateManager;
+	class StatusIconProvider;
 
 	class MainWindow : public QMainWindow {
 		Q_OBJECT
@@ -31,6 +32,7 @@ namespace Roster {
 			Manager* manager_;
 			RosterBuilder* rb_;
 			ViewStateManager* vsm_;
+			StatusIconProvider* statusIconProvider_;
 
 			QAction *toggleAvatarsAct_, *toggleStatusAct_, *toggleJoinedAccountsAct_, *toggleJoinByNameAct_, *toggleShowOfflineAct_;
 	};

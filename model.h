@@ -12,6 +12,7 @@ namespace Roster {
 	class Roster;
 	class Manager;
 	class RosterBuilder;
+	class StatusIconProvider;
 
 	class Model : public QAbstractItemModel	{
 		Q_OBJECT
@@ -36,6 +37,7 @@ namespace Roster {
 			void setManager(Manager* manager);
 			Manager* getManager() const;
 			void setRosterBuilder(RosterBuilder* rb);
+			void setStatusIconProvider(StatusIconProvider* statusIconProvider);
 
 		public slots:
 			void setShowAvatars(bool showAvatars);
@@ -57,6 +59,7 @@ namespace Roster {
 			Manager* manager_;
 			RosterBuilder* rb_;
 			bool showAvatars_, showStatusMessages_;
+			StatusIconProvider* statusIconProvider_;
 	};
 };
 

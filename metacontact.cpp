@@ -15,18 +15,6 @@ namespace Roster {
 		return statusMessage_;
 	}
 
-	const QIcon Metacontact::getIcon() const {
-		// FIXME: get REAL icon here
-		QIcon icon;
-		
-		foreach(Item* item, items_) {
-			Contact* contact = static_cast<Contact*>(item);
-			icon = contact->getIcon();
-		}
-
-		return icon;
-	}
-
 	const QIcon& Metacontact::getAvatar() const {
 		return avatar_;
 	}

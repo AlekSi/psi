@@ -11,7 +11,6 @@ namespace Roster {
 	Contact::Contact(const Contact& c) : GroupItem() {
 		name_ = c.name_;
 		jid_ = c.jid_;
-//		icon_ = c.icon_;
 		avatar_ = c.avatar_;	
 		items_ = c.items_;
 	}
@@ -33,22 +32,6 @@ namespace Roster {
 
 	void Contact::setJid(const QString& jid) {
 		jid_ = jid;
-	}
-
-	const QIcon Contact::getIcon() const {
-		// return icon_;
-		int maxPriority = -1;
-		QIcon icon("icons/offline.png");
-		
-		foreach(Item* item, items_) {
-			Resource* resource = static_cast<Resource*>(item);
-			if ( maxPriority < resource->getPriority() ) {
-				icon = resource->getIcon();
-				maxPriority = resource->getPriority();
-			}
-		}
-
-		return icon;
 	}
 
 	const QIcon& Contact::getAvatar() const {

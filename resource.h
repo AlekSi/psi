@@ -19,7 +19,6 @@ namespace Roster {
 			const QString& getName() const;
 			const QString& getStatusMessage() const;
 			const int getPriority() const;
-			const QIcon getIcon() const;
 			const StatusType getStatus() const;
 
 			void setName(const QString& name);

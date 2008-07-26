@@ -15,7 +15,6 @@ namespace Roster {
 
 			const QString& getName() const;
 			const QString getStatusMessage() const;
-			const QIcon getIcon() const;
 			const QIcon& getAvatar() const;
 			const StatusType getStatus() const;
 
@@ -23,6 +22,7 @@ namespace Roster {
 			void setAvatar(const QIcon& avatar); 
 			void setStatusMessage(const QString& statusMessage);
 			void setStatus(const StatusType status);
+
 		private:
 			QString name_;
 			QString statusMessage_;

@@ -17,6 +17,7 @@
 #include "rosterbuilder.h"
 #include "rosterdataservice.h"
 #include "viewstatemanager.h"
+#include "statusiconprovider.h"
 
 #include "dummydataservice.h"
 
@@ -29,11 +30,14 @@ namespace Roster {
 		vsm_ = new ViewStateManager;
 		rb_ = new RosterBuilder(data_, manager_, vsm_);
 
+		statusIconProvider_ = new StatusIconProvider;
+		
 		view_ = new View;
 		view_->setItemDelegate(new Delegate);
 		model_ = new Model(data_);
 		view_->setModel(model_);
 		view_->setViewStateManager(vsm_);
+		model_->setStatusIconProvider(statusIconProvider_);
 
 		connect(model_, SIGNAL(expand(const QModelIndex&)), view_, SLOT(expand(const QModelIndex&)));
 		connect(model_, SIGNAL(collapse(const QModelIndex&)), view_, SLOT(collapse(const QModelIndex&)));

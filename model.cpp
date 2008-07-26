@@ -17,6 +17,7 @@
 #include "manager.h"
 #include "rosterbuilder.h"
 #include "metacontact.h"
+#include "statusiconprovider.h"
 
 namespace Roster {
 	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatusMessages_(true) {
@@ -50,13 +51,13 @@ namespace Roster {
 					return QIcon("icons/groupclose.png");
 				}
 			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-				return contact->getIcon();
+				return statusIconProvider_->getIconForStatus(contact->getStatus());
 			} else if ( Account* account = dynamic_cast<Account*>(item) ) {
 				return account->getIcon();
 			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
-				return resource->getIcon();
+				return statusIconProvider_->getIconForStatus(resource->getStatus());
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
-				return metacontact->getIcon();
+				return statusIconProvider_->getIconForStatus(metacontact->getStatus());
 			}
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
@@ -409,6 +410,10 @@ namespace Roster {
 
 	void Model::setRosterBuilder(RosterBuilder* rb) {
 		rb_ = rb;
+	}
+
+	void Model::setStatusIconProvider(StatusIconProvider* statusIconProvider) {
+		statusIconProvider_ = statusIconProvider;
 	}
 
 }

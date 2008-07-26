@@ -43,14 +43,6 @@ namespace Roster {
 		statusMessage_ = statusMessage;
 	}
 
-	const QIcon Resource::getIcon() const {
-		if ( status_ == STATUS_ONLINE ) {
-			return QIcon("icons/online.png");
-		} else {
-			return QIcon("icons/offline.png");
-		}
-	}
-
 	const StatusType Resource::getStatus() const {
 		return status_;
 	}

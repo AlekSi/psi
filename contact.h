@@ -19,14 +19,12 @@ namespace Roster {
 
 			const QString& getName() const;
 			const QString& getJid() const;
-			const QIcon getIcon() const;
 			const QIcon& getAvatar() const;
 			const QString getStatusMessage() const;
 			void setStatus(const StatusType status);
 
 			void setName(const QString& name);
 			void setJid(const QString& jid);
-			void setIcon(const QIcon& icon);
 			void setAvatar(const QIcon& avatar);
 			void setStatusMessage(const QString& statusMessage);
 			const StatusType getStatus() const;
