@@ -45,11 +45,7 @@ namespace Roster {
 			}
 		} else if ( role == Qt::DecorationRole ) { // left icon
 			if ( Group* group = dynamic_cast<Group*>(item) ) {
-				if ( group->isExpanded() ) {
-					return QIcon("icons/groupopen.png");
-				} else {
-					return QIcon("icons/groupclose.png");
-				}
+				return statusIconProvider_->getIconForGroup(group->isExpanded());
 			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 				return statusIconProvider_->getIconForStatus(contact->getStatus());
 			} else if ( Account* account = dynamic_cast<Account*>(item) ) {

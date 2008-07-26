@@ -9,6 +9,7 @@ namespace Roster {
 	class StatusIconProvider {
 		public:
 			const QIcon getIconForStatus(const StatusType status) const;
+			const QIcon getIconForGroup(const bool expanded) const;
 	};
 }
 
