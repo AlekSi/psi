@@ -5,14 +5,14 @@
 
 namespace Roster {
 
-	Resource::Resource(const QString& name, const int priority, const ShowType show, const QString statusMessage)
-											: name_(name), priority_(priority), show_(show), statusMessage_(statusMessage) {
+	Resource::Resource(const QString& name, const int priority, const StatusType status, const QString statusMessage)
+											: name_(name), priority_(priority), status_(status), statusMessage_(statusMessage) {
 	}
 
 	Resource::Resource(const XMPPResource* xresource) {
 		name_ = xresource->getName();
 		priority_ = xresource->getPriority();
-		show_ = xresource->getShow();
+		status_ = xresource->getStatus();
 		statusMessage_ = xresource->getStatusMessage();
 	}
 
@@ -44,16 +44,19 @@ namespace Roster {
 	}
 
 	const QIcon Resource::getIcon() const {
-		if ( show_ == STATUS_ONLINE ) {
+		if ( status_ == STATUS_ONLINE ) {
 			return QIcon("icons/online.png");
 		} else {
 			return QIcon("icons/offline.png");
 		}
 	}
 
-	const ShowType Resource::getShow() const {
-		return show_;
+	const StatusType Resource::getStatus() const {
+		return status_;
 	}
 
+	void Resource::setStatus(const StatusType status) {
+		status_ = status;
+	}
 }
 

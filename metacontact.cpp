@@ -42,4 +42,12 @@ namespace Roster {
 	void Metacontact::setStatusMessage(const QString& statusMessage) {
 		statusMessage_ = statusMessage;
 	}
+
+	void Metacontact::setStatus(const StatusType status) {
+		status_ = status;
+	}
+
+	const StatusType Metacontact::getStatus() const {
+		return status_;
+	}
 }

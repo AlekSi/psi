@@ -73,6 +73,12 @@ namespace Roster {
 
 	void Manager::addResource(Resource* resource, Contact* contact) {
 		contact->addResource(resource);
+
+		if ( contact->getIndexOf(resource) == 0 ) {
+			setContactStatusMessage(contact, resource->getStatusMessage());
+			setContactStatus(contact, resource->getStatus());
+		}
+
 		emit itemAdded(resource);
 	}
 
@@ -104,6 +110,43 @@ namespace Roster {
 		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
 			if ( metacontact->getIndexOf(contact) == 0 ) {
 				metacontact->setAvatar(contact->getAvatar());
+			}
+		}
+	}
+
+	void Manager::setStatusMessage(Resource* resource, const QString& statusMessage) {
+		resource->setStatusMessage(statusMessage);
+
+		Contact* contact = static_cast<Contact*>(resource->getParent());
+		if ( contact->getIndexOf(resource) == 0 ) {
+			setContactStatusMessage(contact, statusMessage);
+		}
+
+	}
+
+	void Manager::setContactStatusMessage(Contact* contact, const QString& statusMessage) {
+		contact->setStatusMessage(statusMessage);
+		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
+			if ( metacontact->getIndexOf(contact) == 0 ) {
+				metacontact->setStatusMessage(statusMessage);
+			}
+		}
+	}
+
+	void Manager::setStatus(Resource* resource, StatusType status) {
+		resource->setStatus(status);
+		Contact* contact = static_cast<Contact*>(resource->getParent());
+		if ( contact->getIndexOf(resource) == 0 ) {
+			setContactStatus(contact, status);
+		}
+	}
+
+	void Manager::setContactStatus(Contact* contact, StatusType status) {
+		contact->setStatus(status);
+
+		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
+			if ( metacontact->getIndexOf(contact) == 0 ) {
+				metacontact->setStatus(status);
 			}
 		}
 	}

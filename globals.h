@@ -12,7 +12,7 @@ namespace Roster {
 		StatusMessageRole = Qt::UserRole + 3
 	};
 
-	enum ShowType {
+	enum StatusType {
 		STATUS_ONLINE,
 		STATUS_AWAY,
 		STATUS_CHAT,

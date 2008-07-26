@@ -221,19 +221,19 @@ namespace Roster {
 
 	const bool RosterBuilder::isContactVisible(const XMPPRosterItem* xitem) const {
 		foreach(XMPPResource* xres, xitem->getResources()) {
-			if ( xres->getShow() == STATUS_ONLINE or xres->getShow() == STATUS_CHAT ) {
+			if ( xres->getStatus() == STATUS_ONLINE or xres->getStatus() == STATUS_CHAT ) {
 				return true;
 			}
 
-			if ( xres->getShow() == STATUS_DND and !(itemFilter_ & FILTER_DND) ) {
+			if ( xres->getStatus() == STATUS_DND and !(itemFilter_ & FILTER_DND) ) {
 				return true;
 			}
 
-			if ( xres->getShow() == STATUS_AWAY and !(itemFilter_ & FILTER_AWAY) ) {
+			if ( xres->getStatus() == STATUS_AWAY and !(itemFilter_ & FILTER_AWAY) ) {
 				return true;
 			}
 
-			if ( xres->getShow() == STATUS_XA and !(itemFilter_ & FILTER_XA) ) {
+			if ( xres->getStatus() == STATUS_XA and !(itemFilter_ & FILTER_XA) ) {
 				return true;
 			}
 		}

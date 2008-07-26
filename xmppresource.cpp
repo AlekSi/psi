@@ -2,7 +2,7 @@
 
 namespace Roster {
 
-	XMPPResource::XMPPResource(const QString& name, const int priority, const ShowType show, const QString statusMessage) : name_(name), priority_(priority), show_(show), statusMessage_(statusMessage) {
+	XMPPResource::XMPPResource(const QString& name, const int priority, const StatusType status, const QString statusMessage) : name_(name), priority_(priority), status_(status), statusMessage_(statusMessage) {
 	}
 
 	XMPPResource::~XMPPResource() {
@@ -32,12 +32,12 @@ namespace Roster {
 		statusMessage_ = statusMessage;
 	}
 
-	const ShowType XMPPResource::getShow() const {
-		return show_;
+	const StatusType XMPPResource::getStatus() const {
+		return status_;
 	}
 
-	void XMPPResource::setShow(const ShowType show) {
-		show_ = show;
+	void XMPPResource::setStatus(const StatusType status) {
+		status_ = status;
 	}
 
 }

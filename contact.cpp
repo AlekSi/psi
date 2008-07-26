@@ -60,18 +60,7 @@ namespace Roster {
 	}
 
 	const QString Contact::getStatusMessage() const {
-		int maxPriority = -1;
-		QString statusMessage;
-		
-		foreach(Item* item, items_) {
-			Resource* resource = static_cast<Resource*>(item);
-			if ( maxPriority < resource->getPriority() ) {
-				statusMessage = resource->getStatusMessage();
-				maxPriority = resource->getPriority();
-			}
-		}
-
-		return statusMessage;
+		return statusMessage_;
 	}
 
 	void Contact::addResource(Resource* resource) {
@@ -79,5 +68,16 @@ namespace Roster {
 		items_.append(resource);
 	}
 
+	void Contact::setStatusMessage(const QString& statusMessage) {
+		statusMessage_ = statusMessage;
+	}
+
+	void Contact::setStatus(const StatusType status) {
+		status_ = status;
+	}
+
+	const StatusType Contact::getStatus() const {
+		return status_;
+	}
 }
 

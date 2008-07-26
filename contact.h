@@ -22,19 +22,23 @@ namespace Roster {
 			const QIcon getIcon() const;
 			const QIcon& getAvatar() const;
 			const QString getStatusMessage() const;
+			void setStatus(const StatusType status);
 
 			void setName(const QString& name);
 			void setJid(const QString& jid);
 			void setIcon(const QIcon& icon);
 			void setAvatar(const QIcon& avatar);
+			void setStatusMessage(const QString& statusMessage);
+			const StatusType getStatus() const;
 
 			void addResource(Resource* resource);
 
 		private:
 			QString name_;
 			QString jid_;
-			ShowType show_;
 			QIcon avatar_;
+			QString statusMessage_;
+			StatusType status_;
 	};
 }
 

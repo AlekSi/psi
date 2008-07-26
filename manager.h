@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QIcon>
 
+#include "globals.h"
+
 namespace Roster {
 	class Group;
 	class Contact;
@@ -34,11 +36,18 @@ namespace Roster {
 			void updateState(GroupItem* groupItem, bool expanded);
 
 			void setAvatar(Contact* contact, const QIcon& avatar);
+			void setStatusMessage(Resource* resource, const QString& statusMessage);
+			void setStatus(Resource* resource, StatusType status);
+
 		signals:
 			void itemUpdated(Item* item);
 			void itemAdded(Item* item);
 			void itemRemoved(Item* item);
 			void itemToBeRemoved(Item* item);
+
+		private:
+			void setContactStatusMessage(Contact* contact, const QString& statusMessage);
+			void setContactStatus(Contact* contact, StatusType status);
 	};
 }
 
