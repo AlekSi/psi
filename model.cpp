@@ -20,7 +20,7 @@
 #include "statusiconprovider.h"
 
 namespace Roster {
-	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatusMessages_(true) {
+	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatusMessages_(true), statusIconProvider_(NULL) {
 	}
 
 	QVariant Model::data(const QModelIndex &index, int role) const {
