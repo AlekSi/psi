@@ -21,6 +21,7 @@ namespace Roster {
 			virtual int getIndexOf(Item* item) const;
 			virtual void removeItem(Item* item);
 			virtual void addItem(Item* item);
+			virtual void addItem(Item* item, int i);
 			virtual const QList<Item*>& getItems() const;
 			virtual Group* findGroup(const QString& name);
 			virtual Contact* findContact(const QString& name, const QString& acname = "");

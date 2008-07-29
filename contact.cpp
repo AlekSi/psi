@@ -46,11 +46,6 @@ namespace Roster {
 		return statusMessage_;
 	}
 
-	void Contact::addResource(Resource* resource) {
-		resource->setParent(this);
-		items_.append(resource);
-	}
-
 	void Contact::setStatusMessage(const QString& statusMessage) {
 		statusMessage_ = statusMessage;
 	}

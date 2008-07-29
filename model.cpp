@@ -179,7 +179,7 @@ namespace Roster {
 		} else if ( dynamic_cast<Resource*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else if ( dynamic_cast<Group*>(item) ) {
-			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable;
+			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
 		} else if ( dynamic_cast<Metacontact*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable;
 		} else {

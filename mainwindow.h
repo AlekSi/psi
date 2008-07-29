@@ -22,7 +22,6 @@ namespace Roster {
 			MainWindow();
 
 		private:
-			void setupTestData();
 			void buildTestRoster();
 			void setupMenus();
 

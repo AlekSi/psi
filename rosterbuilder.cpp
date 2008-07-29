@@ -76,12 +76,11 @@ namespace Roster {
 		foreach(QString xgroup, xitem->getGroups()) {
 			Contact* contact = new Contact(xitem->getName(), xitem->getJid());
 			contact->setAccountName(acname);
-			manager_->setAvatar(contact, srv->getAvatar(contact->getJid()));
-//			contact->setAvatar(srv->getAvatar(contact->getJid()));
 
 			Group* group = findGroup(xgroup, acname);
-
 			addContact(contact, group);
+
+			manager_->setAvatar(contact, srv->getAvatar(contact->getJid()));
 			manager_->updateState(contact, vsm_->isContactExpanded(contact));
 
 			foreach(XMPPResource* xresource, xitem->getResources()) {
@@ -246,6 +245,8 @@ namespace Roster {
 	}
 
 	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {
+		Q_UNUSED(xitem);
+		Q_UNUSED(acname);
 	}
 
 	QList<Contact*> RosterBuilder::findContacts(const XMPPRosterItem* xitem, const QString& acname) {

@@ -100,77 +100,8 @@ namespace Roster {
 
 		RosterDataService* rosterService2 = new DummyDataService();
 		rb_->registerAccount("gislan@jabster.pl", rosterService2);
-/*
-		XMPPRosterItem* d = new XMPPRosterItem("Romeo", "romeo@jabber.org", generic);
-		XMPPRosterItem* e = new XMPPRosterItem("Juliet", "juliet@jabber.org", generic);
-		XMPPRosterItem* f = new XMPPRosterItem("Hamlet", "hamlet@jabber.org", nested);
-
-		rb_->addItem("gislan@jabster.pl", d);
-		rb_->addItem("gislan@jabster.pl", e);
-		rb_->addItem("gislan@jabster.pl", f);
-*/
 		rb_->rebuild();
-		//rb_->buildJoinedAccounts(data_);
-	//	rb_->buildAllAccounts(data_);
 	}
 
-	void MainWindow::setupTestData() {
-/*		Contact* c1 = new Contact("Gislan", "gislan@utumno.pl");
-		Contact* c2 = new Contact("Remko", "remko@el-tramo.be");
-		Contact* c3 = new Contact("you@jabber.org", "you@jabber.org");
-		Contact* c4 = new Contact("me@jabber.org", "me@jabber.org");
-		Contact* c5 = new Contact("Romeo", "romeo@monteki.com");
-		
-		c1->setIcon(QIcon("icons/online.png"));
-		c2->setIcon(QIcon("icons/online.png"));
-		c3->setIcon(QIcon("icons/offline.png"));
-		c4->setIcon(QIcon("icons/offline.png"));
-		c5->setIcon(QIcon("icons/online.png"));
-
-		c1->setAvatar(QIcon("icons/avatar.png"));
-		c2->setAvatar(QIcon("icons/remko.jpg"));
-
-//		c1->setStatus("working on GSoC");
-//		c4->setStatus("relaxing");
-//		c5->setStatus("<3 Juliet");
-
-		Resource* r1 = new Resource("Home", 6);
-		Resource* r2 = new Resource("Work", 4);
-		Resource* r3 = new Resource("Verona", 6);
-
-		r1->setIcon(QIcon("icons/online.png"));
-		r2->setIcon(QIcon("icons/online.png"));
-		r3->setIcon(QIcon("icons/online.png"));
-
-		r1->setStatus("Working on GSoC");
-		r3->setStatus("<3 Juliet");
-
-		c1->addResource(r1);
-		c1->addResource(r2);
-		c5->addResource(r3);
-
-		Group* g1 = new Group("Group #1");
-		Group* g2 = new Group("Subgroup #2");
-	
-		g1->addItem(c3);
-		g1->addItem(c4);
-		g2->addItem(c5);
-
-		g1->addItem(g2);
-
-		Account* account = new Account("gislan@utumno.pl");
-		account->setIcon(QIcon("icons/online.png"));
-
-		Metacontact* m1 = new Metacontact("GSoCers");
-		m1->addItem(c1);
-		m1->addItem(c2);
-		account->addItem(m1);
-
-//		account->addItem(c1);
-//		account->addItem(c2);
-		account->addItem(g1);
-
-		data_->addItem(account);*/
-	}
 }
 

@@ -24,7 +24,7 @@ namespace Roster {
 			void copyContact(Contact* contact, GroupItem* group);
 			void removeContact(Contact* contact);
 			void moveContact(Contact* contact, GroupItem* group);
-			void addContact(Contact* contact, Group* group);
+			void addContact(Contact* contact, GroupItem* group);
 
 			void addGroup(Group* group, GroupItem* parent);
 			void addResource(Resource* resource, Contact* contact);
@@ -48,6 +48,10 @@ namespace Roster {
 		private:
 			void setContactStatusMessage(Contact* contact, const QString& statusMessage);
 			void setContactStatus(Contact* contact, StatusType status);
+			void addItem(Item* item, GroupItem* parent);
+			void resort(Item* item);
+
+			static const bool sortOp(const Item* item1, const Item* item2);
 	};
 }
 

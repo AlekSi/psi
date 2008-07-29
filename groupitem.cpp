@@ -31,6 +31,11 @@ namespace Roster {
 		items_.append(item);
 	}
 
+	void GroupItem::addItem(Item* item, int i) {
+		item->setParent(this);
+		items_.insert(i, item);
+	}
+
 	int GroupItem::getIndexOf(Item* item) const {
 		 return items_.indexOf(item);
 	}
