@@ -107,7 +107,7 @@ namespace Roster {
 		QString tip("<div style=\"white-space: pre\">");
 
 		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid()));
+			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid().full()));
 
 			foreach(Item* subitem, contact->getItems()) {
 				Resource* resource = dynamic_cast<Resource*>(subitem);
@@ -127,7 +127,7 @@ namespace Roster {
 			tip += account->getName();
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 			Contact* parent = dynamic_cast<Contact*>(item->getParent());
-			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(parent->getName()), Qt::escape(parent->getJid()));
+			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(parent->getName()), Qt::escape(parent->getJid().full()));
 			tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg(resource->getName(), QString::number(resource->getPriority()));
 
 			if (! resource->getStatusMessage().isEmpty()) {
@@ -139,7 +139,7 @@ namespace Roster {
 
 			foreach(Item* item, metacontact->getItems()) {
 				Contact* contact = static_cast<Contact*>(item);	
-				tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid()));
+				tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid().full()));
 			}
 		} else {
 			return QVariant();

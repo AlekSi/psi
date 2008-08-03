@@ -5,7 +5,7 @@
 
 namespace Roster {
 
-	Contact::Contact(const QString& name, const QString& jid) : GroupItem(), name_(name), jid_(jid) {
+	Contact::Contact(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid) {
 	}
 
 	Contact::Contact(const Contact& c) : GroupItem() {
@@ -22,7 +22,7 @@ namespace Roster {
 		return name_;
 	}
 
-	const QString& Contact::getJid() const {
+	const XMPP::Jid& Contact::getJid() const {
 		return jid_;
 	}
 
@@ -30,7 +30,7 @@ namespace Roster {
 		name_ = name;
 	}
 
-	void Contact::setJid(const QString& jid) {
+	void Contact::setJid(const XMPP::Jid& jid) {
 		jid_ = jid;
 	}
 

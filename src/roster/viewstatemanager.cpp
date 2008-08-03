@@ -25,8 +25,8 @@ namespace Roster {
 	}
 
 	const bool ViewStateManager::ContactSpec::operator<(const ContactSpec& c) const {
-		if ( jid_ != c.jid_ ) {
-			return jid_ < c.jid_;
+		if ( jid_.full() != c.jid_.full() ) {
+			return jid_.full() < c.jid_.full();
 		}
 		if ( groupName_ != c.groupName_ ) {
 			return groupName_ < c.groupName_;

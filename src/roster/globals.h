@@ -3,6 +3,7 @@
 
 #include <Qt>
 #include "common.h"
+#include "xmpp_jid.h"
 
 namespace Roster {
 

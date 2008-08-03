@@ -5,6 +5,8 @@
 #include <QString>
 #include <QMap>
 
+#include "globals.h"
+
 class UserListItem;
 
 namespace Roster {
@@ -13,19 +15,19 @@ namespace Roster {
 	class XMPPRosterItem {
 		public:
 			XMPPRosterItem();
-			XMPPRosterItem(const QString& name, const QString& jid, const QList<QString>& groups);
+			XMPPRosterItem(const QString& name, const XMPP::Jid& jid, const QList<QString>& groups);
 			XMPPRosterItem(const UserListItem* item);
 			~XMPPRosterItem();
 
 			const QString& getName() const;
-			const QString& getJid() const;
+			const XMPP::Jid& getJid() const;
 			const QList<QString> getGroups() const;
 			const QList<XMPPResource*> getResources() const;
 
 			void setResource(XMPPResource* resource);
 		private:
 			QString name_;
-			QString jid_;
+			XMPP::Jid jid_;
 			QList<QString> groups_;
 			QMap<QString, XMPPResource*> resources_;
 	};

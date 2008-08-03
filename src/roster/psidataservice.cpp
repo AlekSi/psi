@@ -36,7 +36,7 @@ namespace Roster {
 		return list;
 	}
 
-	const QIcon PsiDataService::getAvatar(const QString& jid) const {
+	const QIcon PsiDataService::getAvatar(const XMPP::Jid& jid) const {
 		return QIcon();
 	}
 

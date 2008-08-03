@@ -20,7 +20,7 @@ namespace Roster {
 			~PsiDataService();
 
 			const QList<XMPPRosterItem*> getRosterItems() const;
-			const QIcon getAvatar(const QString& jid) const;
+			const QIcon getAvatar(const XMPP::Jid& jid) const;
 
 		private slots:
 			void updatedContact(const UserListItem& item);

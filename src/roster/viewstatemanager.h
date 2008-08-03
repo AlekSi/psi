@@ -4,6 +4,8 @@
 #include <QString>
 #include <QMap>
 
+#include "globals.h"
+
 namespace Roster {
 	class Contact;
 	class Group;
@@ -37,7 +39,7 @@ namespace Roster {
 					ContactSpec(Contact* contact);
 					const bool operator<(const ContactSpec& c) const;
 				private:
-					QString jid_;
+					XMPP::Jid jid_;
 					QString groupName_; 
 					QString accountName_;
 			};

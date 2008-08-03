@@ -7,7 +7,7 @@ namespace Roster {
 	XMPPRosterItem::XMPPRosterItem() {
 	}
 
-	XMPPRosterItem::XMPPRosterItem(const QString& name, const QString& jid, const QList<QString>& groups) : name_(name), jid_(jid), groups_(groups) {
+	XMPPRosterItem::XMPPRosterItem(const QString& name, const XMPP::Jid& jid, const QList<QString>& groups) : name_(name), jid_(jid), groups_(groups) {
 	}
 
 	XMPPRosterItem::XMPPRosterItem(const UserListItem* item) {
@@ -27,7 +27,7 @@ namespace Roster {
 		return name_;
 	}
 
-	const QString& XMPPRosterItem::getJid() const {
+	const XMPP::Jid& XMPPRosterItem::getJid() const {
 		return jid_;
 	}
 
