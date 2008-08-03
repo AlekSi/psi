@@ -37,6 +37,11 @@ namespace Roster {
 	}
 
 	const QIcon PsiDataService::getAvatar(const XMPP::Jid& jid) const {
+		UserListItem* item = acc_->find(jid);
+		if ( item ) {
+			return QIcon(item->avatar());
+		}
+		
 		return QIcon();
 	}
 

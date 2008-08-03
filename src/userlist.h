@@ -142,6 +142,8 @@ public:
 
 	const QString & publicKeyID() const;
 	void setPublicKeyID(const QString &);
+
+	const QPixmap avatar() const;
 	
 private:
 	int lastmsgtype;

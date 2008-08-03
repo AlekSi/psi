@@ -697,3 +697,7 @@ UserListItem *UserList::find(const XMPP::Jid &j)
 	return 0;
 }
 
+const QPixmap UserListItem::avatar() const {
+	return v_avatarFactory->getAvatar(jid().bare());
+}
+
