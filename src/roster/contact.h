@@ -29,6 +29,8 @@ namespace Roster {
 			void setStatusMessage(const QString& statusMessage);
 			const StatusType getStatus() const;
 
+			Resource* findResource(const QString& name) const;
+
 		private:
 			QString name_;
 			QString jid_;

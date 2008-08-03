@@ -20,6 +20,7 @@ namespace Roster {
 
 		public:
 			MainWindow();
+			RosterBuilder* getRosterBuilder();
 
 		private:
 			void buildTestRoster();

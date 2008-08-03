@@ -28,7 +28,9 @@ namespace XMPP {
 	class Jid;
 	class Message;
 }
-using namespace XMPP;
+
+using XMPP::Jid;
+using XMPP::Message;
 
 class PsiAccount;
 class TabManager;

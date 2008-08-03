@@ -57,5 +57,17 @@ namespace Roster {
 	const StatusType Contact::getStatus() const {
 		return status_;
 	}
+
+	Resource* Contact::findResource(const QString& name) const {
+		foreach(Item* item, items_) {
+			if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
+				if ( resource->getName() == name ) {
+					return resource;
+				}
+			}
+		}
+
+		return NULL;
+	}
 }
 

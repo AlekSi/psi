@@ -1,5 +1,6 @@
 #include "xmpprosteritem.h"
 #include "xmppresource.h"
+#include "userlist.h"
 
 namespace Roster {
 
@@ -7,6 +8,16 @@ namespace Roster {
 	}
 
 	XMPPRosterItem::XMPPRosterItem(const QString& name, const QString& jid, const QList<QString>& groups) : name_(name), jid_(jid), groups_(groups) {
+	}
+
+	XMPPRosterItem::XMPPRosterItem(const UserListItem* item) {
+		if ( item->name().isEmpty() ) {
+			name_ = item->jid().full();
+		} else {
+			name_ = item->name();
+		}
+		jid_ = item->jid().full();
+		groups_ = item->groups();
 	}
 
 	XMPPRosterItem::~XMPPRosterItem() {
@@ -20,7 +31,12 @@ namespace Roster {
 		return jid_;
 	}
 
-	const QList<QString>& XMPPRosterItem::getGroups() const {
+	const QList<QString> XMPPRosterItem::getGroups() const {
+		if ( groups_.isEmpty() ) {
+			QList<QString> ret;
+			ret << "General";
+			return ret;	
+		}
 		return groups_;
 	}
 

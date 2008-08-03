@@ -19,7 +19,7 @@
 #include "viewstatemanager.h"
 #include "statusiconprovider.h"
 
-#include "dummydataservice.h"
+#include "psidataservice.h"
 
 namespace Roster {
 	MainWindow::MainWindow() {
@@ -94,13 +94,17 @@ namespace Roster {
 	}
 
 		
-	void MainWindow::buildTestRoster() {
-		RosterDataService* rosterService = new DummyDataService();
+	void MainWindow::buildTestRoster() {/*
+		RosterDataService* rosterService = new PsiDataService();
 		rb_->registerAccount("gislan@utumno.pl", rosterService);
 
-		RosterDataService* rosterService2 = new DummyDataService();
+		RosterDataService* rosterService2 = new PsiDataService();
 		rb_->registerAccount("gislan@jabster.pl", rosterService2);
-		rb_->rebuild();
+		rb_->rebuild();*/
+	}
+
+	RosterBuilder* MainWindow::getRosterBuilder() {
+		return rb_;
 	}
 
 }

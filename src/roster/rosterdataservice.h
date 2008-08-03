@@ -7,10 +7,15 @@
 namespace Roster {
 	class XMPPRosterItem;
 
-	class RosterDataService {
+	class RosterDataService : public QObject {
+		Q_OBJECT
+
 		public:
 			virtual const QList<XMPPRosterItem*> getRosterItems() const = 0;
 			virtual const QIcon getAvatar(const QString& jid) const = 0;
+
+		signals:
+			void itemUpdated(const XMPPRosterItem* xitem, const QString& acname);
 	};
 }
 

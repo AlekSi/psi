@@ -5,6 +5,8 @@
 #include <QString>
 #include <QMap>
 
+class UserListItem;
+
 namespace Roster {
 	class XMPPResource;
 
@@ -12,11 +14,12 @@ namespace Roster {
 		public:
 			XMPPRosterItem();
 			XMPPRosterItem(const QString& name, const QString& jid, const QList<QString>& groups);
+			XMPPRosterItem(const UserListItem* item);
 			~XMPPRosterItem();
 
 			const QString& getName() const;
 			const QString& getJid() const;
-			const QList<QString>& getGroups() const;
+			const QList<QString> getGroups() const;
 			const QList<XMPPResource*> getResources() const;
 
 			void setResource(XMPPResource* resource);

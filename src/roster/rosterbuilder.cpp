@@ -194,6 +194,8 @@ namespace Roster {
 
 	void RosterBuilder::registerAccount(const QString& acname, RosterDataService* rosterService) {
 		rosterServices_.insert(acname, rosterService);
+
+		connect(rosterService, SIGNAL(itemUpdated(const XMPPRosterItem*, const QString&)), SLOT(itemChanged(const XMPPRosterItem*, const QString&)));
 	}
 
 	void RosterBuilder::setJoinByName(bool joinByName) {
@@ -245,8 +247,62 @@ namespace Roster {
 	}
 
 	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {
-		Q_UNUSED(xitem);
-		Q_UNUSED(acname);
+		RosterDataService* srv = rosterServices_[acname];
+
+		if ( isContactVisible(xitem) ) {
+			foreach(QString xgroup, xitem->getGroups()) {
+				Group* group = findGroup(xgroup, acname);
+				Contact* contact = group->findContact(xitem->getName(), acname);
+
+				if ( ! contact ) {
+					contact = new Contact(xitem->getName(), xitem->getJid());
+					contact->setAccountName(acname);
+					addContact(contact, group);
+				}
+
+				// update contact data
+				manager_->setAvatar(contact, srv->getAvatar(contact->getJid()));
+				if ( contact->isExpanded() != vsm_->isContactExpanded(contact) ) {
+					manager_->updateState(contact, vsm_->isContactExpanded(contact));
+				}
+
+				QSet<QString> names; // for deleting not used later
+				// update resources
+				foreach(XMPPResource* xresource, xitem->getResources()) {
+					Resource* resource = contact->findResource(xresource->getName());
+
+					if ( resource ) {
+						if ( resource->getStatus() != xresource->getStatus() ) {
+							manager_->setStatus(resource, xresource->getStatus());
+						}
+						if ( resource->getStatusMessage() != xresource->getStatusMessage() ) {
+							manager_->setStatusMessage(resource, xresource->getStatusMessage());
+						}
+					} else {
+						addResource(xresource, contact);
+					}
+
+					names.insert(xresource->getName());
+				}
+
+				// delete obsolete resources
+				foreach(Item* item, contact->getItems()) {
+					Resource* resource = dynamic_cast<Resource*>(item);
+					if ( ! names.contains(resource->getName()) ) {
+						manager_->removeItem(resource);
+						delete resource;
+					}
+				}
+			}
+		} else { // contact not visible
+			foreach(QString xgroup, xitem->getGroups()) {
+				Group* group = findGroup(xgroup, acname);
+				Contact* contact = group->findContact(xitem->getName(), acname);
+				if ( contact ) {
+					manager_->removeContact(contact);
+				}
+			}
+		}
 	}
 
 	QList<Contact*> RosterBuilder::findContacts(const XMPPRosterItem* xitem, const QString& acname) {

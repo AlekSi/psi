@@ -15,8 +15,8 @@ namespace Roster {
 		XMPPRosterItem* remko = new XMPPRosterItem("Remko", "remko@el-tramo.be", generic);
 		XMPPRosterItem* kev = new XMPPRosterItem("Kev", "kevdadrum@jabber.ex.ac.uk", nested);
 
-		XMPPResource* home = new XMPPResource("Home", 5, STATUS_AWAY, "Home, sweet home");
-		XMPPResource* work = new XMPPResource("Work", 7, STATUS_ONLINE, "Working on GSoC");
+		XMPPResource* home = new XMPPResource("Home", 5, STATUS_ONLINE, "Home, sweet home");
+		XMPPResource* work = new XMPPResource("Work", 7, STATUS_DND, "Working on GSoC");
 		XMPPResource* psi = new XMPPResource("Psi", 5, STATUS_ONLINE);
 
 		gislan->setResource(home);

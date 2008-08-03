@@ -18,6 +18,15 @@
  *
  */
 
+namespace Roster {
+	class MainWindow;
+	class PsiDataService;
+	class RosterDataService;
+}
+using Roster::MainWindow;
+using Roster::PsiDataService;
+using Roster::RosterDataService;
+
 #include "psicon.h"
 
 #include <q3ptrlist.h>
@@ -93,6 +102,10 @@
 #include "avcall/avcall.h"
 #include "avcall/calldlg.h"
 
+#include "roster/mainwindow.h"
+#include "roster/psidataservice.h"
+#include "roster/rosterbuilder.h"
+#include "roster/rosterdataservice.h"
 
 #include "AutoUpdater/AutoUpdater.h"
 #ifdef HAVE_SPARKLE
@@ -253,6 +266,7 @@ public:
 	OptionsMigration optionsMigration;
 	OptionsTree accountTree;
 	MainWin *mainwin;
+	MainWindow* rmw;
 	Idle idle;
 	QList<item_dialog*> dialogList;
 	int eventId;
@@ -298,6 +312,9 @@ PsiCon::PsiCon()
 	d->defaultMenuBar = new QMenuBar(0);
 	d->capsRegistry = new CapsRegistry();
 	connect(d->capsRegistry, SIGNAL(registered(const CapsSpec&)), SLOT(saveCapabilities()));
+
+	d->rmw = new MainWindow;
+	d->rmw->show();
 }
 
 PsiCon::~PsiCon()
@@ -568,6 +585,9 @@ bool PsiCon::init()
 	// try autologin if needed
 	foreach(PsiAccount* account, d->contactList->accounts()) {
 		account->autoLogin();
+		RosterDataService* service = new PsiDataService(account);
+		d->rmw->getRosterBuilder()->registerAccount(account->jid().full(), service);
+		d->rmw->getRosterBuilder()->rebuild();
 	}
 	
 	// show tip of the day

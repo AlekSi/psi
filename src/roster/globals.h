@@ -2,6 +2,7 @@
 #define ROSTER_GLOBALS_H
 
 #include <Qt>
+#include "common.h"
 
 namespace Roster {
 
@@ -12,14 +13,7 @@ namespace Roster {
 		StatusMessageRole = Qt::UserRole + 3
 	};
 
-	enum StatusType {
-		STATUS_ONLINE,
-		STATUS_AWAY,
-		STATUS_CHAT,
-		STATUS_DND,
-		STATUS_XA,
-		STATUS_OFFLINE
-	};
+	typedef XMPP::Status::Type StatusType;
 
 	const unsigned int FILTER_OFFLINE = 1;
 	const unsigned int FILTER_DND = 2;

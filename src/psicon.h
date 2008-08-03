@@ -29,8 +29,7 @@
 
 #include "tabbablewidget.h"
 
-
-using namespace XMPP;
+using XMPP::Status;
 
 class PsiCon;
 class PsiAccount;
