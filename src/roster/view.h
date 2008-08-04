@@ -47,6 +47,8 @@ namespace Roster {
 			void itemCollapsed(const QModelIndex& index);
 
 		private:
+			virtual bool viewportEvent(QEvent* event);
+
 			QModelIndex senderItemIndex() const;
 			void initMenu();
 			void expandWithManager(const QModelIndex& index, bool expanded);

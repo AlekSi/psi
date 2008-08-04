@@ -18,6 +18,7 @@
 #include "rosterbuilder.h"
 #include "metacontact.h"
 #include "statusiconprovider.h"
+#include "iconset.h"
 
 namespace Roster {
 	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatusMessages_(true), statusIconProvider_(NULL) {
@@ -111,7 +112,8 @@ namespace Roster {
 
 			foreach(Item* subitem, contact->getItems()) {
 				Resource* resource = dynamic_cast<Resource*>(subitem);
-				tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg(resource->getName(), QString::number(resource->getPriority()));
+				tip += QString("<icon name=\"%3\"> <b>%1</b> (%2)\n")
+					.arg(resource->getName(), QString::number(resource->getPriority()), statusToText(resource->getStatus()));
 
 				if (! resource->getStatusMessage().isEmpty()) {
 					tip += "<u>StatusMessage message</u>\n";
@@ -128,7 +130,8 @@ namespace Roster {
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 			Contact* parent = dynamic_cast<Contact*>(item->getParent());
 			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(parent->getName()), Qt::escape(parent->getJid().full()));
-			tip += QString("<img src=\":icons/online.png\"> <b>%1</b> (%2)\n").arg(resource->getName(), QString::number(resource->getPriority()));
+			tip += QString("<icon name=\"%3\"> <b>%1</b> (%2)\n")
+				.arg(resource->getName(), QString::number(resource->getPriority()), statusToText(resource->getStatus()));
 
 			if (! resource->getStatusMessage().isEmpty()) {
 				tip += "<u>StatusMessage message</u>\n";

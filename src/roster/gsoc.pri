@@ -47,5 +47,6 @@ SOURCES += \
 	$$PWD/metacontact.cpp \
 	$$PWD/viewstatemanager.cpp \
 	$$PWD/statusiconprovider.cpp \
-	$$PWD/psidataservice.cpp
+	$$PWD/psidataservice.cpp \
+	$$PWD/globals.cpp
 

@@ -15,6 +15,7 @@
 #include "manager.h"
 #include "viewstatemanager.h"
 #include "metacontact.h"
+#include "psitooltip.h"
 
 namespace Roster {
 
@@ -318,6 +319,22 @@ namespace Roster {
 	}
 
 	void View::menuRemoveGroupAndContacts() {
+	}
+
+	bool View::viewportEvent(QEvent* event) {
+		if ( event->type() == QEvent::ToolTip ) {
+			QHelpEvent* he = static_cast<QHelpEvent*>(event);
+
+			QModelIndex index = indexAt(he->pos());
+			if ( index.isValid() ) {
+				PsiToolTip::showText(he->globalPos(), index.data(Qt::ToolTipRole).toString(), viewport());
+			}
+
+			event->setAccepted(true);
+			return true;
+		}
+
+		return QTreeView::viewportEvent(event);
 	}
 
 	/* 
