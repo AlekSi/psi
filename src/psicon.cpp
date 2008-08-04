@@ -587,8 +587,8 @@ bool PsiCon::init()
 		account->autoLogin();
 		RosterDataService* service = new PsiDataService(account);
 		d->rmw->getRosterBuilder()->registerAccount(account->jid().full(), service);
-		d->rmw->getRosterBuilder()->rebuild();
 	}
+	d->rmw->getRosterBuilder()->rebuild();
 	
 	// show tip of the day
 	if ( PsiOptions::instance()->getOption("options.ui.tip.show").toBool() ) {

@@ -46,7 +46,7 @@ namespace Roster {
 	}
 
 	void PsiDataService::updatedContact(const UserListItem& item) {
-		if ( ! item.inList() ) {
+		if ( ! item.inList() ) { // FIXME: check whether it's normal item instead
 			return;
 		}
 
