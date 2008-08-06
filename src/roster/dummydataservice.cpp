@@ -33,14 +33,18 @@ namespace Roster {
 		return items_;
 	}
 
-	const QIcon DummyDataService::getAvatar(const QString& jid) const {
-		if ( jid == "gislan@utumno.pl" ) {
+	const QIcon DummyDataService::getAvatar(const XMPP::Jid& jid) const {
+		if ( jid.full() == "gislan@utumno.pl" ) {
 			return QIcon("icons/avatar.png");
-		} else if ( jid == "remko@el-tramo.be") {
+		} else if ( jid.full() == "remko@el-tramo.be") {
 			return QIcon("icons/remko.jpg");
 		} else {
 			return QIcon();
 		}
+	}
+
+	const bool DummyDataService::isTransport(const XMPP::Jid& jid) const {
+		return false;
 	}
 
 }

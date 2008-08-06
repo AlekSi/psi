@@ -7,6 +7,8 @@
 
 namespace Roster {
 
+	const QString SEPARATOR = "::";
+
 	enum Roles {
 		ItemRole = Qt::UserRole,
 		IdRole = Qt::UserRole + 1,
@@ -20,8 +22,10 @@ namespace Roster {
 	const unsigned int FILTER_DND = 2;
 	const unsigned int FILTER_AWAY = 4;
 	const unsigned int FILTER_XA = 8;
+	const unsigned int FILTER_TRANSPORTS = 16;
 
 	const QString statusToText(const StatusType& status);
+
 }
 
 #endif

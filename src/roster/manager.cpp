@@ -6,6 +6,7 @@
 #include "account.h"
 #include "resource.h"
 #include "metacontact.h"
+#include "transport.h"
 
 namespace Roster {
 	void Manager::renameContact(Contact* contact, QString newName) {
@@ -21,31 +22,40 @@ namespace Roster {
 	}
 
 	void Manager::removeContact(Contact* contact) {
-		emit itemToBeRemoved(contact);
-		contact->getParent()->removeItem(contact);
-		emit itemRemoved(contact);
+		removeItem(contact);
 
 		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
+			if ( metacontact->getNbItems() ) {
+				Item* item = metacontact->getItems().at(0);
+				Contact* c = static_cast<Contact*>(item);
+				metacontact->setStatusMessage(c->getStatusMessage());
+				metacontact->setStatus(c->getStatus());
+				metacontact->setAvatar(c->getAvatar());
 
-			foreach(Item* item, metacontact->getItems()) {
-				Contact* contact = static_cast<Contact*>(item);
-				if ( !contact->getStatusMessage().isEmpty() ) {
-					metacontact->setStatusMessage(contact->getStatusMessage());
-					break;
-				}
+				emit itemUpdated(metacontact);
+			} else {
+				removeMetacontact(metacontact);
 			}
-
-			emit itemUpdated(metacontact);
 		}
 	}
 
 	void Manager::moveContact(Contact* contact, GroupItem* group) {
-		removeItem(contact);
+		removeContact(contact);
 		addContact(contact, group);
 	}
 
-	void Manager::addContact(Contact* contact, GroupItem* group) {
-		addItem(contact, group);
+	void Manager::addContact(Contact* contact, GroupItem* groupItem) {
+		addItem(contact, groupItem);
+
+		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
+			/* if it's the first contact in metacontact, copy stuff to metacontact */
+			if ( metacontact->getIndexOf(contact) == 0 ) {
+				metacontact->setStatus(contact->getStatus());
+				metacontact->setStatusMessage(contact->getStatusMessage());
+				metacontact->setAvatar(contact->getAvatar());
+				emit itemUpdated(metacontact);
+			}
+		}
 	}
 
 	void Manager::addGroup(Group* group, GroupItem* parent) {
@@ -57,7 +67,6 @@ namespace Roster {
 	}
 
 	void Manager::removeItem(Item* item) { 
-		// FIXME: isn't that too generic? should we use removeContact / removeGroup / etc ?
 		emit itemToBeRemoved(item);
 		item->getParent()->removeItem(item);
 		emit itemRemoved(item);
@@ -65,22 +74,10 @@ namespace Roster {
 
 	void Manager::addResource(Resource* resource, Contact* contact) {
 		addItem(resource, contact);
-		emit itemAdded(resource);
 
 		if ( contact->getIndexOf(resource) == 0 ) {
 			setContactStatusMessage(contact, resource->getStatusMessage());
 			setContactStatus(contact, resource->getStatus());
-		}
-	}
-
-	void Manager::addToMetacontact(Contact* contact, Metacontact* metacontact) {
-		addItem(contact, metacontact);
-
-		/* if it's the first contact in metacontact, copy stuff to metacontact */
-		if ( metacontact->getIndexOf(contact) == 0 ) {
-			metacontact->setStatusMessage(contact->getStatusMessage());
-			metacontact->setAvatar(contact->getAvatar());
-			emit itemUpdated(metacontact);
 		}
 	}
 
@@ -109,11 +106,11 @@ namespace Roster {
 		resource->setStatusMessage(statusMessage);
 		emit itemUpdated(resource);
 
-		Contact* contact = static_cast<Contact*>(resource->getParent());
-		if ( contact->getIndexOf(resource) == 0 ) {
-			setContactStatusMessage(contact, statusMessage);
-		}
-
+		if ( Contact* contact = dynamic_cast<Contact*>(resource->getParent()) ) {
+			if ( contact->getIndexOf(resource) == 0 ) {
+				setContactStatusMessage(contact, statusMessage);
+			}
+		} 
 	}
 
 	void Manager::setContactStatusMessage(Contact* contact, const QString& statusMessage) {
@@ -147,10 +144,20 @@ namespace Roster {
 
 		resort(resource);
 	
-		Contact* contact = static_cast<Contact*>(resource->getParent());
-		if ( contact->getIndexOf(resource) == 0 ) {
-			setContactStatus(contact, status);
+		if ( Contact* contact = static_cast<Contact*>(resource->getParent()) ) {
+			if ( contact->getIndexOf(resource) == 0 ) {
+				setContactStatus(contact, status);
+			}
+		} else if ( Transport* transport = static_cast<Transport*>(resource->getParent()) ) {
+			if ( transport->getIndexOf(resource) == 0 ) {
+				setTransportStatus(transport, status);
+			}
 		}
+	}
+
+	void Manager::setTransportStatus(Transport* transport, StatusType status) {
+		transport->setStatus(status);
+		emit itemUpdated(transport);
 	}
 
 	void Manager::resort(Item* item) {
@@ -222,6 +229,53 @@ namespace Roster {
 
 		qDebug() << "Oops, this should never happen";
 		return false;
+	}	
+
+	void Manager::addTransport(Transport* transport, GroupItem* groupItem) {
+		groupItem->addItem(transport);
+		emit itemAdded(transport);
+	}
+
+	void Manager::removeGroup(Group* group) {
+		removeItem(group);
+	}
+
+	void Manager::removeMetacontact(Metacontact* metacontact) {
+		removeItem(metacontact);
+	}
+
+	void Manager::removeAccount(Account* account) {
+		removeItem(account);
+	}
+
+	// BEGIN black magic
+	void Manager::removeResource(Resource* resource) {
+		if ( resource->getParent()->getIndexOf(resource) == 0 ) {
+			if ( Contact* contact = dynamic_cast<Contact*>(resource->getParent()) ) {
+				if ( contact->getNbItems() > 1 ) {
+					Resource* r = static_cast<Resource*>(contact->getItems().at(1));
+					contact->setStatusMessage(r->getStatusMessage());
+					contact->setStatus(r->getStatus());
+				} else {
+					contact->setStatusMessage("");
+					contact->setStatus(STATUS_OFFLINE);
+				}
+			} else if ( Transport* transport = dynamic_cast<Transport*>(resource->getParent()) ) {
+				if ( transport->getNbItems() > 1 ) {
+					Resource* r = static_cast<Resource*>(contact->getItems().at(1));
+					transport->setStatus(r->getStatus());
+				} else {
+					transport->setStatus(STATUS_OFFLINE);
+				}
+			}
+		}
+
+		removeItem(resource);
+	}
+	// END black magic
+
+	void Manager::removeTransport(Transport* transport) {
+		removeItem(transport);
 	}	
 }
 

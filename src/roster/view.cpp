@@ -16,6 +16,7 @@
 #include "viewstatemanager.h"
 #include "metacontact.h"
 #include "psitooltip.h"
+#include "transport.h"
 
 namespace Roster {
 
@@ -159,6 +160,12 @@ namespace Roster {
 			menu->addAction(sendMessageToResourceAct_);
 			menu->addAction(openChatToResourceAct_);
 			menu->addAction(sendFileToResourceAct_);
+		} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
+			if ( isExpanded(index) ) {
+				menu->addAction(hideResourcesAct_);
+			} else {
+				menu->addAction(showResourcesAct_);
+			}
 		}
 
 		foreach(QAction* action, menu->actions()) {

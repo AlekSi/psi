@@ -4,10 +4,9 @@
 #include <QString>
 
 #include "groupitem.h"
+#include "globals.h"
 
 namespace Roster {
-	const QString SEPARATOR = "::";
-
 	class Account;
 
 	class Roster : public GroupItem {

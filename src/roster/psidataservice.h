@@ -21,6 +21,7 @@ namespace Roster {
 
 			const QList<XMPPRosterItem*> getRosterItems() const;
 			const QIcon getAvatar(const XMPP::Jid& jid) const;
+			const bool isTransport(const XMPP::Jid& jid) const;
 
 		private slots:
 			void updatedContact(const UserListItem& item);

@@ -15,7 +15,8 @@ namespace Roster {
 			~DummyDataService();
 
 			const QList<XMPPRosterItem*> getRosterItems() const;
-			const QIcon getAvatar(const QString& jid) const;
+			const QIcon getAvatar(const XMPP::Jid& jid) const;
+			const bool isTransport(const XMPP::Jid& jid) const;
 
 		private:
 			QList<XMPPRosterItem*> items_;

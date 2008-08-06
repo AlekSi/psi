@@ -19,6 +19,7 @@
 #include "metacontact.h"
 #include "statusiconprovider.h"
 #include "iconset.h"
+#include "transport.h"
 
 namespace Roster {
 	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatusMessages_(true), statusIconProvider_(NULL) {
@@ -43,6 +44,8 @@ namespace Roster {
 				return QString("%1 (%2)").arg(resource->getName(), QString::number(resource->getPriority()));
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 				return metacontact->getName();
+			} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
+				return transport->getName();
 			}
 		} else if ( role == Qt::DecorationRole ) { // left icon
 			if ( Group* group = dynamic_cast<Group*>(item) ) {
@@ -55,6 +58,8 @@ namespace Roster {
 				return statusIconProvider_->getIconForStatus(resource->getStatus());
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 				return statusIconProvider_->getIconForStatus(metacontact->getStatus());
+			} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
+				return statusIconProvider_->getIconForStatus(transport->getStatus());
 			}
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
@@ -185,8 +190,12 @@ namespace Roster {
 			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
 		} else if ( dynamic_cast<Metacontact*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable;
+		} else if ( dynamic_cast<Transport*>(item) ) {
+			return Qt::ItemIsEnabled;
+		} else if ( dynamic_cast<Account*>(item) ) {
+			return Qt::ItemIsEnabled;
 		} else {
-			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
+			return Qt::ItemIsEnabled;
 		}
 	}
 

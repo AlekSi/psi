@@ -15,29 +15,36 @@ namespace Roster {
 	class Account;
 	class Resource;
 	class Metacontact;
+	class Transport;
 	
 	class Manager : public QObject {
 		Q_OBJECT
 
 		public:
-			void renameContact(Contact* contact, QString newName);
-			void copyContact(Contact* contact, GroupItem* group);
-			void removeContact(Contact* contact);
-			void moveContact(Contact* contact, GroupItem* group);
 			void addContact(Contact* contact, GroupItem* group);
-
 			void addGroup(Group* group, GroupItem* parent);
 			void addResource(Resource* resource, Contact* contact);
 			void addAccount(Account* account, GroupItem* parent);
-			void addToMetacontact(Contact* contact, Metacontact* metacontact);
+			void addTransport(Transport* transport, GroupItem* groupItem);
 			void addMetacontact(Metacontact* metacontact, GroupItem* group);
 
-			void removeItem(Item* item);
-			void updateState(GroupItem* groupItem, bool expanded);
+			void removeContact(Contact* contact);	
+			void removeResource(Resource* resource);
+			void removeAccount(Account* account);
+			void removeMetacontact(Metacontact* metacontact);
+			void removeTransport(Transport* transport);
+			void removeGroup(Group* group);
 
+			void updateState(GroupItem* groupItem, bool expanded);
+			void renameContact(Contact* contact, QString newName);
 			void setAvatar(Contact* contact, const QIcon& avatar);
 			void setStatusMessage(Resource* resource, const QString& statusMessage);
 			void setStatus(Resource* resource, StatusType status);
+
+			void copyContact(Contact* contact, GroupItem* group);
+			void moveContact(Contact* contact, GroupItem* group);
+
+			void removeItem(Item* item);
 
 		signals:
 			void itemUpdated(Item* item);
@@ -48,6 +55,7 @@ namespace Roster {
 		private:
 			void setContactStatusMessage(Contact* contact, const QString& statusMessage);
 			void setContactStatus(Contact* contact, StatusType status);
+			void setTransportStatus(Transport* transport, StatusType status);
 			void addItem(Item* item, GroupItem* parent);
 			void resort(Item* item);
 

@@ -1,3 +1,5 @@
+#include <QDebug>
+
 #include "psidataservice.h"
 #include "xmpprosteritem.h"
 #include "xmppresource.h"
@@ -20,17 +22,15 @@ namespace Roster {
 		for ( uint i = 0; i < acc_->userList()->count(); i++ ) {
 			UserListItem* item = acc_->userList()->at(i);
 
-			if ( ! item->isTransport() ) {
-				XMPPRosterItem* xitem = new XMPPRosterItem(item);
+			XMPPRosterItem* xitem = new XMPPRosterItem(item);
 
-				for ( uint j = 0; j < item->userResourceList().count(); j++ ) {
-					UserResource res = item->userResourceList().at(j);
-					XMPPResource* xres = new XMPPResource(res);
-					xitem->setResource(xres);
-				}
-
-				list.append(xitem);
+			for ( uint j = 0; j < item->userResourceList().count(); j++ ) {
+				UserResource res = item->userResourceList().at(j);
+				XMPPResource* xres = new XMPPResource(res);
+				xitem->setResource(xres);
 			}
+
+			list.append(xitem);
 		}
 
 		return list;
@@ -46,7 +46,7 @@ namespace Roster {
 	}
 
 	void PsiDataService::updatedContact(const UserListItem& item) {
-		if ( ! item.inList() ) { // FIXME: check whether it's normal item instead
+		if ( item.isSelf() ) {
 			return;
 		}
 
@@ -60,4 +60,15 @@ namespace Roster {
 
 		emit itemUpdated(xitem, acc_->jid().full());
 	}
+
+	const bool PsiDataService::isTransport(const XMPP::Jid& jid) const {
+		UserListItem* item = acc_->find(jid);
+
+		if ( item ) {
+			return item->isTransport();
+		}
+
+		return false;
+	}
+
 }

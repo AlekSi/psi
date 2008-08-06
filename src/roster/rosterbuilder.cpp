@@ -13,6 +13,7 @@
 #include "roster.h"
 #include "metacontact.h"
 #include "viewstatemanager.h"
+#include "transport.h"
 
 namespace Roster {
 
@@ -89,10 +90,25 @@ namespace Roster {
 		}
 	}
 
+	void RosterBuilder::addTransport(const XMPPRosterItem* xitem, const QString& acname) {
+		if ( itemFilter_ & FILTER_TRANSPORTS ) {
+			return;
+		}
+
+		Group* group = findGroup("Agents/Transports", acname, true);
+		Transport* transport = new Transport(xitem->getName(), xitem->getJid());
+		transport->setAccountName(acname);
+		manager_->addTransport(transport, group);
+	}
+
 	void RosterBuilder::buildRoster(const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 		foreach(XMPPRosterItem* xitem, srv->getRosterItems()) { 
-			addItem(xitem, acname);
+			if ( srv->isTransport(xitem->getJid()) ) {
+				addTransport(xitem, acname);
+			} else {
+				addItem(xitem, acname);
+			}
 		}
 	}
 
@@ -112,13 +128,13 @@ namespace Roster {
 			manager_->addContact(contact, group);
 		} else {
 			if ( Metacontact* metacontact = group->findMetacontact(contact->getName()) ) {
-				manager_->addToMetacontact(contact, metacontact);
+				manager_->addContact(contact, metacontact);
 			} else if ( Contact* similar = group->findContact(contact->getName()) ) {
 				Metacontact* metacontact = addMetacontact(contact->getName(), contact->getAccountName(), group);		
 
 				manager_->removeContact(similar);
-				manager_->addToMetacontact(similar, metacontact);
-				manager_->addToMetacontact(contact, metacontact);
+				manager_->addContact(similar, metacontact);
+				manager_->addContact(contact, metacontact);
 			} else {
 				manager_->addContact(contact, group);
 			}
@@ -246,7 +262,7 @@ namespace Roster {
 		return false;
 	}
 
-	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {
+	void RosterBuilder::contactChanged(const XMPPRosterItem* xitem, const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 
 		if ( isContactVisible(xitem) ) {
@@ -289,7 +305,7 @@ namespace Roster {
 				foreach(Item* item, contact->getItems()) {
 					Resource* resource = dynamic_cast<Resource*>(item);
 					if ( ! names.contains(resource->getName()) ) {
-						manager_->removeItem(resource);
+						manager_->removeResource(resource);
 						delete resource;
 					}
 				}
@@ -302,6 +318,20 @@ namespace Roster {
 					manager_->removeContact(contact);
 				}
 			}
+		}
+	}
+
+	void RosterBuilder::transportChanged(const XMPPRosterItem* xitem, const QString& acname) {
+
+	}
+
+	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {
+		RosterDataService* srv = rosterServices_[acname];
+
+		if ( srv->isTransport(xitem->getJid()) ) {
+			transportChanged(xitem, acname);
+		} else {
+			contactChanged(xitem, acname);
 		}
 	}
 
