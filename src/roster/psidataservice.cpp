@@ -61,6 +61,7 @@ namespace Roster {
 	}
 
 	void PsiDataService::updatedContact(const UserListItem& item) {
+		qDebug() << "updated contact" << item.jid().full();
 		XMPPRosterItem* xitem = buildRosterItem(&item);
 
 		for ( uint j = 0; j < item.userResourceList().count(); j++ ) {

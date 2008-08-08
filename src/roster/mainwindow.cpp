@@ -41,6 +41,7 @@ namespace Roster {
 
 		connect(model_, SIGNAL(expand(const QModelIndex&)), view_, SLOT(expand(const QModelIndex&)));
 		connect(model_, SIGNAL(collapse(const QModelIndex&)), view_, SLOT(collapse(const QModelIndex&)));
+		connect(view_, SIGNAL(searchInput(const QString&)), SLOT(searchInput(const QString&)));
 
 		model_->setManager(manager_);
 		view_->setManager(manager_);
@@ -59,6 +60,11 @@ namespace Roster {
 
 		view_->resizeColumnToContents(0);
 		resize(200, 350);
+	}
+
+	void MainWindow::searchInput(const QString& text) {
+		searchText_ += text;
+		rb_->setSearch(searchText_);
 	}
 
 	void MainWindow::setupMenus() {

@@ -22,6 +22,9 @@ namespace Roster {
 			MainWindow();
 			RosterBuilder* getRosterBuilder();
 
+		private slots:
+			void searchInput(const QString& text);
+
 		private:
 			void buildTestRoster();
 			void setupMenus();
@@ -35,6 +38,7 @@ namespace Roster {
 			StatusIconProvider* statusIconProvider_;
 
 			QAction *toggleAvatarsAct_, *toggleStatusAct_, *toggleJoinedAccountsAct_, *toggleJoinByNameAct_, *toggleShowOfflineAct_;
+			QString searchText_;
 	};
 }
 

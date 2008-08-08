@@ -345,6 +345,40 @@ namespace Roster {
 		return QTreeView::viewportEvent(event);
 	}
 
+	/* copy-paste from contactview.cpp */
+	void View::keyPressEvent(QKeyEvent* event) {
+		int key = event->key();
+		if ( key == Qt::Key_Home   || key == Qt::Key_End      ||
+			 key == Qt::Key_PageUp || key == Qt::Key_PageDown ||
+			 key == Qt::Key_Up     || key == Qt::Key_Down     ||
+			 key == Qt::Key_Left   || key == Qt::Key_Right    ||
+			 key == Qt::Key_Enter  || key == Qt::Key_Return) {
+			QTreeView::keyPressEvent(event);
+#ifdef Q_WS_MAC
+		} else if (event->modifiers() == Qt::ControlModifier) {
+			QTreeView::keyPressEvent(event);
+#endif 
+		} else {
+			QString text = event->text().lower();
+			if (text.isEmpty()) {
+				QTreeView::keyPressEvent(event);
+			}
+			else {
+				bool printable = true;
+				foreach (QChar ch, text) {
+					if (!ch.isPrint()) {
+						QTreeView::keyPressEvent(event);
+						printable = false;
+						break;
+					}
+				}
+				if (printable) {
+					emit searchInput(text);
+				}
+			}
+		}
+	}
+
 	/* 
 	 * returns QModelIndex of item on which context menu was called 
 	 * it is NOT safe to call it if sender() is not QAction or if it doesn't contain Roster::Item* object inside

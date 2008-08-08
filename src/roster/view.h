@@ -42,12 +42,16 @@ namespace Roster {
 			void menuRemoveContact();
 			void menuSendFile();
 
+		signals:
+			void searchInput(const QString& text);
+
 		private slots:
 			void itemExpanded(const QModelIndex& index);
 			void itemCollapsed(const QModelIndex& index);
 
 		private:
 			virtual bool viewportEvent(QEvent* event);
+			void keyPressEvent(QKeyEvent* event);
 
 			QModelIndex senderItemIndex() const;
 			void initMenu();

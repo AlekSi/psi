@@ -125,7 +125,7 @@ namespace Roster {
 	void RosterBuilder::updateTransport(const XMPPRosterItem* xitem, const QString& acname) {
 		Group* group = findGroup("Agents/Transports", acname, false);
 		Transport* transport = group ? group->findTransport(xitem->getJid(), acname) : 0;
-		if ( itemFilter_ & FILTER_TRANSPORTS ) {
+		if ( isTransportVisible(xitem) ) {
 			if ( transport ) {
 				manager_->removeTransport(transport);
 				delete transport;
@@ -289,6 +289,14 @@ namespace Roster {
 	}
 
 	const bool RosterBuilder::isContactVisible(const XMPPRosterItem* xitem) const {
+		if ( ! searchText_.isEmpty() ) {
+			if ( xitem->getName().toLower().contains(searchText_.toLower()) ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		foreach(XMPPResource* xres, xitem->getResources()) {
 			if ( xres->getStatus() == STATUS_ONLINE or xres->getStatus() == STATUS_CHAT ) {
 				return true;
@@ -302,6 +310,17 @@ namespace Roster {
 		}
 
 		return ! (itemFilter_ & FILTER_OFFLINE);
+	}
+
+	const bool RosterBuilder::isTransportVisible(const XMPPRosterItem* xitem) const {
+		if ( ! searchText_.isEmpty() ) {
+			if ( xitem->getName().toLower().contains(searchText_.toLower()) ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return ! (itemFilter_ & FILTER_TRANSPORTS);
 	}
 
 	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {
@@ -350,6 +369,12 @@ namespace Roster {
 
 	void RosterBuilder::selfChanged(const XMPPRosterItem* xitem, const QString& acname) {
 		updateSelf(xitem, acname);
+	}
+
+	void RosterBuilder::setSearch(const QString& searchText) {
+		qDebug() << "setting searchText to" << searchText;
+		searchText_ = searchText;
+		rebuild();
 	}
 
 }

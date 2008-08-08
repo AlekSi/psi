@@ -27,6 +27,7 @@ namespace Roster {
 			RosterBuilder(Roster* root_, Manager* manager, ViewStateManager* vms);
 			void registerAccount(const QString& acname, RosterDataService* rosterService);
 			void rebuild();
+			void setSearch(const QString& searchText);
 
 			unsigned int getFilter();
 
@@ -62,6 +63,7 @@ namespace Roster {
 
 
 			const bool isContactVisible(const XMPPRosterItem* xitem) const;
+			const bool isTransportVisible(const XMPPRosterItem* xitem) const;
 
 			QMap<QString, RosterDataService*> rosterServices_;
 
@@ -71,6 +73,7 @@ namespace Roster {
 			bool joinedAccounts_;
 			bool joinByName_;
 			unsigned int itemFilter_;
+			QString searchText_;
 	};
 
 }
