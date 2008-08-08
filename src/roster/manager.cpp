@@ -7,6 +7,7 @@
 #include "resource.h"
 #include "metacontact.h"
 #include "transport.h"
+#include "self.h"
 
 namespace Roster {
 	void Manager::renameContact(Contact* contact, QString newName) {
@@ -72,12 +73,21 @@ namespace Roster {
 		emit itemRemoved(item);
 	}
 
-	void Manager::addResource(Resource* resource, Contact* contact) {
-		addItem(resource, contact);
+	void Manager::addResource(Resource* resource, GroupItem* groupItem) {
+		addItem(resource, groupItem);
 
-		if ( contact->getIndexOf(resource) == 0 ) {
-			setContactStatusMessage(contact, resource->getStatusMessage());
-			setContactStatus(contact, resource->getStatus());
+		if ( groupItem->getIndexOf(resource) == 0 ) {
+			if ( Contact* contact = dynamic_cast<Contact*>(groupItem) ) {
+				setContactStatusMessage(contact, resource->getStatusMessage());
+				setContactStatus(contact, resource->getStatus());
+			} else if ( Self* self = dynamic_cast<Self*>(groupItem) ) {
+				self->setStatus(resource->getStatus());
+				self->setStatusMessage(resource->getStatusMessage());
+				emit itemUpdated(self);
+			} else if ( Transport* transport = dynamic_cast<Transport*>(groupItem) ) {
+				transport->setStatus(resource->getStatus());
+				emit itemUpdated(transport);
+			}
 		}
 	}
 
@@ -201,6 +211,14 @@ namespace Roster {
 			}
 		} else if ( dynamic_cast<const Account*>(item2) ) {
 			return false; 
+		} else if ( const Self* s1 = dynamic_cast<const Self*>(item1) ) {
+			if ( const Self* s2 = dynamic_cast<const Self*>(item2) ) {
+				return s1->getName().toLower() < s2->getName().toLower();
+			} else {
+				return true;
+			}
+		} else if ( dynamic_cast<const Self*>(item2) ) {
+			return false;
 		} else if ( const Group* g1 = dynamic_cast<const Group*>(item1) ) {
 			if ( const Group* g2 = dynamic_cast<const Group*>(item2) ) {
 				return g1->getName().toLower() < g2->getName().toLower();
@@ -209,6 +227,14 @@ namespace Roster {
 			}
 		} else if ( dynamic_cast<const Group*>(item2) ) {
 			return false;
+		} else if ( const Transport* t1 = dynamic_cast<const Transport*>(item1) ) {
+			if ( const Transport* t2 = dynamic_cast<const Transport*>(item2) ) {
+				return t1->getName().toLower() < t2->getName().toLower();
+			} else {
+				return false;
+			}
+		} else if ( dynamic_cast<const Transport*>(item2) ) {
+			return true;
 		} else if ( const Metacontact* m1 = dynamic_cast<const Metacontact*>(item1) ) {
 			if ( const Contact* c2 = dynamic_cast<const Contact*>(item2) ) {
 				return (m1->getStatus() < c2->getStatus()) or (m1->getStatus() == c2->getStatus() and m1->getName().toLower() < c2->getName().toLower());
@@ -248,6 +274,24 @@ namespace Roster {
 		removeItem(account);
 	}
 
+	void Manager::removeSelf(Self* self) {
+		removeItem(self);
+	}
+
+	void Manager::addSelf(Self* self, GroupItem* groupItem) {
+		addItem(self, groupItem);
+
+		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(self->getParent()) ) {
+			/* if it's the first contact in metacontact, copy stuff to metacontact */
+			if ( metacontact->getIndexOf(self) == 0 ) {
+				metacontact->setStatus(self->getStatus());
+				metacontact->setStatusMessage(self->getStatusMessage());
+				metacontact->setAvatar(self->getAvatar());
+				emit itemUpdated(metacontact);
+			}
+		}
+	}
+
 	// BEGIN black magic
 	void Manager::removeResource(Resource* resource) {
 		if ( resource->getParent()->getIndexOf(resource) == 0 ) {
@@ -266,6 +310,13 @@ namespace Roster {
 					transport->setStatus(r->getStatus());
 				} else {
 					transport->setStatus(STATUS_OFFLINE);
+				}
+			} else if ( Self* self = dynamic_cast<Self*>(resource->getParent()) ) {
+				if ( self->getNbItems() > 1 ) {
+					Resource* r = static_cast<Resource*>(contact->getItems().at(1));
+					self->setStatus(r->getStatus());
+				} else {
+					self->setStatus(STATUS_OFFLINE);
 				}
 			}
 		}

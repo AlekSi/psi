@@ -161,6 +161,7 @@ namespace Roster {
 			menu->addAction(openChatToResourceAct_);
 			menu->addAction(sendFileToResourceAct_);
 		} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
+			Q_UNUSED(transport);
 			if ( isExpanded(index) ) {
 				menu->addAction(hideResourcesAct_);
 			} else {

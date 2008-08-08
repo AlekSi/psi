@@ -24,8 +24,6 @@ namespace Roster {
 //			void setAvatar(const QIcon& avatar);
 //			void setStatusMessage(const QString& statusMessage);
 
-			Resource* findResource(const QString& name) const;
-
 		private:
 			QString name_;
 			XMPP::Jid jid_;

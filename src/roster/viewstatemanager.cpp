@@ -5,6 +5,8 @@
 #include "contact.h"
 #include "metacontact.h"
 #include "account.h"
+#include "transport.h"
+#include "self.h"
 
 namespace Roster {
 
@@ -58,6 +60,23 @@ namespace Roster {
 		return name_ < a.name_;
 	}
 
+	ViewStateManager::TransportSpec::TransportSpec(Transport* transport) {
+		jid_ = transport->getJid();
+		accountName_ = transport->getAccountName();
+	}
+
+	const bool ViewStateManager::TransportSpec::operator<(const TransportSpec& t) const {
+		return (accountName_ < t.accountName_ or (accountName_ == t.accountName_ and jid_.full() < t.jid_.full()));
+	}
+
+	ViewStateManager::SelfSpec::SelfSpec(Self* self) {
+		accountName_ = self->getAccountName();
+	}
+
+	const bool ViewStateManager::SelfSpec::operator<(const SelfSpec& s) const {
+		return accountName_ < s.accountName_;
+	}
+
 	// ViewStateManager
 	const bool ViewStateManager::isGroupExpanded(Group* group) const {
 		if ( !groups_.contains(GroupSpec(group)) ) {
@@ -81,6 +100,14 @@ namespace Roster {
 		return accounts_.value(AccountSpec(account));
 	}
 
+	const bool ViewStateManager::isTransportExpanded(Transport* transport) const {
+		return transports_.value(TransportSpec(transport));
+	}
+
+	const bool ViewStateManager::isSelfExpanded(Self* self) const {
+		return selfs_.value(SelfSpec(self));
+	}
+
 	void ViewStateManager::setGroupExpanded(Group* group, bool expanded) {
 		groups_.insert(GroupSpec(group), expanded);
 		group->setExpanded(expanded);
@@ -99,6 +126,16 @@ namespace Roster {
 	void ViewStateManager::setAccountExpanded(Account* account, bool expanded) {
 		accounts_.insert(AccountSpec(account), expanded);
 		account->setExpanded(expanded);
+	}
+
+	void ViewStateManager::setTransportExpanded(Transport* transport, bool expanded) {
+		transports_.insert(TransportSpec(transport), expanded);
+		transport->setExpanded(expanded);
+	}
+
+	void ViewStateManager::setSelfExpanded(Self* self, bool expanded) {
+		selfs_.insert(SelfSpec(self), expanded);
+		self->setExpanded(expanded);
 	}
 
 }

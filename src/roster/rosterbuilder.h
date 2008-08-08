@@ -18,6 +18,7 @@ namespace Roster {
 	class Contact;
 	class Metacontact;
 	class ViewStateManager;
+	class Self;
 
 	class RosterBuilder : public QObject {
 		Q_OBJECT
@@ -38,6 +39,8 @@ namespace Roster {
 			void itemAdded(const XMPPRosterItem* xitem, const QString& acname);
 			void itemRemoved(const XMPPRosterItem* xitem, const QString& acname);
 			void itemChanged(const XMPPRosterItem* xitem, const QString& acname);
+			void selfChanged(const XMPPRosterItem* xitem, const QString& acname);
+			void accountChanged(const QString& acname);
 		
 		private:
 			void buildRoster(const QString& acname);
@@ -45,18 +48,18 @@ namespace Roster {
 			void buildJoinedAccounts();
 			void buildAllAccounts();
 
-			Group* findGroup(const QString& groupName, const QString& acname, bool create = true);
+			Group* findGroup(const QString& groupName, const QString& acname, bool create = false);
 			QList<Contact*> findContacts(const XMPPRosterItem* xitem, const QString& acname);
 
+			void updateResources(const QList<XMPPResource*> list, GroupItem* groupItem);
+			void updateContact(const XMPPRosterItem* xitem, const QString& acname);
+			void updateTransport(const XMPPRosterItem* xitem, const QString& acname);
+			void updateSelf(const XMPPRosterItem* xitem, const QString& acname);
+
 			void addContact(Contact* contact, Group* group);
-			void addItem(const XMPPRosterItem* xitem, const QString& acname);
 			Metacontact* addMetacontact(const QString& name, const QString& acname, GroupItem* parent);
 			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);
-			void addResource(XMPPResource* xresource, Contact* parent);
-			void addTransport(const XMPPRosterItem* xitem, const QString& acname);
 
-			void contactChanged(const XMPPRosterItem* xitem, const QString& acname);
-			void transportChanged(const XMPPRosterItem* xitem, const QString& acname);
 
 			const bool isContactVisible(const XMPPRosterItem* xitem) const;
 

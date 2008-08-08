@@ -20,6 +20,7 @@
 #include "statusiconprovider.h"
 #include "iconset.h"
 #include "transport.h"
+#include "self.h"
 
 namespace Roster {
 	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatusMessages_(true), statusIconProvider_(NULL) {
@@ -46,6 +47,8 @@ namespace Roster {
 				return metacontact->getName();
 			} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
 				return transport->getName();
+			} else if ( Self* self = dynamic_cast<Self*>(item) ) {
+				return self->getName();
 			}
 		} else if ( role == Qt::DecorationRole ) { // left icon
 			if ( Group* group = dynamic_cast<Group*>(item) ) {
@@ -60,6 +63,8 @@ namespace Roster {
 				return statusIconProvider_->getIconForStatus(metacontact->getStatus());
 			} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
 				return statusIconProvider_->getIconForStatus(transport->getStatus());
+			} else if ( Self* self = dynamic_cast<Self*>(item) ) {
+				return statusIconProvider_->getIconForStatus(self->getStatus());
 			}
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
@@ -86,6 +91,8 @@ namespace Roster {
 				return contact->getAvatar(); 
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 				return metacontact->getAvatar();
+			} else if ( Self* self = dynamic_cast<Self*>(item) ) {
+				return self->getAvatar();
 			}
 		} else if ( role == StatusMessageRole and showStatusMessages_ ) { // statusMessage text
 			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
@@ -94,6 +101,8 @@ namespace Roster {
 				return resource->getStatusMessage();
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 				return metacontact->getStatusMessage();
+			} else if ( Self* self = dynamic_cast<Self*>(item) ) {
+				return self->getStatusMessage();
 			}
 		} else if ( role == Qt::SizeHintRole ) { // size of item
 			if ( !index.data(AvatarRole).value<QIcon>().isNull() ) {
@@ -149,6 +158,24 @@ namespace Roster {
 				Contact* contact = static_cast<Contact*>(item);	
 				tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid().full()));
 			}
+		} else if ( Self* self = dynamic_cast<Self*>(item) ) {
+			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(self->getName()), Qt::escape(self->getJid().full()));
+
+			foreach(Item* subitem, self->getItems()) {
+				Resource* resource = dynamic_cast<Resource*>(subitem);
+				tip += QString("<icon name=\"%3\"> <b>%1</b> (%2)\n")
+					.arg(resource->getName(), QString::number(resource->getPriority()), statusToText(resource->getStatus()));
+
+				if (! resource->getStatusMessage().isEmpty()) {
+					tip += "<u>StatusMessage message</u>\n";
+					tip += Qt::escape(resource->getStatusMessage()) + "\n";
+				}
+			}
+
+			/* if we're using joined accounts, put info on which account is this self on */
+			if ( self->getParent()->getAccountName().isEmpty() ) {
+				tip += QString("\n(Account: %1)\n").arg(Qt::escape(self->getAccountName()));
+			}
 		} else {
 			return QVariant();
 		}
@@ -193,6 +220,8 @@ namespace Roster {
 		} else if ( dynamic_cast<Transport*>(item) ) {
 			return Qt::ItemIsEnabled;
 		} else if ( dynamic_cast<Account*>(item) ) {
+			return Qt::ItemIsEnabled;
+		} else if ( dynamic_cast<Self*>(item) ) {
 			return Qt::ItemIsEnabled;
 		} else {
 			return Qt::ItemIsEnabled;

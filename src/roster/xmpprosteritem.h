@@ -16,13 +16,16 @@ namespace Roster {
 		public:
 			XMPPRosterItem();
 			XMPPRosterItem(const QString& name, const XMPP::Jid& jid, const QList<QString>& groups);
-			XMPPRosterItem(const UserListItem* item);
 			~XMPPRosterItem();
 
 			const QString& getName() const;
 			const XMPP::Jid& getJid() const;
 			const QList<QString> getGroups() const;
 			const QList<XMPPResource*> getResources() const;
+
+			void setName(const QString& name);
+			void setJid(const XMPP::Jid& jid);
+			void setGroups(const QList<QString>& groups);
 
 			void setResource(XMPPResource* resource);
 		private:

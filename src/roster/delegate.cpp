@@ -15,6 +15,7 @@
  */
 
 namespace Roster {
+
 	void Delegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const {
 		painter->save();
 		painter->setClipping(false);
@@ -105,5 +106,6 @@ namespace Roster {
 	void Delegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 		editor->setGeometry(nameRect(option, index));
 	}
+
 }
 

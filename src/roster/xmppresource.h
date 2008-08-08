@@ -5,14 +5,11 @@
 
 #include "globals.h"
 
-class UserResource;
-
 namespace Roster {
 
 	class XMPPResource {
 		public:
 			XMPPResource(const QString& name, const int priority, const StatusType status = STATUS_OFFLINE, const QString statusMessage = "");
-			XMPPResource(const UserResource& item);
 			~XMPPResource();
 
 			const QString& getName() const;
@@ -31,6 +28,7 @@ namespace Roster {
 			StatusType status_;
 			QString statusMessage_;
 	};
+
 }
 
 #endif

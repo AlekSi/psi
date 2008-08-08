@@ -1,9 +1,13 @@
 #include <QDebug>
 
+#include "globals.h"
 #include "groupitem.h"
 #include "group.h"
 #include "contact.h"
 #include "metacontact.h"
+#include "self.h"
+#include "resource.h"
+#include "transport.h"
 
 namespace Roster {
 
@@ -79,6 +83,42 @@ namespace Roster {
 		}
 
 		return 0;
+	}
+
+	Self* GroupItem::findSelf(const QString& acname) const {
+		foreach(Item* item, items_) {
+			if ( Self* self = dynamic_cast<Self*>(item) ) {
+				if ( self->getAccountName() == acname ) {
+					return self;
+				}
+			}
+		}
+
+		return 0;
+	}
+
+	Resource* GroupItem::findResource(const QString& name) const {
+		foreach(Item* item, items_) {
+			if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
+				if ( resource->getName() == name ) {
+					return resource;
+				}
+			}
+		}
+
+		return NULL;
+	}
+
+	Transport* GroupItem::findTransport(const XMPP::Jid& jid, const QString& acname) const {
+		foreach(Item* item, items_) {
+			if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
+				if ( transport->getJid().full() == jid.full() and transport->getAccountName() == acname ) {
+					return transport;
+				}
+			}
+		}
+
+		return NULL;
 	}
 
 	void GroupItem::setExpanded(const bool expanded) {

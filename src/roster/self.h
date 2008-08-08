@@ -1,19 +1,16 @@
-#ifndef ROSTER_CONTACT_H
-#define ROSTER_CONTACT_H
-
-#include <QString>
-#include <QIcon>
+#ifndef ROSTER_SELF_H
+#define ROSTER_SELF_H
 
 #include "groupitem.h"
 #include "globals.h"
 
 namespace Roster {
-	// single contact on roster
-	class Contact : public GroupItem {
+	class Resource;
+
+	class Self : public GroupItem {
 		public:
-			Contact(const QString& name, const XMPP::Jid& jid);
-			Contact(const Contact& c);
-			~Contact();
+			Self(const QString& name, const XMPP::Jid& jid);
+			~Self();
 
 			const QString& getName() const;
 			const XMPP::Jid& getJid() const;
@@ -27,6 +24,8 @@ namespace Roster {
 			void setStatusMessage(const QString& statusMessage);
 			const StatusType getStatus() const;
 
+			Resource* findResource(const QString& name) const;
+
 		private:
 			QString name_;
 			XMPP::Jid jid_;
@@ -34,6 +33,7 @@ namespace Roster {
 			QString statusMessage_;
 			StatusType status_;
 	};
+
 }
 
 #endif

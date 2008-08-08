@@ -1,16 +1,8 @@
 #include "xmppresource.h"
-#include "userlist.h"
 
 namespace Roster {
 
 	XMPPResource::XMPPResource(const QString& name, const int priority, const StatusType status, const QString statusMessage) : name_(name), priority_(priority), status_(status), statusMessage_(statusMessage) {
-	}
-
-	XMPPResource::XMPPResource(const UserResource& item) {
-		name_ = item.name();
-		priority_ = item.priority();
-		status_ = item.status().type();
-		statusMessage_ = item.status().status();
 	}
 
 	XMPPResource::~XMPPResource() {
