@@ -298,7 +298,6 @@ MainWin::MainWin(bool _onTop, bool _asTool, PsiCon* psi, const char* name, Roste
 	splitter->addWidget(cvlist);
 	splitter->addWidget(view);
 	view->resizeColumnToContents(0);	
-	splitter->moveSplitter(0, 100);
 
 	int layoutMargin = 2;
 #ifdef Q_WS_MAC
