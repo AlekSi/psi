@@ -4,6 +4,7 @@
 #include <QTreeView>
 #include <QObject>
 #include <QModelIndex>
+#include <QMap>
 
 namespace XMPP {
 	class Jid;
@@ -47,6 +48,8 @@ namespace Roster {
 			void menuOpenChat();
 			void menuRemoveContact();
 			void menuSendFile();
+			void menuExecuteCommand();
+			void menuUserInfo();
 
 		signals:
 			void searchInput(const QString& text);
@@ -63,7 +66,8 @@ namespace Roster {
 			void initMenu();
 			void expandWithManager(const QModelIndex& index, bool expanded);
 
-			QAction *sendMessageAct_, *historyAct_, *showResourcesAct_, *hideResourcesAct_, *renameContactAct_, *removeContactAct_, *sendFileAct_, *openChatAct_; // Contact menu
+			QMap<QString, QAction*> menuActions_;
+			QAction *renameContactAct_; // Contact menu
 			QAction *sendMessageToGroupAct_, *renameGroupAct_, *removeGroupAct_, *removeGroupAndContactsAct_; // Group menu
 			QAction *goOnlineAct_, *goOfflineAct_, *xmlConsoleAct_; // Roster menu
 			QAction *sendToAllAct_; // Multiple contacts menu

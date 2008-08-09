@@ -17,9 +17,31 @@ namespace Roster {
 	}
 
 	void ViewManager::sendMessage(Contact* contact) {
-		if ( managers_.contains(contact->getAccountName()) ) {
-			managers_[contact->getAccountName()]->sendMessage(contact->getJid());
-		}
+		managers_[contact->getAccountName()]->sendMessage(contact->getJid());
+	}
+
+	void ViewManager::openChat(Contact* contact) {
+		managers_[contact->getAccountName()]->openChat(contact->getJid());
+	}
+
+	void ViewManager::executeCommand(Contact* contact) {
+		managers_[contact->getAccountName()]->executeCommand(contact->getJid());
+	}
+
+	void ViewManager::sendFile(Contact* contact) {
+		managers_[contact->getAccountName()]->sendFile(contact->getJid());
+	}
+
+	void ViewManager::removeContact(Contact* contact) {
+		managers_[contact->getAccountName()]->removeContact(contact->getJid());
+	}
+
+	void ViewManager::showHistory(Contact* contact) {
+		managers_[contact->getAccountName()]->showHistory(contact->getJid());
+	}
+
+	void ViewManager::userInfo(Contact* contact) {
+		managers_[contact->getAccountName()]->userInfo(contact->getJid());
 	}
 
 }

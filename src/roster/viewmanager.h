@@ -18,7 +18,15 @@ namespace Roster {
 			~ViewManager();
 
 			void registerAccount(PsiAccount* acc);
+			
+			// contact actions
 			void sendMessage(Contact* contact);
+			void openChat(Contact* contact);
+			void executeCommand(Contact* contact);
+			void sendFile(Contact* contact);
+			void removeContact(Contact* contact);
+			void showHistory(Contact* contact); 
+			void userInfo(Contact* contact);
 		
 		private:
 			QMap<QString, ViewAccountManager*> managers_;
