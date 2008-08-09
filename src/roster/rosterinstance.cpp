@@ -10,6 +10,7 @@
 #include "roster.h"
 #include "delegate.h"
 #include "psidataservice.h"
+#include "viewmanager.h"
 
 #include "psiaccount.h"
 
@@ -22,6 +23,7 @@ namespace Roster {
 		vsm_ = new ViewStateManager;
 		rb_ = new RosterBuilder(data_, manager_, vsm_);
 
+		vm_ = new ViewManager;
 		statusIconProvider_ = new StatusIconProvider;
 		
 		view_ = new View;
@@ -37,6 +39,7 @@ namespace Roster {
 
 		model_->setManager(manager_);
 		view_->setManager(manager_);
+		view_->setViewManager(vm_);
 		model_->setRosterBuilder(rb_);
 	}
 
@@ -46,6 +49,7 @@ namespace Roster {
 		delete rb_;
 		delete statusIconProvider_;
 		delete vsm_;
+		delete vm_;
 		delete manager_;
 	}
 
@@ -64,6 +68,9 @@ namespace Roster {
 	void RosterInstance::registerAccount(PsiAccount* acc) {
 		RosterDataService* srv = new PsiDataService(acc);
 		rb_->registerAccount(acc->jid().full(), srv);
+
+		vm_->registerAccount(acc);
+
 		rb_->rebuild();
 	}	
 

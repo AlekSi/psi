@@ -5,10 +5,15 @@
 #include <QObject>
 #include <QModelIndex>
 
+namespace XMPP {
+	class Jid;
+}
+
 namespace Roster {
 	class Item;
 	class Manager;
 	class ViewStateManager;
+	class ViewManager;
 
     class View : public QTreeView {
 		Q_OBJECT
@@ -18,6 +23,7 @@ namespace Roster {
 
 			void setManager(Manager* manager);
 			void setViewStateManager(ViewStateManager* vsm);
+			void setViewManager(ViewManager* vm);
 
 		public slots:
 			void showContextMenu(const QPoint& position);
@@ -65,6 +71,7 @@ namespace Roster {
 
 			Manager* manager_;
 			ViewStateManager* vsm_;
+			ViewManager* vm_;
     };
 }
 

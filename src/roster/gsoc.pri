@@ -28,7 +28,9 @@ HEADERS += \
 	$$PWD/psidataservice.h \
 	$$PWD/transport.h \
 	$$PWD/self.h \
-	$$PWD/rosterinstance.h
+	$$PWD/rosterinstance.h \
+	$$PWD/viewmanager.h \
+	$$PWD/viewaccountmanager.h
 
 SOURCES += \
 	$$PWD/model.cpp \
@@ -54,5 +56,7 @@ SOURCES += \
 	$$PWD/globals.cpp \
 	$$PWD/transport.cpp \
 	$$PWD/self.cpp \
-	$$PWD/rosterinstance.cpp
+	$$PWD/rosterinstance.cpp \
+	$$PWD/viewmanager.cpp \
+	$$PWD/viewaccountmanager.cpp
 

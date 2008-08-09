@@ -17,6 +17,7 @@
 #include "metacontact.h"
 #include "psitooltip.h"
 #include "transport.h"
+#include "viewmanager.h"
 
 namespace Roster {
 
@@ -51,6 +52,10 @@ namespace Roster {
 
 	void View::setViewStateManager(ViewStateManager* vsm) {
 		vsm_ = vsm;
+	}
+
+	void View::setViewManager(ViewManager* vm) {
+		vm_ = vm;
 	}
 
 	/* initialize context menu actions */
@@ -186,6 +191,7 @@ namespace Roster {
 			setExpanded(index, !isExpanded(index));
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 			qDebug() << "Default action triggered on contact" << contact->getName();
+			vm_->sendMessage(contact);
 		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
 			setExpanded(index, !isExpanded(index));
 			qDebug() << "Default action triggered on account" << account->getName();
@@ -235,7 +241,7 @@ namespace Roster {
 	void View::menuSendMessage() {
 		QAction* action = static_cast<QAction*>(sender());
 		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		qDebug() << "send message to" << contact->getName();
+		vm_->sendMessage(contact);
 	}
 
 	/* menu action for (contact)->history */

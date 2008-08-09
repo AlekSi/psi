@@ -13,6 +13,7 @@ namespace Roster {
 	class Manager;
 	class ViewStateManager;
 	class Roster;
+	class ViewManager;
 
 	class RosterInstance : public QObject {
 		Q_OBJECT
@@ -35,6 +36,7 @@ namespace Roster {
 			Model* model_;
 			StatusIconProvider* statusIconProvider_;
 			Roster* data_;
+			ViewManager* vm_;
 	};	
 
 }
