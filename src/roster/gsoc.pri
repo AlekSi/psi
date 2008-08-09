@@ -27,7 +27,8 @@ HEADERS += \
 	$$PWD/statusiconprovider.h \
 	$$PWD/psidataservice.h \
 	$$PWD/transport.h \
-	$$PWD/self.h
+	$$PWD/self.h \
+	$$PWD/rosterinstance.h
 
 SOURCES += \
 	$$PWD/model.cpp \
@@ -52,5 +53,6 @@ SOURCES += \
 	$$PWD/psidataservice.cpp \
 	$$PWD/globals.cpp \
 	$$PWD/transport.cpp \
-	$$PWD/self.cpp
+	$$PWD/self.cpp \
+	$$PWD/rosterinstance.cpp
 

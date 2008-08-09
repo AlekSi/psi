@@ -125,7 +125,7 @@ namespace Roster {
 	void RosterBuilder::updateTransport(const XMPPRosterItem* xitem, const QString& acname) {
 		Group* group = findGroup("Agents/Transports", acname, false);
 		Transport* transport = group ? group->findTransport(xitem->getJid(), acname) : 0;
-		if ( isTransportVisible(xitem) ) {
+		if ( ! isTransportVisible(xitem) ) {
 			if ( transport ) {
 				manager_->removeTransport(transport);
 				delete transport;

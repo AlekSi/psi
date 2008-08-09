@@ -21,6 +21,11 @@
 #ifndef MAINWIN_H
 #define MAINWIN_H
 
+namespace Roster {
+	class View;
+}
+using Roster::View;
+
 #include <QMainWindow>
 #include <QMap>
 #include <QList>
@@ -49,7 +54,7 @@ class MainWin : public AdvancedWidget<QMainWindow>
 {
 	Q_OBJECT
 public:
-	MainWin(bool onTop, bool asTool, PsiCon *, const char *name=0);
+	MainWin(bool onTop, bool asTool, PsiCon *, const char *name=0, View* v = 0);
 	~MainWin();
 
 	void setWindowOpts(bool onTop, bool asTool);
@@ -62,6 +67,7 @@ public:
 	QMap<QString, QAction*> actions;
 
 	ContactView *cvlist;
+	View* view;
 
 	PsiCon *psiCon() const;
 

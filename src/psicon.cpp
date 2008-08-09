@@ -18,15 +18,15 @@
  *
  */
 
+// FIXME: dirty hack to avoid XMPP::Roster and Roster:: name collision due to "using namespace XMPP" in .h files
 namespace Roster {
-	class MainWindow;
-	class PsiDataService;
-	class RosterDataService;
+	class RosterInstance;
+	class View;
 }
-using Roster::MainWindow;
-using Roster::PsiDataService;
-using Roster::RosterDataService;
+using Roster::RosterInstance;
+using Roster::View;
 
+#include "mainwin.h"
 #include "psicon.h"
 
 #include <q3ptrlist.h>
@@ -54,7 +54,6 @@ using Roster::RosterDataService;
 #include "psievent.h"
 #include "passphrasedlg.h"
 #include "common.h"
-#include "mainwin.h"
 #include "idle.h"
 #include "accountmanagedlg.h"
 #include "statusdlg.h"
@@ -106,6 +105,7 @@ using Roster::RosterDataService;
 #include "roster/psidataservice.h"
 #include "roster/rosterbuilder.h"
 #include "roster/rosterdataservice.h"
+#include "roster/rosterinstance.h"
 
 #include "AutoUpdater/AutoUpdater.h"
 #ifdef HAVE_SPARKLE
@@ -266,7 +266,6 @@ public:
 	OptionsMigration optionsMigration;
 	OptionsTree accountTree;
 	MainWin *mainwin;
-	MainWindow* rmw;
 	Idle idle;
 	QList<item_dialog*> dialogList;
 	int eventId;
@@ -283,6 +282,7 @@ public:
 	CapsRegistry* capsRegistry;
 	TabManager *tabManager;
 	AutoUpdater *autoUpdater;
+	RosterInstance *roster;
 };
 
 //----------------------------------------------------------------------------
@@ -312,9 +312,6 @@ PsiCon::PsiCon()
 	d->defaultMenuBar = new QMenuBar(0);
 	d->capsRegistry = new CapsRegistry();
 	connect(d->capsRegistry, SIGNAL(registered(const CapsSpec&)), SLOT(saveCapabilities()));
-
-	d->rmw = new MainWindow;
-	d->rmw->show();
 }
 
 PsiCon::~PsiCon()
@@ -350,6 +347,9 @@ bool PsiCon::init()
 	connect(d->contactList, SIGNAL(accountCountChanged()), SIGNAL(accountCountChanged()));
 	connect(d->contactList, SIGNAL(accountActivityChanged()), SIGNAL(accountActivityChanged()));
 	connect(d->contactList, SIGNAL(saveAccounts()), SLOT(saveAccounts()));
+
+	// new roster !!!
+	d->roster = new RosterInstance();
 
 	// do some backuping in case we are about to start migration from config.xml+options.xml
 	// to options.xml only.
@@ -460,7 +460,7 @@ bool PsiCon::init()
 	Anim::setMainThread(QThread::currentThread());
 
 	// setup the main window
-	d->mainwin = new MainWin(PsiOptions::instance()->getOption("options.ui.contactlist.always-on-top").toBool(), (PsiOptions::instance()->getOption("options.ui.systemtray.enable").toBool() && PsiOptions::instance()->getOption("options.contactlist.use-toolwindow").toBool()), this, "psimain"); 
+	d->mainwin = new MainWin(PsiOptions::instance()->getOption("options.ui.contactlist.always-on-top").toBool(), (PsiOptions::instance()->getOption("options.ui.systemtray.enable").toBool() && PsiOptions::instance()->getOption("options.contactlist.use-toolwindow").toBool()), this, "psimain", d->roster->getView()); 
 	d->mainwin->setUseDock(PsiOptions::instance()->getOption("options.ui.systemtray.enable").toBool());
 
 	connect(d->mainwin, SIGNAL(closeProgram()), SLOT(closeProgram()));
@@ -585,11 +585,11 @@ bool PsiCon::init()
 	// try autologin if needed
 	foreach(PsiAccount* account, d->contactList->accounts()) {
 		account->autoLogin();
-		RosterDataService* service = new PsiDataService(account);
-		d->rmw->getRosterBuilder()->registerAccount(account->jid().full(), service);
+
+		d->roster->registerAccount(account); // register account to new roster
 	}
-	d->rmw->getRosterBuilder()->rebuild();
-	
+
+
 	// show tip of the day
 	if ( PsiOptions::instance()->getOption("options.ui.tip.show").toBool() ) {
 		TipDlg::show(this);

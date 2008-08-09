@@ -24,7 +24,6 @@
 namespace Roster {
 	MainWindow::MainWindow() {
 		data_ = new Roster;
-//		setupTestData();
 
 		manager_ = new Manager;
 		vsm_ = new ViewStateManager;
