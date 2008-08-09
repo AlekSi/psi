@@ -23,8 +23,10 @@
 
 namespace Roster {
 	class View;
+	class RosterInstance;
 }
 using Roster::View;
+using Roster::RosterInstance;
 
 #include <QMainWindow>
 #include <QMap>
@@ -54,7 +56,7 @@ class MainWin : public AdvancedWidget<QMainWindow>
 {
 	Q_OBJECT
 public:
-	MainWin(bool onTop, bool asTool, PsiCon *, const char *name=0, View* v = 0);
+	MainWin(bool onTop, bool asTool, PsiCon *, const char *name=0, RosterInstance* ri = 0);
 	~MainWin();
 
 	void setWindowOpts(bool onTop, bool asTool);
@@ -68,6 +70,7 @@ public:
 
 	ContactView *cvlist;
 	View* view;
+	RosterInstance* ri;
 
 	PsiCon *psiCon() const;
 

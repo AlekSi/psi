@@ -36,6 +36,7 @@ namespace Roster {
 			void setJoinByName(bool joinByName);
 			void setFilter(unsigned int itemFilter);
 			void setShowOffline(bool show);
+			void setShowSelf(bool show);
 
 			void itemAdded(const XMPPRosterItem* xitem, const QString& acname);
 			void itemRemoved(const XMPPRosterItem* xitem, const QString& acname);

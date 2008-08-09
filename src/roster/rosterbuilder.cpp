@@ -372,10 +372,20 @@ namespace Roster {
 	}
 
 	void RosterBuilder::setSearch(const QString& searchText) {
-		qDebug() << "setting searchText to" << searchText;
 		searchText_ = searchText;
 		rebuild();
 	}
 
+	void RosterBuilder::setShowSelf(bool show) {
+		if ( show ) {
+			itemFilter_ = itemFilter_ & (~FILTER_SELF);
+		} else {
+			itemFilter_ = itemFilter_ | FILTER_SELF;
+		}
+	
+		foreach(QString acname, rosterServices_.keys()) {
+			updateSelf(rosterServices_[acname]->getSelf(), acname);
+		}
+	}
 }
 
