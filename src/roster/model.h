@@ -56,6 +56,7 @@ namespace Roster {
 
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;
+			QVariant foregroundRole(Item* item) const;
 
 			Roster* root_;
 			Manager* manager_;
