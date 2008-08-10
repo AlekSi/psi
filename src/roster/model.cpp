@@ -70,11 +70,7 @@ namespace Roster {
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
 		} else if ( role == Qt::BackgroundRole ) { // background color
-			if ( dynamic_cast<Account*>(item) ) {
-				return QBrush( QColor(150, 150, 150), Qt::SolidPattern ); // FIXME: colors from options
-			} else if ( dynamic_cast<Group*>(item) ) {
-				return QBrush( QColor(240, 240, 240), Qt::SolidPattern );
-			}
+			return backgroundRole(item);
 		} else if ( role == Qt::ForegroundRole ) { // text color
 			return foregroundRole(item);
 		} else if ( role == Qt::ToolTipRole ) { // tooltip
@@ -107,6 +103,16 @@ namespace Roster {
 			} else {
 				return QSize(1, 20);
 			}
+		}
+
+		return QVariant();
+	}
+
+	QVariant Model::backgroundRole(Item* item) const {
+		if ( dynamic_cast<Account*>(item) ) {
+			return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.profile.header-background").value<QColor>());
+		} else if ( dynamic_cast<Group*>(item) ) {
+			return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.grouping.header-background").value<QColor>());
 		}
 
 		return QVariant();
