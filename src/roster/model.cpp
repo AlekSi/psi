@@ -409,6 +409,7 @@ namespace Roster {
 		manager_ = manager;
 		connect(manager_, SIGNAL(itemUpdated(Item*)), SLOT(itemUpdated(Item*)));
 		connect(manager_, SIGNAL(itemAdded(Item*)), SLOT(itemAdded(Item*)));
+		connect(manager_, SIGNAL(itemToBeAdded(GroupItem*, int)), SLOT(itemToBeAdded(GroupItem*, int)));
 		connect(manager_, SIGNAL(itemRemoved(Item*)), SLOT(itemRemoved(Item*)));
 		connect(manager_, SIGNAL(itemToBeRemoved(Item*)), SLOT(itemToBeRemoved(Item*)));
 	}
@@ -442,6 +443,8 @@ namespace Roster {
 	}
 
 	void Model::itemAdded(Item* item) {
+		endInsertRows();
+
 		QModelIndex index = getIndex(item->getId());
 		if ( index.isValid() ) {
 			if ( GroupItem* groupItem = dynamic_cast<GroupItem*>(item) ) {
@@ -454,6 +457,11 @@ namespace Roster {
 
 			emit layoutChanged();
 		}
+	}
+
+	void Model::itemToBeAdded(GroupItem* parent, int row) {
+		QModelIndex index = getIndex(parent->getId());
+		beginInsertRows(index, row, row);
 	}
 
 	void Model::itemToBeRemoved(Item* item) {

@@ -144,6 +144,7 @@ namespace Roster {
 			i = parent->getIndexOf(*it);
 		}
 
+		emit itemToBeAdded(parent, i);
 		parent->addItem(item, i);
 		emit itemAdded(item);
 	}
@@ -259,7 +260,6 @@ namespace Roster {
 
 	void Manager::addTransport(Transport* transport, GroupItem* groupItem) {
 		groupItem->addItem(transport);
-		emit itemAdded(transport);
 	}
 
 	void Manager::removeGroup(Group* group) {

@@ -13,6 +13,7 @@ namespace Roster {
 	class Manager;
 	class RosterBuilder;
 	class StatusIconProvider;
+	class GroupItem;
 
 	class Model : public QAbstractItemModel	{
 		Q_OBJECT
@@ -45,6 +46,7 @@ namespace Roster {
 
 			void itemUpdated(Item* item);
 			void itemAdded(Item* item);
+			void itemToBeAdded(GroupItem* parent, int row);
 			void itemRemoved(Item* item);
 			void itemToBeRemoved(Item* item);
 

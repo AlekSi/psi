@@ -17,6 +17,7 @@ namespace Roster {
 	class Metacontact;
 	class Transport;
 	class Self;
+	class GroupItem;
 	
 	class Manager : public QObject {
 		Q_OBJECT
@@ -52,6 +53,7 @@ namespace Roster {
 		signals:
 			void itemUpdated(Item* item);
 			void itemAdded(Item* item);
+			void itemToBeAdded(GroupItem* parent, int row);
 			void itemRemoved(Item* item);
 			void itemToBeRemoved(Item* item);
 
