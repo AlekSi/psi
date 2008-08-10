@@ -23,7 +23,7 @@ namespace Roster {
 																		root_(root), 
 																		manager_(manager), 
 																		joinedAccounts_(false), 
-																		joinByName_(false),
+																		joinByName_(true),
 																		itemFilter_(FILTER_OFFLINE)	{
 	}
 
@@ -96,15 +96,41 @@ namespace Roster {
 		RosterDataService* srv = rosterServices_[acname];
 
 		foreach(QString xgroup, xitem->getGroups()) {
-			Group* group = findGroup(xgroup, acname);
-			Contact* contact = group ? group->findContact(xitem->getName(), acname) : 0;
+			GroupItem* parent = findGroup(xgroup, acname);
+
+			if ( joinByName_ and parent ) {
+				Metacontact* metacontact = parent->findMetacontact(xitem->getName());
+				if ( metacontact ) {
+					parent = metacontact;
+				}
+			}
+
+			Contact* contact = parent ? parent->findContact(xitem->getJid(), acname) : 0;
 
 			if ( isContactVisible(xitem) ) {
 				if ( ! contact ) {
-					group = findGroup(xgroup, acname, true); // create if needed
 					contact = new Contact(xitem->getName(), xitem->getJid());
 					contact->setAccountName(acname);
-					addContact(contact, group);
+					
+					if ( ! parent ) {
+						parent = findGroup(xgroup, acname, true);
+					}
+
+					if ( ! joinByName_ ) {
+						parent = findGroup(xgroup, acname, true);
+						manager_->addContact(contact, parent);
+					} else {
+						if ( Contact* similar = parent->findContact(xitem->getName()) ) {
+							Metacontact* metacontact = addMetacontact(contact->getName(), parent->getAccountName(), parent);
+
+							manager_->removeContact(similar);
+							manager_->addContact(similar, metacontact);
+							manager_->addContact(contact, metacontact);
+						} else {
+							parent = findGroup(xgroup, acname, true);
+							manager_->addContact(contact, parent);
+						}
+					}
 				}
 
 				// update contact data
@@ -169,24 +195,6 @@ namespace Roster {
 		manager_->addMetacontact(metacontact, parent);
 		manager_->updateState(metacontact, vsm_->isMetacontactExpanded(metacontact));
 		return metacontact;
-	}
-
-	void RosterBuilder::addContact(Contact* contact, Group* group) {
-		if ( ! joinByName_ ) {
-			manager_->addContact(contact, group);
-		} else {
-			if ( Metacontact* metacontact = group->findMetacontact(contact->getName()) ) {
-				manager_->addContact(contact, metacontact);
-			} else if ( Contact* similar = group->findContact(contact->getName()) ) {
-				Metacontact* metacontact = addMetacontact(contact->getName(), contact->getAccountName(), group);		
-
-				manager_->removeContact(similar);
-				manager_->addContact(similar, metacontact);
-				manager_->addContact(contact, metacontact);
-			} else {
-				manager_->addContact(contact, group);
-			}
-		}
 	}
 
 	void RosterBuilder::buildAllAccounts() {

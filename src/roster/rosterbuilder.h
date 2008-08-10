@@ -52,14 +52,12 @@ namespace Roster {
 			void buildAllAccounts();
 
 			Group* findGroup(const QString& groupName, const QString& acname, bool create = false);
-			QList<Contact*> findContacts(const XMPPRosterItem* xitem, const QString& acname);
 
 			void updateResources(const QList<XMPPResource*> list, GroupItem* groupItem);
 			void updateContact(const XMPPRosterItem* xitem, const QString& acname);
 			void updateTransport(const XMPPRosterItem* xitem, const QString& acname);
 			void updateSelf(const XMPPRosterItem* xitem, const QString& acname);
 
-			void addContact(Contact* contact, Group* group);
 			Metacontact* addMetacontact(const QString& name, const QString& acname, GroupItem* parent);
 			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);
 

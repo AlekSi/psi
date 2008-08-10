@@ -31,7 +31,8 @@ namespace Roster {
 			virtual void addItem(Item* item, int i);
 			virtual const QList<Item*>& getItems() const;
 			virtual Group* findGroup(const QString& name);
-			virtual Contact* findContact(const QString& name, const QString& acname = "");
+			virtual Contact* findContact(const QString& name);
+			virtual Contact* findContact(const XMPP::Jid& jid, const QString& acname);
 			virtual Metacontact* findMetacontact(const QString& name);
 			virtual Self* findSelf(const QString& acname) const;
 			virtual Resource* findResource(const QString& name) const;

@@ -60,11 +60,22 @@ namespace Roster {
 		return 0;
 	}
 
-	// FIXME: this is wrong with metacontacts, we need to pass acname as well
-	Contact* GroupItem::findContact(const QString& name, const QString& acname) {
+	Contact* GroupItem::findContact(const XMPP::Jid& jid, const QString& acname) {
 		foreach(Item* item, items_) {
 			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-				if ( contact->getName() == name and (contact->getAccountName() == acname or acname.isEmpty()) ) {
+				if ( contact->getJid().full() == jid.full() and contact->getAccountName() == acname ) {
+					return contact;
+				}
+			}
+		}
+
+		return 0;
+	}
+
+	Contact* GroupItem::findContact(const QString& name) {
+		foreach(Item* item, items_) {
+			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+				if ( contact->getName() == name ) {
 					return contact;
 				}
 			}
