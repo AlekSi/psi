@@ -19,6 +19,8 @@
 #include "transport.h"
 #include "viewactionsservice.h"
 
+#include "psiiconset.h"
+
 namespace Roster {
 
 	/* Look & feel, initializations, connects */
@@ -67,15 +69,15 @@ namespace Roster {
 			const char* slot;
 			const char* icon;
 		} actionlist[] = {
-			{"sendMessage", tr("Send &message"), SLOT(menuSendMessage()), ""},
+			{"sendMessage", tr("Send &message"), SLOT(menuSendMessage()), "psi/sendMessage"},
 			{"executeCommand", tr("E&xecute command"), SLOT(menuExecuteCommand()), ""},
-			{"openChat", tr("Open &chat window"), SLOT(menuOpenChat()), ""},
-			{"sendFile", tr("Send &file"), SLOT(menuSendFile()), ""},
-			{"removeContact", tr("Rem&ove"), SLOT(menuRemoveContact()), ""},
-			{"history", tr("&History"), SLOT(menuHistory()), ""},
+			{"openChat", tr("Open &chat window"), SLOT(menuOpenChat()), "psi/start-chat"},
+			{"sendFile", tr("Send &file"), SLOT(menuSendFile()), "psi/upload"},
+			{"removeContact", tr("Rem&ove"), SLOT(menuRemoveContact()), "psi/remove"},
+			{"history", tr("&History"), SLOT(menuHistory()), "psi/history"},
 			{"hideResources", tr("Hide resources"), SLOT(menuHideResources()), ""},
 			{"showResources", tr("Show resources"), SLOT(menuShowResources()), ""},
-			{"userInfo", tr("User &info"), SLOT(menuUserInfo()), ""},
+			{"userInfo", tr("User &info"), SLOT(menuUserInfo()), "psi/vCard"},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -83,6 +85,10 @@ namespace Roster {
 		for ( int i = 0; ! QString(actionlist[i].name).isEmpty(); i++ ) {
 			// FIXME: no icon
 			menuActions_[actionlist[i].name] = new QAction(tr(actionlist[i].text), this);
+			if ( ! QString(actionlist[i].icon).isEmpty() ) {
+				// FIXME: use proxy for icon factory
+				menuActions_[actionlist[i].name]->setIcon(IconsetFactory::iconPixmap(actionlist[i].icon));
+			}
 			connect(menuActions_[actionlist[i].name], SIGNAL(triggered()), this, actionlist[i].slot);
 		}
 

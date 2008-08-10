@@ -348,11 +348,6 @@ bool PsiCon::init()
 	connect(d->contactList, SIGNAL(accountActivityChanged()), SIGNAL(accountActivityChanged()));
 	connect(d->contactList, SIGNAL(saveAccounts()), SLOT(saveAccounts()));
 
-	// new roster !!!
-	d->roster = new RosterInstance();
-	connect(this, SIGNAL(accountAdded(PsiAccount*)), d->roster, SLOT(accountAdded(PsiAccount*)));
-	connect(this, SIGNAL(accountRemoved(PsiAccount*)), d->roster, SLOT(accountRemoved(PsiAccount*)));
-	connect(this, SIGNAL(accountUpdated(PsiAccount*)), d->roster, SLOT(accountUpdated(PsiAccount*)));
 
 
 	// do some backuping in case we are about to start migration from config.xml+options.xml
@@ -462,6 +457,12 @@ bool PsiCon::init()
 	new PsiConObject(this);
 		
 	Anim::setMainThread(QThread::currentThread());
+
+	// new roster !!!
+	d->roster = new RosterInstance();
+	connect(this, SIGNAL(accountAdded(PsiAccount*)), d->roster, SLOT(accountAdded(PsiAccount*)));
+	connect(this, SIGNAL(accountRemoved(PsiAccount*)), d->roster, SLOT(accountRemoved(PsiAccount*)));
+	connect(this, SIGNAL(accountUpdated(PsiAccount*)), d->roster, SLOT(accountUpdated(PsiAccount*)));
 
 	// setup the main window
 	d->mainwin = new MainWin(PsiOptions::instance()->getOption("options.ui.contactlist.always-on-top").toBool(), (PsiOptions::instance()->getOption("options.ui.systemtray.enable").toBool() && PsiOptions::instance()->getOption("options.contactlist.use-toolwindow").toBool()), this, "psimain", d->roster); 
