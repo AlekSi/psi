@@ -3,8 +3,7 @@
 
 namespace Roster {
 
-	Metacontact::Metacontact(const QString& name) {
-		name_ = name;
+	Metacontact::Metacontact(const QString& name) : name_(name), status_(STATUS_OFFLINE) {
 	}
 
 	const QString& Metacontact::getName() const {

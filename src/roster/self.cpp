@@ -5,7 +5,7 @@
 
 namespace Roster {
 
-	Self::Self(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid) {
+	Self::Self(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid), status_(STATUS_OFFLINE) {
 	}
 
 	Self::~Self() {

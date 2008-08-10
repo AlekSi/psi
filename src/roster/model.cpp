@@ -119,12 +119,14 @@ namespace Roster {
 	}
 
 	QVariant Model::foregroundRole(Item* item) const {
+		QBrush br(Qt::black, Qt::SolidPattern);
+
 		if ( dynamic_cast<Account*>(item) ) {
-			return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.profile.header-foreground").value<QColor>());
+			br.setColor(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.profile.header-foreground").value<QColor>());
 		} else if ( dynamic_cast<Group*>(item) ) {
-			return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.grouping.header-foreground").value<QColor>());
+			br.setColor(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.grouping.header-foreground").value<QColor>());
 		} else if ( dynamic_cast<Resource*>(item) ) {
-			return QBrush(Qt::gray); // FIXME: new option
+			br.setColor(Qt::gray); // FIXME: new option
 		} else {
 			StatusType status = STATUS_OFFLINE;
 			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
@@ -136,17 +138,17 @@ namespace Roster {
 			}
 
 			if ( status == STATUS_ONLINE or status == STATUS_CHAT or status == STATUS_INVISIBLE ) {
-				return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.status.online").value<QColor>());
+				br.setColor(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.status.online").value<QColor>());
 			} else if ( status == STATUS_AWAY or status == STATUS_XA ) {
-				return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.status.away").value<QColor>());
+				br.setColor(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.status.away").value<QColor>());
 			} else if ( status == STATUS_DND ) {
-				return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.status.do-not-disturb").value<QColor>());
+				br.setColor(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.status.do-not-disturb").value<QColor>());
 			} else if ( status == STATUS_OFFLINE ) {
-				return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.status.offline").value<QColor>());
+				br.setColor(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.status.offline").value<QColor>());
 			}
 		}
 
-		return QVariant();
+		return br;
 	}
 
 	QVariant Model::makeToolTip(const QModelIndex& index) const {

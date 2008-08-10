@@ -3,7 +3,7 @@
 
 namespace Roster {
 
-	Transport::Transport(const QString& name, const XMPP::Jid& jid) : name_(name), jid_(jid) {
+	Transport::Transport(const QString& name, const XMPP::Jid& jid) : name_(name), jid_(jid), status_(STATUS_OFFLINE) {
 	}
 
 	Transport::~Transport() {

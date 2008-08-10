@@ -5,7 +5,7 @@
 
 namespace Roster {
 
-	Contact::Contact(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid) {
+	Contact::Contact(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid), status_(STATUS_OFFLINE) {
 	}
 
 	Contact::Contact(const Contact& c) : GroupItem() {
