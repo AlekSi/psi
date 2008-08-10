@@ -11,7 +11,7 @@
 #include "roster.h"
 #include "delegate.h"
 #include "psidataservice.h"
-#include "viewmanager.h"
+#include "viewactionsservice.h"
 
 #include "psiaccount.h"
 
@@ -24,7 +24,7 @@ namespace Roster {
 		vsm_ = new ViewStateManager;
 		rb_ = new RosterBuilder(data_, manager_, vsm_);
 
-		vm_ = new ViewManager;
+		actionsService_ = new ViewActionsService;
 		statusIconProvider_ = new StatusIconProvider;
 		
 		view_ = new View;
@@ -39,7 +39,7 @@ namespace Roster {
 
 		model_->setManager(manager_);
 		view_->setManager(manager_);
-		view_->setViewManager(vm_);
+		view_->setViewActionsService(actionsService_);
 		model_->setRosterBuilder(rb_);
 	}
 
@@ -49,7 +49,7 @@ namespace Roster {
 		delete rb_;
 		delete statusIconProvider_;
 		delete vsm_;
-		delete vm_;
+		delete actionsService_;
 		delete manager_;
 	}
 
@@ -70,7 +70,7 @@ namespace Roster {
 		QString acname = acc->jid().full();
 
 		rb_->registerAccount(acname, srv);
-		vm_->registerAccount(acname, acc);
+		actionsService_->registerAccount(acname, acc);
 
 		rb_->rebuild();
 	}
@@ -79,7 +79,7 @@ namespace Roster {
 		QString acname = acc->jid().full();
 
 		rb_->unregisterAccount(acname);
-		vm_->unregisterAccount(acname);
+		actionsService_->unregisterAccount(acname);
 
 		rb_->rebuild();
 	}
@@ -88,7 +88,7 @@ namespace Roster {
 		// FIXME: this is performance killer
 		QString acname = acc->jid().full();
 		rb_->unregisterAccount(acname);
-		vm_->unregisterAccount(acname);
+		actionsService_->unregisterAccount(acname);
 
 		accountAdded(acc);
 	}

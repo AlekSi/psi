@@ -1,5 +1,5 @@
-#ifndef ROSTER_VIEWACCOUNTMANAGER_H
-#define ROSTER_VIEWACCOUNTMANAGER_H
+#ifndef ROSTER_ROSTERACTIONSSERVICE_H
+#define ROSTER_ROSTERACTIONSSERVICE_H
 
 #include <QObject>
 
@@ -13,12 +13,12 @@ class PsiAccount;
 
 namespace Roster {
 
-	class ViewAccountManager : public QObject {
+	class RosterActionsService : public QObject {
 		Q_OBJECT
 
 		public:
-			ViewAccountManager(PsiAccount* acc);
-			~ViewAccountManager();
+			RosterActionsService(PsiAccount* acc);
+			~RosterActionsService();
 
 			void sendMessage(const XMPP::Jid& jid);
 			void openChat(const XMPP::Jid& jid);

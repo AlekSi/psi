@@ -1,5 +1,5 @@
-#ifndef ROSTER_VIEWMANAGER_H
-#define ROSTER_VIEWMANAGER_H
+#ifndef ROSTER_VIEWACTIONSSERVICE_H
+#define ROSTER_VIEWACTIONSSERVICE_H
 
 #include <QObject>
 #include <QMap>
@@ -7,15 +7,15 @@
 class PsiAccount;
 
 namespace Roster {
-	class ViewAccountManager;
+	class RosterActionsService;
 	class Contact;
 
-	class ViewManager : public QObject {
+	class ViewActionsService : public QObject {
 		Q_OBJECT
 
 		public:
-			ViewManager();
-			~ViewManager();
+			ViewActionsService();
+			~ViewActionsService();
 
 			void registerAccount(const QString& acname, PsiAccount* acc);
 			void unregisterAccount(const QString& acname);
@@ -30,7 +30,7 @@ namespace Roster {
 			void userInfo(Contact* contact);
 		
 		private:
-			QMap<QString, ViewAccountManager*> managers_;
+			QMap<QString, RosterActionsService*> managers_;
 	};
 
 }

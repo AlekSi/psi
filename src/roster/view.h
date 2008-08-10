@@ -14,7 +14,7 @@ namespace Roster {
 	class Item;
 	class Manager;
 	class ViewStateManager;
-	class ViewManager;
+	class ViewActionsService;
 
     class View : public QTreeView {
 		Q_OBJECT
@@ -24,7 +24,7 @@ namespace Roster {
 
 			void setManager(Manager* manager);
 			void setViewStateManager(ViewStateManager* vsm);
-			void setViewManager(ViewManager* vm);
+			void setViewActionsService(ViewActionsService* actionsService);
 
 		public slots:
 			void showContextMenu(const QPoint& position);
@@ -75,7 +75,7 @@ namespace Roster {
 
 			Manager* manager_;
 			ViewStateManager* vsm_;
-			ViewManager* vm_;
+			ViewActionsService* actionsService_;
     };
 }
 

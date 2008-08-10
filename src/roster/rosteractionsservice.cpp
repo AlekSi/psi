@@ -1,11 +1,11 @@
-#include "viewaccountmanager.h"
+#include "rosteractionsservice.h"
 #include "psiaccount.h"
 
 using XMPP::Jid;
 
 namespace Roster {
 	
-	ViewAccountManager::ViewAccountManager(PsiAccount* acc) {
+	RosterActionsService::RosterActionsService(PsiAccount* acc) {
 		connect(this, SIGNAL(actionSendMessage(const Jid&)), acc, SLOT(actionSendMessage(const Jid&)));
 		connect(this, SIGNAL(actionOpenChat(const Jid&)), acc, SLOT(actionOpenChat(const Jid&)));
 		connect(this, SIGNAL(actionExecuteCommand(const Jid&)), acc, SLOT(actionExecuteCommand(const Jid&)));
@@ -15,34 +15,34 @@ namespace Roster {
 		connect(this, SIGNAL(actionUserInfo(const Jid&)), acc, SLOT(actionInfo(const Jid&)));
 	}
 
-	ViewAccountManager::~ViewAccountManager() {
+	RosterActionsService::~RosterActionsService() {
 	}
 
-	void ViewAccountManager::sendMessage(const XMPP::Jid& jid) {
+	void RosterActionsService::sendMessage(const XMPP::Jid& jid) {
 		emit actionSendMessage(jid);
 	}
 
-	void ViewAccountManager::openChat(const XMPP::Jid& jid) {
+	void RosterActionsService::openChat(const XMPP::Jid& jid) {
 		emit actionOpenChat(jid);
 	}
 
-	void ViewAccountManager::executeCommand(const XMPP::Jid& jid) {
+	void RosterActionsService::executeCommand(const XMPP::Jid& jid) {
 		emit actionExecuteCommand(jid);
 	}
 
-	void ViewAccountManager::sendFile(const XMPP::Jid& jid) {
+	void RosterActionsService::sendFile(const XMPP::Jid& jid) {
 		emit actionSendFile(jid);
 	}
 
-	void ViewAccountManager::removeContact(const XMPP::Jid& jid) {
+	void RosterActionsService::removeContact(const XMPP::Jid& jid) {
 		emit actionRemove(jid);
 	}
 
-	void ViewAccountManager::showHistory(const XMPP::Jid& jid) {
+	void RosterActionsService::showHistory(const XMPP::Jid& jid) {
 		emit actionHistory(jid);
 	}
 
-	void ViewAccountManager::userInfo(const XMPP::Jid& jid) {
+	void RosterActionsService::userInfo(const XMPP::Jid& jid) {
 		emit actionUserInfo(jid);
 	}
 

@@ -17,7 +17,7 @@
 #include "metacontact.h"
 #include "psitooltip.h"
 #include "transport.h"
-#include "viewmanager.h"
+#include "viewactionsservice.h"
 
 namespace Roster {
 
@@ -54,8 +54,8 @@ namespace Roster {
 		vsm_ = vsm;
 	}
 
-	void View::setViewManager(ViewManager* vm) {
-		vm_ = vm;
+	void View::setViewActionsService(ViewActionsService* actionsService) {
+		actionsService_ = actionsService;
 	}
 
 	/* initialize context menu actions */
@@ -203,8 +203,7 @@ namespace Roster {
 			qDebug() << "Default action triggered on group" << group->getName();
 			setExpanded(index, !isExpanded(index));
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-			qDebug() << "Default action triggered on contact" << contact->getName();
-			vm_->openChat(contact);
+			actionsService_->openChat(contact);
 		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
 			setExpanded(index, !isExpanded(index));
 			qDebug() << "Default action triggered on account" << account->getName();
@@ -254,26 +253,26 @@ namespace Roster {
 	void View::menuSendMessage() {
 		QAction* action = static_cast<QAction*>(sender());
 		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		vm_->sendMessage(contact);
+		actionsService_->sendMessage(contact);
 	}
 
 	void View::menuExecuteCommand() {
 		QAction* action = static_cast<QAction*>(sender());
 		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		vm_->executeCommand(contact);
+		actionsService_->executeCommand(contact);
 	}
 
 	void View::menuUserInfo() {
 		QAction* action = static_cast<QAction*>(sender());
 		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		vm_->userInfo(contact);
+		actionsService_->userInfo(contact);
 	}
 
 	/* menu action for (contact)->history */
 	void View::menuHistory() {
 		QAction* action = static_cast<QAction*>(sender());
 		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		vm_->showHistory(contact);
+		actionsService_->showHistory(contact);
 	}
 
 	/* menu action for (group)->send message to group */
@@ -344,19 +343,19 @@ namespace Roster {
 	void View::menuRemoveContact() {
 		QAction* action = static_cast<QAction*>(sender());
 		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		vm_->removeContact(contact);
+		actionsService_->removeContact(contact);
 	}
 
 	void View::menuSendFile() {
 		QAction* action = static_cast<QAction*>(sender());
 		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		vm_->sendFile(contact);
+		actionsService_->sendFile(contact);
 	}
 
 	void View::menuOpenChat() {
 		QAction* action = static_cast<QAction*>(sender());
 		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		vm_->openChat(contact);
+		actionsService_->openChat(contact);
 	}
 
 	void View::menuRemoveGroupAndContacts() {
