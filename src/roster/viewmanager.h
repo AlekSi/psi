@@ -17,7 +17,8 @@ namespace Roster {
 			ViewManager();
 			~ViewManager();
 
-			void registerAccount(PsiAccount* acc);
+			void registerAccount(const QString& acname, PsiAccount* acc);
+			void unregisterAccount(const QString& acname);
 			
 			// contact actions
 			void sendMessage(Contact* contact);

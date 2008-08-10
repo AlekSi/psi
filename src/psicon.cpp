@@ -350,6 +350,10 @@ bool PsiCon::init()
 
 	// new roster !!!
 	d->roster = new RosterInstance();
+	connect(this, SIGNAL(accountAdded(PsiAccount*)), d->roster, SLOT(accountAdded(PsiAccount*)));
+	connect(this, SIGNAL(accountRemoved(PsiAccount*)), d->roster, SLOT(accountRemoved(PsiAccount*)));
+	connect(this, SIGNAL(accountUpdated(PsiAccount*)), d->roster, SLOT(accountUpdated(PsiAccount*)));
+
 
 	// do some backuping in case we are about to start migration from config.xml+options.xml
 	// to options.xml only.
@@ -585,8 +589,6 @@ bool PsiCon::init()
 	// try autologin if needed
 	foreach(PsiAccount* account, d->contactList->accounts()) {
 		account->autoLogin();
-
-		d->roster->registerAccount(account); // register account to new roster
 	}
 
 

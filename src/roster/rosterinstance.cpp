@@ -1,4 +1,5 @@
 #include <Qt>
+#include <QDebug>
 
 #include "rosterinstance.h"
 #include "view.h"
@@ -35,7 +36,6 @@ namespace Roster {
 
 		connect(model_, SIGNAL(expand(const QModelIndex&)), view_, SLOT(expand(const QModelIndex&)));
 		connect(model_, SIGNAL(collapse(const QModelIndex&)), view_, SLOT(collapse(const QModelIndex&)));
-//		connect(view_, SIGNAL(searchInput(const QString&)), SLOT(searchInput(const QString&)));
 
 		model_->setManager(manager_);
 		view_->setManager(manager_);
@@ -65,13 +65,32 @@ namespace Roster {
 		return rb_;
 	}
 
-	void RosterInstance::registerAccount(PsiAccount* acc) {
+	void RosterInstance::accountAdded(PsiAccount* acc) {
 		RosterDataService* srv = new PsiDataService(acc);
-		rb_->registerAccount(acc->jid().full(), srv);
+		QString acname = acc->jid().full();
 
-		vm_->registerAccount(acc);
+		rb_->registerAccount(acname, srv);
+		vm_->registerAccount(acname, acc);
 
 		rb_->rebuild();
-	}	
+	}
+
+	void RosterInstance::accountRemoved(PsiAccount* acc) {
+		QString acname = acc->jid().full();
+
+		rb_->unregisterAccount(acname);
+		vm_->unregisterAccount(acname);
+
+		rb_->rebuild();
+	}
+
+	void RosterInstance::accountUpdated(PsiAccount* acc) {
+		// FIXME: this is performance killer
+		QString acname = acc->jid().full();
+		rb_->unregisterAccount(acname);
+		vm_->unregisterAccount(acname);
+
+		accountAdded(acc);
+	}
 
 }

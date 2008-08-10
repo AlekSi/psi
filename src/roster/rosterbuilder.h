@@ -26,6 +26,7 @@ namespace Roster {
 		public:
 			RosterBuilder(Roster* root_, Manager* manager, ViewStateManager* vms);
 			void registerAccount(const QString& acname, RosterDataService* rosterService);
+			void unregisterAccount(const QString& acname);
 			void rebuild();
 			void setSearch(const QString& searchText);
 

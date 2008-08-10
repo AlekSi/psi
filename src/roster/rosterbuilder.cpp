@@ -331,7 +331,7 @@ namespace Roster {
 	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 
-		if ( srv->isEnabled() ) {
+		if ( ! srv->isEnabled() ) {
 			return;
 		}
 
@@ -398,5 +398,11 @@ namespace Roster {
 			updateSelf(rosterServices_[acname]->getSelf(), acname);
 		}
 	}
+
+	void RosterBuilder::unregisterAccount(const QString& acname) {
+		rosterServices_[acname]->disconnect();
+		rosterServices_.remove(acname);
+	}
+
 }
 

@@ -26,7 +26,10 @@ namespace Roster {
 			View* getView();
 			RosterBuilder* getRosterBuilder();
 
-			void registerAccount(PsiAccount* acc);
+		public slots:
+			void accountAdded(PsiAccount* acc);
+			void accountRemoved(PsiAccount* acc);
+			void accountUpdated(PsiAccount* acc);
 
 		private:
 			View* view_;

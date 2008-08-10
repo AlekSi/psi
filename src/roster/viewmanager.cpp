@@ -11,9 +11,13 @@ namespace Roster {
 	ViewManager::~ViewManager() {
 	}
 
-	void ViewManager::registerAccount(PsiAccount* acc) {
+	void ViewManager::registerAccount(const QString& acname, PsiAccount* acc) {
 		ViewAccountManager* manager = new ViewAccountManager(acc);
-		managers_.insert(acc->jid().full(), manager);
+		managers_.insert(acname, manager);
+	}
+
+	void ViewManager::unregisterAccount(const QString& acname) {
+		managers_.remove(acname);
 	}
 
 	void ViewManager::sendMessage(Contact* contact) {
