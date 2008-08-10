@@ -35,7 +35,11 @@ namespace Roster {
 
 				emit itemUpdated(metacontact);
 			} else {
-				removeMetacontact(metacontact);
+				metacontact->setStatusMessage("");
+				metacontact->setStatus(STATUS_OFFLINE);
+				metacontact->setAvatar(QIcon());
+
+				emit itemUpdated(metacontact);
 			}
 		}
 	}

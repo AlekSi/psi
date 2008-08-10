@@ -116,7 +116,7 @@ namespace Roster {
 						parent = findGroup(xgroup, acname, true);
 					}
 
-					if ( ! joinByName_ ) {
+					if ( ! joinByName_ or dynamic_cast<Metacontact*>(parent) ) {
 						parent = findGroup(xgroup, acname, true);
 						manager_->addContact(contact, parent);
 					} else {
@@ -143,6 +143,20 @@ namespace Roster {
 			} else {
 				if ( contact ) {
 					manager_->removeContact(contact);
+					delete contact;
+
+					if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(parent) ) {
+						if ( metacontact->getNbItems() == 1 ) {
+							GroupItem* grandparent = metacontact->getParent();
+
+							Contact* lastContact = dynamic_cast<Contact*>(metacontact->getItems().at(0));
+							manager_->removeContact(lastContact);
+							manager_->removeMetacontact(metacontact);
+							delete metacontact;
+
+							manager_->addContact(lastContact, grandparent);
+						}
+					}
 				}
 			}
 		}

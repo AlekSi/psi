@@ -31,6 +31,7 @@ namespace Roster {
 		setRootIsDecorated(false);
 		setExpandsOnDoubleClick(false);
 		setEditTriggers(QAbstractItemView::EditKeyPressed);
+		setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
 		setStyleSheet("QTreeView::branch { image: none; width: 0px } QTreeView { alternate-background-color: #D6EEFF; }"); // FIXME: externalize this
 		setIndentation(5);
