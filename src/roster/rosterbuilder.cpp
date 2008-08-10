@@ -331,6 +331,10 @@ namespace Roster {
 	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 
+		if ( srv->isEnabled() ) {
+			return;
+		}
+
 		if ( srv->isTransport(xitem->getJid()) ) {
 			updateTransport(xitem, acname);
 		} else {
@@ -373,7 +377,9 @@ namespace Roster {
 	}
 
 	void RosterBuilder::selfChanged(const XMPPRosterItem* xitem, const QString& acname) {
-		updateSelf(xitem, acname);
+		if ( rosterServices_[acname]->isEnabled() ) {
+			updateSelf(xitem, acname);
+		}
 	}
 
 	void RosterBuilder::setSearch(const QString& searchText) {
