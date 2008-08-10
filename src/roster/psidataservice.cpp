@@ -16,6 +16,10 @@ namespace Roster {
 	PsiDataService::~PsiDataService() {
 	}
 
+	const bool PsiDataService::isEnabled() const {
+		return acc_->enabled();
+	}
+
 	const QList<XMPPRosterItem*> PsiDataService::getRosterItems() const {
 		// FIXME: where to delete those?
 		QList<XMPPRosterItem*> list;

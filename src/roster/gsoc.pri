@@ -13,13 +13,11 @@ HEADERS += \
 	$$PWD/view.h \
 	$$PWD/delegate.h \
 	$$PWD/roster.h \
-	$$PWD/mainwindow.h \
 	$$PWD/resource.h \
 	$$PWD/manager.h \
 	$$PWD/xmpprosteritem.h \
 	$$PWD/rosterbuilder.h \
 	$$PWD/rosterdataservice.h \
-	$$PWD/dummydataservice.h \
 	$$PWD/xmppresource.h \
 	$$PWD/metacontact.h \
 	$$PWD/globals.h \
@@ -42,12 +40,10 @@ SOURCES += \
 	$$PWD/view.cpp \
 	$$PWD/delegate.cpp \
 	$$PWD/roster.cpp \
-	$$PWD/mainwindow.cpp \
 	$$PWD/resource.cpp \
 	$$PWD/manager.cpp \
 	$$PWD/xmpprosteritem.cpp \
 	$$PWD/rosterbuilder.cpp \
-	$$PWD/dummydataservice.cpp \
 	$$PWD/xmppresource.cpp \
 	$$PWD/metacontact.cpp \
 	$$PWD/viewstatemanager.cpp \

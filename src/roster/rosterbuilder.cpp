@@ -148,6 +148,7 @@ namespace Roster {
 
 	void RosterBuilder::buildRoster(const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
+
 		foreach(XMPPRosterItem* xitem, srv->getRosterItems()) { // FIXME: isn't this calling getRosterItems many times?
 			if ( srv->isTransport(xitem->getJid()) ) {
 				updateTransport(xitem, acname);
@@ -191,19 +192,23 @@ namespace Roster {
 	void RosterBuilder::buildAllAccounts() {
 		clear(root_);
 		foreach(QString name, rosterServices_.keys()) {
-			Account* account = new Account(name);
-			account->setAccountName(name);
-			manager_->addAccount(account, root_);
-			manager_->updateState(account, vsm_->isAccountExpanded(account));
+			if ( rosterServices_[name]->isEnabled() ) {
+				Account* account = new Account(name);
+				account->setAccountName(name);
+				manager_->addAccount(account, root_);
+				manager_->updateState(account, vsm_->isAccountExpanded(account));
 
-			buildRoster(name);
+				buildRoster(name);
+			}
 		}
 	}
 
 	void RosterBuilder::buildJoinedAccounts() {
 		clear(root_);
 		foreach(QString acname, rosterServices_.keys()) {
-			buildRoster(acname);
+			if ( rosterServices_[acname]->isEnabled() ) {
+				buildRoster(acname);
+			}
 		}
 	}
 

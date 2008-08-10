@@ -19,6 +19,7 @@ namespace Roster {
 			virtual const QIcon getAvatar(const XMPP::Jid& jid) const = 0;
 			virtual const bool isTransport(const XMPP::Jid& jid) const = 0;
 			virtual const XMPPRosterItem* getSelf() const = 0;
+			virtual const bool isEnabled() const = 0;
 
 		signals:
 			void itemUpdated(const XMPPRosterItem* xitem, const QString& acname);
