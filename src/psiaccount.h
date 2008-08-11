@@ -151,7 +151,6 @@ public:
 	void modify();
 	void changeVCard();
 	void changePW();
-	void changeStatus(int);
 	void doDisco();
 
 	void showXmlConsole();
@@ -214,6 +213,7 @@ signals:
 	void startBounce();
 
 public slots:
+	void changeStatus(int);
 	void setStatus(const XMPP::Status &, bool withStatus = false);
 
 	void capsChanged(const Jid&);

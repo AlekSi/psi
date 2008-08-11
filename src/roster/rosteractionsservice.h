@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "globals.h"
+
 namespace XMPP {
 	class Jid;
 }
@@ -33,6 +35,7 @@ namespace Roster {
 			void removeAuthFrom(const XMPP::Jid& jid);
 			void assignAvatar(const XMPP::Jid& jid, const QString& file);
 			void clearAvatar(const XMPP::Jid& jid);
+			void changeStatus(const StatusType status);
 
 		signals:
 			void actionSendMessage(const Jid& jid);
@@ -48,6 +51,7 @@ namespace Roster {
 			void actionRemoveAuthFrom(const Jid& jid);
 			void actionAssignAvatar(const Jid& jid, const QString& file);
 			void actionClearAvatar(const Jid& jid);
+			void actionChangeStatus(int status);
 	};
 
 }

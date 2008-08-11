@@ -19,12 +19,13 @@ namespace Roster {
 		name_ = name;
 	}
 
-	const QIcon& Account::getIcon() const {
-		return icon_;
+	void Account::setStatus(const StatusType status) {
+		status_ = status;
 	}
 
-	void Account::setIcon(const QIcon& icon) {
-		icon_ = icon;
+	const StatusType Account::getStatus() const {
+		return status_;
 	}
+
 }
 

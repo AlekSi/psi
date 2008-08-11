@@ -64,4 +64,8 @@ namespace Roster {
 		emit accountUpdated(acc_->jid().full());
 	}
 
+	const StatusType PsiDataService::getStatus() const {
+		return acc_->status().type();
+	}
+
 }

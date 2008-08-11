@@ -26,6 +26,7 @@ namespace Roster {
 			const bool isTransport(const XMPP::Jid& jid) const;
 			const UserListItem* getSelf() const;
 			const bool isEnabled() const;
+			const StatusType getStatus() const;
 
 		private slots:
 			void updatedContact(const UserListItem& item);

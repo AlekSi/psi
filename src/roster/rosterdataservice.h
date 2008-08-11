@@ -4,6 +4,8 @@
 #include <QList>
 #include <QIcon>
 
+#include "globals.h"
+
 namespace XMPP {
 	class Jid;
 }
@@ -21,6 +23,7 @@ namespace Roster {
 			virtual const bool isTransport(const XMPP::Jid& jid) const = 0;
 			virtual const UserListItem* getSelf() const = 0;
 			virtual const bool isEnabled() const = 0;
+			virtual const StatusType getStatus() const = 0;
 
 		signals:
 			void itemUpdated(const UserListItem* xitem, const QString& acname);

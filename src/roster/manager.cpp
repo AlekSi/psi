@@ -153,7 +153,7 @@ namespace Roster {
 		emit itemAdded(item);
 	}
 
-	void Manager::setStatus(Resource* resource, StatusType status) {
+	void Manager::setStatus(Resource* resource, const StatusType status) {
 		resource->setStatus(status);
 		emit itemUpdated(resource);
 
@@ -168,6 +168,11 @@ namespace Roster {
 				setTransportStatus(transport, status);
 			}
 		}
+	}
+
+	void Manager::setStatus(Account* account, const StatusType status) {
+		account->setStatus(status);
+		emit itemUpdated(account);
 	}
 
 	void Manager::setTransportStatus(Transport* transport, StatusType status) {

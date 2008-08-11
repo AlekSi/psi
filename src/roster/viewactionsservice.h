@@ -4,11 +4,14 @@
 #include <QObject>
 #include <QMap>
 
+#include "globals.h"
+
 class PsiAccount;
 
 namespace Roster {
 	class RosterActionsService;
 	class Contact;
+	class Account;
 
 	class ViewActionsService : public QObject {
 		Q_OBJECT
@@ -34,6 +37,9 @@ namespace Roster {
 			void removeAuthFrom(Contact* contact);
 			void assignAvatar(Contact* contact, const QString& file);
 			void clearAvatar(Contact* contact);
+
+			// account actions
+			void changeStatus(Account* account, const StatusType status);
 	
 		private:
 			QMap<QString, RosterActionsService*> managers_;

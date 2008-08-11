@@ -89,6 +89,12 @@ namespace Roster {
 			{"removeAuthFrom", tr("Remove authorization from"), SLOT(menuRemoveAuthFrom()), ""},
 			{"assignAvatar", tr("&Assign custom picture"), SLOT(menuAssignAvatar()), ""},
 			{"clearAvatar", tr("&Clear custom picture"), SLOT(menuClearAvatar()), ""},
+			{"goOnline", tr("Online"), SLOT(menuChangeStatus()), "status/online"},
+			{"goOffline", tr("Offline"), SLOT(menuChangeStatus()), "status/offline"},
+			{"goXA", tr("Not available"), SLOT(menuChangeStatus()), "status/xa"},
+			{"goAway", tr("Away"), SLOT(menuChangeStatus()), "status/away"},
+			{"goDND", tr("Do not disturb"), SLOT(menuChangeStatus()), "status/dnd"},
+			{"goChat", tr("Free for chat"), SLOT(menuChangeStatus()), "status/chat"},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -112,18 +118,6 @@ namespace Roster {
 		connect(removeGroupAct_, SIGNAL(triggered()), this, SLOT(menuRemoveGroup()));
 		removeGroupAndContactsAct_ = new QAction(QIcon("icons/remove.png"),tr("Remove group and contacts"), this);
 		connect(removeGroupAndContactsAct_, SIGNAL(triggered()), this, SLOT(menuRemoveGroupAndContacts()));
-
-		/* contact */
-		renameContactAct_ = new QAction(tr("Re&name"), this);
-		connect(renameContactAct_, SIGNAL(triggered()), this, SLOT(menuRename()));
-
-		/* account */
-		xmlConsoleAct_ = new QAction(tr("&XML Console"), this);
-		connect(xmlConsoleAct_, SIGNAL(triggered()), this, SLOT(menuXmlConsole()));
-		goOnlineAct_ = new QAction(tr("Online"), this);
-		connect(goOnlineAct_, SIGNAL(triggered()), this, SLOT(menuGoOnline()));
-		goOfflineAct_ = new QAction(tr("Offline"), this);
-		connect(goOfflineAct_, SIGNAL(triggered()), this, SLOT(menuGoOffline()));
 
 		/* resource */
 		sendMessageToResourceAct_ = new QAction(QIcon("icons/send.png"), tr("Send &message"), this);
@@ -211,15 +205,17 @@ namespace Roster {
 			menu->addSeparator();
 			menu->addAction(menuActions_["userInfo"]);
 			menu->addAction(menuActions_["history"]);
-		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
-			qDebug() << "Context menu opened for account" << account->getName();
-
+		} else if ( dynamic_cast<Account*>(item) ) {
 			QMenu* statusMenu = new QMenu(tr("&Status"));
-			statusMenu->addAction(goOnlineAct_);
-			statusMenu->addAction(goOfflineAct_);
+			statusMenu->addAction(menuActions_["goOnline"]);
+			statusMenu->addAction(menuActions_["goChat"]);
+			statusMenu->addSeparator();
+			statusMenu->addAction(menuActions_["goAway"]);
+			statusMenu->addAction(menuActions_["goXA"]);
+			statusMenu->addAction(menuActions_["goDND"]);
+			statusMenu->addSeparator();
+			statusMenu->addAction(menuActions_["goOffline"]);
 			menu->addMenu(statusMenu);
-
-			menu->addAction(xmlConsoleAct_);
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 			qDebug() << "Context menu opened for resource " << resource->getName();
 
@@ -398,6 +394,28 @@ namespace Roster {
 		QAction* action = static_cast<QAction*>(sender());
 		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
 		actionsService_->sendFile(contact);
+	}
+
+	void View::menuChangeStatus() {
+		QAction* action = static_cast<QAction*>(sender());
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+
+		StatusType status = STATUS_OFFLINE;
+		if ( action == menuActions_["goOnline"] ) {
+			status = STATUS_ONLINE;
+		} else if ( action == menuActions_["goChat"] ) {
+			status = STATUS_CHAT;
+		} else if ( action == menuActions_["goOffline"] ) {
+			status = STATUS_OFFLINE;
+		} else if ( action == menuActions_["goAway"] ) {
+			status = STATUS_AWAY;
+		} else if ( action == menuActions_["goXA"] ) {
+			status = STATUS_XA;
+		} else if ( action == menuActions_["goDND"] ) {
+			status = STATUS_DND;
+		}
+
+		actionsService_->changeStatus(account, status);
 	}
 
 	void View::menuOpenChat() {

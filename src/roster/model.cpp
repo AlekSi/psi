@@ -57,7 +57,7 @@ namespace Roster {
 			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 				return statusIconProvider_->getIconForStatus(contact->getStatus());
 			} else if ( Account* account = dynamic_cast<Account*>(item) ) {
-				return account->getIcon();
+				return statusIconProvider_->getIconForStatus(account->getStatus());
 			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 				return statusIconProvider_->getIconForStatus(resource->getStatus());
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {

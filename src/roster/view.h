@@ -56,6 +56,7 @@ namespace Roster {
 			void menuRerequestAuthFrom();
 			void menuResendAuthTo();
 			void menuOpenWhiteboard();
+			void menuChangeStatus();
 
 		signals:
 			void searchInput(const QString& text);
@@ -73,9 +74,7 @@ namespace Roster {
 			void expandWithManager(const QModelIndex& index, bool expanded);
 
 			QMap<QString, QAction*> menuActions_;
-			QAction *renameContactAct_; // Contact menu
 			QAction *sendMessageToGroupAct_, *renameGroupAct_, *removeGroupAct_, *removeGroupAndContactsAct_; // Group menu
-			QAction *goOnlineAct_, *goOfflineAct_, *xmlConsoleAct_; // Roster menu
 			QAction *sendToAllAct_; // Multiple contacts menu
 			QAction *sendMessageToResourceAct_, *openChatToResourceAct_, *sendFileToResourceAct_; // Resource menu
 

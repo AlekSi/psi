@@ -222,12 +222,26 @@ namespace Roster {
 		clear(root_);
 		foreach(QString name, rosterServices_.keys()) {
 			if ( rosterServices_[name]->isEnabled() ) {
-				Account* account = new Account(name);
-				account->setAccountName(name);
-				manager_->addAccount(account, root_);
-				manager_->updateState(account, vsm_->isAccountExpanded(account));
-
+				updateAccount(name);
 				buildRoster(name);
+			}
+		}
+	}
+
+	void RosterBuilder::updateAccount(const QString& acname) {
+		RosterDataService* srv = rosterServices_[acname];
+		if ( srv->isEnabled() and ! joinedAccounts_ ) {
+			Account* account = root_->findAccount(acname);
+			
+			if ( ! account ) {
+				account = new Account(acname);
+				account->setAccountName(acname);
+				manager_->addAccount(account, root_);
+			}
+
+			manager_->updateState(account, vsm_->isAccountExpanded(account));
+			if ( account->getStatus() != srv->getStatus() ) {
+				manager_->setStatus(account, srv->getStatus());
 			}
 		}
 	}
@@ -401,8 +415,7 @@ namespace Roster {
 	}
 
 	void RosterBuilder::accountChanged(const QString& acname) {
-		Q_UNUSED(acname);
-		// FIXME: do something ;-)
+		updateAccount(acname);
 	}
 
 	void RosterBuilder::selfChanged(const UserListItem* xitem, const QString& acname) {

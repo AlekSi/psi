@@ -2,6 +2,7 @@
 #include "psiaccount.h"
 #include "rosteractionsservice.h"
 #include "contact.h"
+#include "account.h"
 
 namespace Roster {
 
@@ -70,6 +71,10 @@ namespace Roster {
 
 	void ViewActionsService::clearAvatar(Contact* contact) {
 		managers_[contact->getAccountName()]->clearAvatar(contact->getJid());
+	}
+
+	void ViewActionsService::changeStatus(Account* account, const StatusType status) {
+		managers_[account->getAccountName()]->changeStatus(status);
 	}
 
 }

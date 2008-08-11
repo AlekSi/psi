@@ -5,6 +5,7 @@
 #include <QIcon>
 
 #include "groupitem.h"
+#include "globals.h"
 
 namespace Roster {
 
@@ -15,14 +16,14 @@ namespace Roster {
 			~Account();
 
 			const QString& getName() const;
-			const QIcon& getIcon() const;
+			const StatusType getStatus() const;
 
 			void setName(const QString& name);
-			void setIcon(const QIcon& icon);
+			void setStatus(const StatusType status);
 
 		private:
 			QString name_;
-			QIcon icon_;
+			StatusType status_;
 	};
 
 }

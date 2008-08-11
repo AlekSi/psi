@@ -19,13 +19,13 @@ namespace Roster {
 			const XMPP::Jid& getJid() const;
 			const QIcon& getAvatar() const;
 			const QString getStatusMessage() const;
-			void setStatus(const StatusType status);
+			const StatusType getStatus() const;
 
 			void setName(const QString& name);
 			void setJid(const XMPP::Jid& jid);
 			void setAvatar(const QIcon& avatar);
 			void setStatusMessage(const QString& statusMessage);
-			const StatusType getStatus() const;
+			void setStatus(const StatusType status);
 
 		private:
 			QString name_;

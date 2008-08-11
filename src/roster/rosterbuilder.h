@@ -60,6 +60,7 @@ namespace Roster {
 			void updateContact(const UserListItem* xitem, const QString& acname);
 			void updateTransport(const UserListItem* xitem, const QString& acname);
 			void updateSelf(const UserListItem* xitem, const QString& acname);
+			void updateAccount(const QString& acname);
 
 			Metacontact* addMetacontact(const QString& name, const QString& acname, GroupItem* parent);
 			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);

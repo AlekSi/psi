@@ -18,6 +18,7 @@ namespace Roster {
 		connect(this, SIGNAL(actionResendAuthTo(const Jid&)), acc, SLOT(actionAuth(const Jid&)));
 		connect(this, SIGNAL(actionRerequestAuthFrom(const Jid&)), acc, SLOT(actionAuthRequest(const Jid&)));
 		connect(this, SIGNAL(actionRemoveAuthFrom(const Jid&)), acc, SLOT(actionAuthRemove(const Jid&)));
+		connect(this, SIGNAL(actionChangeStatus(int)), acc, SLOT(changeStatus(int)));
 
 		connect(this, SIGNAL(actionAssignAvatar(const Jid&, const QString&)), 
 				acc->avatarFactory(), SLOT(importManualAvatar(const Jid&, const QString&)));
@@ -77,6 +78,10 @@ namespace Roster {
 
 	void RosterActionsService::clearAvatar(const XMPP::Jid& jid) {
 		emit actionClearAvatar(jid);
+	}
+
+	void RosterActionsService::changeStatus(const StatusType status) {
+		emit actionChangeStatus(status);
 	}
 
 }
