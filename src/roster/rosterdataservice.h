@@ -8,22 +8,23 @@ namespace XMPP {
 	class Jid;
 }
 
+class UserListItem;
+
 namespace Roster {
-	class XMPPRosterItem;
 
 	class RosterDataService : public QObject {
 		Q_OBJECT
 
 		public:
-			virtual const QList<XMPPRosterItem*> getRosterItems() const = 0;
+			virtual const QList<UserListItem*> getRosterItems() const = 0;
 			virtual const QIcon getAvatar(const XMPP::Jid& jid) const = 0;
 			virtual const bool isTransport(const XMPP::Jid& jid) const = 0;
-			virtual const XMPPRosterItem* getSelf() const = 0;
+			virtual const UserListItem* getSelf() const = 0;
 			virtual const bool isEnabled() const = 0;
 
 		signals:
-			void itemUpdated(const XMPPRosterItem* xitem, const QString& acname);
-			void selfUpdated(const XMPPRosterItem* xitem, const QString& acname);
+			void itemUpdated(const UserListItem* xitem, const QString& acname);
+			void selfUpdated(const UserListItem* xitem, const QString& acname);
 			void accountUpdated(const QString& acname);
 	};
 }

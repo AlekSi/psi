@@ -11,8 +11,6 @@ class UserListItem;
 class UserResource;
 
 namespace Roster {
-	class XMPPRosterItem;
-	class XMPPResource;
 
 	class PsiDataService : public RosterDataService {
 		Q_OBJECT
@@ -21,10 +19,10 @@ namespace Roster {
 			PsiDataService(PsiAccount* acc);
 			~PsiDataService();
 
-			const QList<XMPPRosterItem*> getRosterItems() const;
+			const QList<UserListItem*> getRosterItems() const;
 			const QIcon getAvatar(const XMPP::Jid& jid) const;
 			const bool isTransport(const XMPP::Jid& jid) const;
-			const XMPPRosterItem* getSelf() const;
+			const UserListItem* getSelf() const;
 			const bool isEnabled() const;
 
 		private slots:
@@ -32,9 +30,6 @@ namespace Roster {
 			void updatedAccount();
 
 		private:
-			XMPPRosterItem* buildRosterItem(const UserListItem* item) const;
-			XMPPResource* buildResource(const UserResource& res) const;
-
 			PsiAccount* acc_;
 	};
 

@@ -5,8 +5,11 @@
 #include <QList>
 #include <QMap>
 
-#include "xmpprosteritem.h"
 #include "globals.h"
+
+class UserListItem;
+class UserResource;
+class UserResourceList;
 
 namespace Roster {
 	class Manager;
@@ -39,10 +42,10 @@ namespace Roster {
 			void setShowOffline(bool show);
 			void setShowSelf(bool show);
 
-			void itemAdded(const XMPPRosterItem* xitem, const QString& acname);
-			void itemRemoved(const XMPPRosterItem* xitem, const QString& acname);
-			void itemChanged(const XMPPRosterItem* xitem, const QString& acname);
-			void selfChanged(const XMPPRosterItem* xitem, const QString& acname);
+			void itemAdded(const UserListItem* xitem, const QString& acname);
+			void itemRemoved(const UserListItem* xitem, const QString& acname);
+			void itemChanged(const UserListItem* xitem, const QString& acname);
+			void selfChanged(const UserListItem* xitem, const QString& acname);
 			void accountChanged(const QString& acname);
 		
 		private:
@@ -53,17 +56,17 @@ namespace Roster {
 
 			Group* findGroup(const QString& groupName, const QString& acname, bool create = false);
 
-			void updateResources(const QList<XMPPResource*> list, GroupItem* groupItem);
-			void updateContact(const XMPPRosterItem* xitem, const QString& acname);
-			void updateTransport(const XMPPRosterItem* xitem, const QString& acname);
-			void updateSelf(const XMPPRosterItem* xitem, const QString& acname);
+			void updateResources(const UserResourceList list, GroupItem* groupItem);
+			void updateContact(const UserListItem* xitem, const QString& acname);
+			void updateTransport(const UserListItem* xitem, const QString& acname);
+			void updateSelf(const UserListItem* xitem, const QString& acname);
 
 			Metacontact* addMetacontact(const QString& name, const QString& acname, GroupItem* parent);
 			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);
 
 
-			const bool isContactVisible(const XMPPRosterItem* xitem) const;
-			const bool isTransportVisible(const XMPPRosterItem* xitem) const;
+			const bool isContactVisible(const UserListItem* xitem) const;
+			const bool isTransportVisible(const UserListItem* xitem) const;
 
 			QMap<QString, RosterDataService*> rosterServices_;
 

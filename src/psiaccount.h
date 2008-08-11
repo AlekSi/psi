@@ -167,7 +167,7 @@ public:
 	QList<UserListItem*> findRelevant(const Jid &) const;
 	UserListItem *findFirstRelevant(const Jid &) const;
 	UserList *userList() const;
-	UserListItem self() const;
+	UserListItem* self() const;
 
 	bool checkConnected(QWidget *parent=0);
 	void playSound(const QString &);

@@ -15,10 +15,8 @@ HEADERS += \
 	$$PWD/roster.h \
 	$$PWD/resource.h \
 	$$PWD/manager.h \
-	$$PWD/xmpprosteritem.h \
 	$$PWD/rosterbuilder.h \
 	$$PWD/rosterdataservice.h \
-	$$PWD/xmppresource.h \
 	$$PWD/metacontact.h \
 	$$PWD/globals.h \
 	$$PWD/viewstatemanager.h \
@@ -42,9 +40,7 @@ SOURCES += \
 	$$PWD/roster.cpp \
 	$$PWD/resource.cpp \
 	$$PWD/manager.cpp \
-	$$PWD/xmpprosteritem.cpp \
 	$$PWD/rosterbuilder.cpp \
-	$$PWD/xmppresource.cpp \
 	$$PWD/metacontact.cpp \
 	$$PWD/viewstatemanager.cpp \
 	$$PWD/statusiconprovider.cpp \

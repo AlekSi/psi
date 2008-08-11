@@ -1,19 +1,11 @@
 #include <QIcon>
 
 #include "resource.h"
-#include "xmppresource.h"
 
 namespace Roster {
 
 	Resource::Resource(const QString& name, const int priority, const StatusType status, const QString statusMessage)
 											: name_(name), priority_(priority), status_(status), statusMessage_(statusMessage) {
-	}
-
-	Resource::Resource(const XMPPResource* xresource) {
-		name_ = xresource->getName();
-		priority_ = xresource->getPriority();
-		status_ = xresource->getStatus();
-		statusMessage_ = xresource->getStatusMessage();
 	}
 
 	Resource::~Resource() {

@@ -1,5 +1,4 @@
 #include "transport.h"
-#include "xmpprosteritem.h"
 
 namespace Roster {
 

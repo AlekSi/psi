@@ -4,8 +4,6 @@
 #include "rosterbuilder.h"
 #include "group.h"
 #include "contact.h"
-#include "xmpprosteritem.h"
-#include "xmppresource.h"
 #include "manager.h"
 #include "account.h"
 #include "rosterdataservice.h"
@@ -15,6 +13,7 @@
 #include "viewstatemanager.h"
 #include "transport.h"
 #include "self.h"
+#include "userlist.h"
 
 namespace Roster {
 
@@ -61,25 +60,26 @@ namespace Roster {
 		rebuild();
 	}
 
-	void RosterBuilder::updateResources(const QList<XMPPResource*> list, GroupItem* groupItem) {
+	void RosterBuilder::updateResources(const UserResourceList list, GroupItem* groupItem) {
 		QSet<QString> names; // for deleting later
-		foreach(XMPPResource* xresource, list) {
-			Resource* resource = groupItem->findResource(xresource->getName());
+		foreach(UserResource xresource, list) {
+			Resource* resource = groupItem->findResource(xresource.name());
 
 			if ( resource ) {
-				if ( resource->getStatus() != xresource->getStatus() ) {
-					manager_->setStatus(resource, xresource->getStatus());
+				if ( resource->getStatus() != xresource.status().type() ) {
+					manager_->setStatus(resource, xresource.status().type());
 				}
-				if ( resource->getStatusMessage() != xresource->getStatusMessage() ) {
-					manager_->setStatusMessage(resource, xresource->getStatusMessage());
+				if ( resource->getStatusMessage() != xresource.status().status() ) {
+					manager_->setStatusMessage(resource, xresource.status().status());
 				}
 			} else {
-				Resource* resource = new Resource(xresource);
+				Resource* resource = new Resource(xresource.name(), xresource.status().priority(), 
+						xresource.status().type(), xresource.status().status());
 				resource->setAccountName(groupItem->getAccountName());
 				manager_->addResource(resource, groupItem);
 			}
 
-			names.insert(xresource->getName());
+			names.insert(xresource.name());
 		}
 
 		// delete obsolete resources
@@ -92,24 +92,30 @@ namespace Roster {
 		}
 	}
 
-	void RosterBuilder::updateContact(const XMPPRosterItem* xitem, const QString& acname) {
+	void RosterBuilder::updateContact(const UserListItem* xitem, const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 
-		foreach(QString xgroup, xitem->getGroups()) {
+		QList<QString> groups = xitem->groups();
+		if ( groups.isEmpty() ) {
+			groups.append("General");
+		}
+
+		foreach(QString xgroup, groups) {
 			GroupItem* parent = findGroup(xgroup, acname);
 
 			if ( joinByName_ and parent ) {
-				Metacontact* metacontact = parent->findMetacontact(xitem->getName());
+				Metacontact* metacontact = parent->findMetacontact(xitem->name());
 				if ( metacontact ) {
 					parent = metacontact;
 				}
 			}
 
-			Contact* contact = parent ? parent->findContact(xitem->getJid(), acname) : 0;
+			Contact* contact = parent ? parent->findContact(xitem->jid(), acname) : 0;
 
 			if ( isContactVisible(xitem) ) {
 				if ( ! contact ) {
-					contact = new Contact(xitem->getName(), xitem->getJid());
+					QString name = xitem->name().isEmpty() ? xitem->jid().full() : xitem->name();
+					contact = new Contact(name, xitem->jid());
 					contact->setAccountName(acname);
 					
 					if ( ! parent ) {
@@ -120,7 +126,7 @@ namespace Roster {
 						parent = findGroup(xgroup, acname, true);
 						manager_->addContact(contact, parent);
 					} else {
-						if ( Contact* similar = parent->findContact(xitem->getName()) ) {
+						if ( Contact* similar = parent->findContact(xitem->name()) ) {
 							Metacontact* metacontact = addMetacontact(contact->getName(), parent->getAccountName(), parent);
 
 							manager_->removeContact(similar);
@@ -139,7 +145,7 @@ namespace Roster {
 					manager_->updateState(contact, vsm_->isContactExpanded(contact));
 				}
 
-				updateResources(xitem->getResources(), contact);
+				updateResources(xitem->userResourceList(), contact);
 			} else {
 				if ( contact ) {
 					manager_->removeContact(contact);
@@ -162,9 +168,9 @@ namespace Roster {
 		}
 	}
 
-	void RosterBuilder::updateTransport(const XMPPRosterItem* xitem, const QString& acname) {
+	void RosterBuilder::updateTransport(const UserListItem* xitem, const QString& acname) {
 		Group* group = findGroup("Agents/Transports", acname, false);
-		Transport* transport = group ? group->findTransport(xitem->getJid(), acname) : 0;
+		Transport* transport = group ? group->findTransport(xitem->jid(), acname) : 0;
 		if ( ! isTransportVisible(xitem) ) {
 			if ( transport ) {
 				manager_->removeTransport(transport);
@@ -173,7 +179,8 @@ namespace Roster {
 		} else {
 			if ( ! transport ) {
 				Group* group = findGroup("Agents/Transports", acname, true);
-				transport = new Transport(xitem->getName(), xitem->getJid());
+				QString name = xitem->name().isEmpty() ? xitem->jid().full() : xitem->name();
+				transport = new Transport(name, xitem->jid());
 				transport->setAccountName(acname);
 				manager_->addTransport(transport, group);
 			}
@@ -182,15 +189,15 @@ namespace Roster {
 				manager_->updateState(transport, vsm_->isTransportExpanded(transport));
 			}
 
-			updateResources(xitem->getResources(), transport);
+			updateResources(xitem->userResourceList(), transport);
 		}
 	}
 
 	void RosterBuilder::buildRoster(const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 
-		foreach(XMPPRosterItem* xitem, srv->getRosterItems()) { // FIXME: isn't this calling getRosterItems many times?
-			if ( srv->isTransport(xitem->getJid()) ) {
+		foreach(UserListItem* xitem, srv->getRosterItems()) { // FIXME: isn't this calling getRosterItems many times?
+			if ( srv->isTransport(xitem->jid()) ) {
 				updateTransport(xitem, acname);
 			} else {
 				updateContact(xitem, acname);
@@ -289,10 +296,10 @@ namespace Roster {
 	void RosterBuilder::registerAccount(const QString& acname, RosterDataService* rosterService) {
 		rosterServices_.insert(acname, rosterService);
 
-		connect(rosterService, SIGNAL(itemUpdated(const XMPPRosterItem*, const QString&)), 
-				SLOT(itemChanged(const XMPPRosterItem*, const QString&)));
-		connect(rosterService, SIGNAL(selfUpdated(const XMPPRosterItem*, const QString&)), 
-				SLOT(selfChanged(const XMPPRosterItem*, const QString&)));
+		connect(rosterService, SIGNAL(itemUpdated(const UserListItem*, const QString&)), 
+				SLOT(itemChanged(const UserListItem*, const QString&)));
+		connect(rosterService, SIGNAL(selfUpdated(const UserListItem*, const QString&)), 
+				SLOT(selfChanged(const UserListItem*, const QString&)));
 		connect(rosterService, SIGNAL(accountUpdated(const QString&)), SLOT(accountChanged(const QString&)));
 	}
 
@@ -305,33 +312,33 @@ namespace Roster {
 		rebuild();
 	}
 
-	void RosterBuilder::itemAdded(const XMPPRosterItem* xitem, const QString& acname) {
+	void RosterBuilder::itemAdded(const UserListItem* xitem, const QString& acname) {
 		Q_UNUSED(xitem); Q_UNUSED(acname);
 		// FIXME: no real stuff here since this is currently not used
 	}
 
-	void RosterBuilder::itemRemoved(const XMPPRosterItem* xitem, const QString& acname) {
+	void RosterBuilder::itemRemoved(const UserListItem* xitem, const QString& acname) {
 		Q_UNUSED(xitem); Q_UNUSED(acname);
 		// FIXME: no real stuff here since this is currently not used
 	}
 
-	const bool RosterBuilder::isContactVisible(const XMPPRosterItem* xitem) const {
+	const bool RosterBuilder::isContactVisible(const UserListItem* xitem) const {
 		if ( ! searchText_.isEmpty() ) {
-			if ( xitem->getName().toLower().contains(searchText_.toLower()) ) {
+			if ( xitem->name().toLower().contains(searchText_.toLower()) ) {
 				return true;
 			} else {
 				return false;
 			}
 		}
 
-		foreach(XMPPResource* xres, xitem->getResources()) {
-			if ( xres->getStatus() == STATUS_ONLINE or xres->getStatus() == STATUS_CHAT ) {
+		foreach(UserResource xres, xitem->userResourceList()) {
+			if ( xres.status().type() == STATUS_ONLINE or xres.status().type() == STATUS_CHAT ) {
 				return true;
-			} else if ( xres->getStatus() == STATUS_DND and !(itemFilter_ & FILTER_DND) ) {
+			} else if ( xres.status().type() == STATUS_DND and !(itemFilter_ & FILTER_DND) ) {
 				return true;
-			} else if ( xres->getStatus() == STATUS_AWAY and !(itemFilter_ & FILTER_AWAY) ) {
+			} else if ( xres.status().type() == STATUS_AWAY and !(itemFilter_ & FILTER_AWAY) ) {
 				return true;
-			} else if ( xres->getStatus() == STATUS_XA and !(itemFilter_ & FILTER_XA) ) {
+			} else if ( xres.status().type() == STATUS_XA and !(itemFilter_ & FILTER_XA) ) {
 				return true;
 			}
 		}
@@ -339,9 +346,9 @@ namespace Roster {
 		return ! (itemFilter_ & FILTER_OFFLINE);
 	}
 
-	const bool RosterBuilder::isTransportVisible(const XMPPRosterItem* xitem) const {
+	const bool RosterBuilder::isTransportVisible(const UserListItem* xitem) const {
 		if ( ! searchText_.isEmpty() ) {
-			if ( xitem->getName().toLower().contains(searchText_.toLower()) ) {
+			if ( xitem->name().toLower().contains(searchText_.toLower()) ) {
 				return true;
 			} else {
 				return false;
@@ -350,21 +357,21 @@ namespace Roster {
 		return ! (itemFilter_ & FILTER_TRANSPORTS);
 	}
 
-	void RosterBuilder::itemChanged(const XMPPRosterItem* xitem, const QString& acname) {
+	void RosterBuilder::itemChanged(const UserListItem* xitem, const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 
 		if ( ! srv->isEnabled() ) {
 			return;
 		}
 
-		if ( srv->isTransport(xitem->getJid()) ) {
+		if ( srv->isTransport(xitem->jid()) ) {
 			updateTransport(xitem, acname);
 		} else {
 			updateContact(xitem, acname);
 		}
 	}
 
-	void RosterBuilder::updateSelf(const XMPPRosterItem* xitem, const QString& acname) {
+	void RosterBuilder::updateSelf(const UserListItem* xitem, const QString& acname) {
 		GroupItem* acc = root_->findAccount(acname);
 		if ( ! acc ) {
 			acc = root_;
@@ -379,7 +386,7 @@ namespace Roster {
 			}
 		} else {
 			if ( ! self ) {
-				self = new Self(xitem->getName(), xitem->getJid());
+				self = new Self(xitem->name(), xitem->jid());
 				self->setAccountName(acname);
 
 				manager_->addSelf(self, acc);
@@ -389,7 +396,7 @@ namespace Roster {
 				manager_->updateState(self, vsm_->isSelfExpanded(self));
 			}
 
-			updateResources(xitem->getResources(), self);	
+			updateResources(xitem->userResourceList(), self);	
 		}
 	}
 
@@ -398,7 +405,7 @@ namespace Roster {
 		// FIXME: do something ;-)
 	}
 
-	void RosterBuilder::selfChanged(const XMPPRosterItem* xitem, const QString& acname) {
+	void RosterBuilder::selfChanged(const UserListItem* xitem, const QString& acname) {
 		if ( rosterServices_[acname]->isEnabled() ) {
 			updateSelf(xitem, acname);
 		}

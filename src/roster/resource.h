@@ -7,13 +7,11 @@
 #include "globals.h"
 
 namespace Roster {
-	class XMPPResource;
 
 	// single contact on roster
 	class Resource : public Item {
 		public:
 			Resource(const QString& name, const int priority, const StatusType status, const QString statusMessage = "");
-			Resource(const XMPPResource* xresource);
 			~Resource();
 
 			const QString& getName() const;
