@@ -50,6 +50,12 @@ namespace Roster {
 			void menuSendFile();
 			void menuExecuteCommand();
 			void menuUserInfo();
+			void menuAssignAvatar();
+			void menuClearAvatar();
+			void menuRemoveAuthFrom();
+			void menuRerequestAuthFrom();
+			void menuResendAuthTo();
+			void menuOpenWhiteboard();
 
 		signals:
 			void searchInput(const QString& text);

@@ -10,6 +10,8 @@ class PsiAccount;
 class UserListItem;
 class UserResource;
 
+using XMPP::Jid;
+
 namespace Roster {
 
 	class PsiDataService : public RosterDataService {

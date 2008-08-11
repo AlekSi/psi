@@ -48,4 +48,28 @@ namespace Roster {
 		managers_[contact->getAccountName()]->userInfo(contact->getJid());
 	}
 
+	void ViewActionsService::openWhiteboard(Contact* contact) {
+		managers_[contact->getAccountName()]->openWhiteboard(contact->getJid());
+	}
+
+	void ViewActionsService::resendAuthTo(Contact* contact) {
+		managers_[contact->getAccountName()]->resendAuthTo(contact->getJid());
+	}
+
+	void ViewActionsService::rerequestAuthFrom(Contact* contact) {
+		managers_[contact->getAccountName()]->rerequestAuthFrom(contact->getJid());
+	}
+
+	void ViewActionsService::removeAuthFrom(Contact* contact) {
+		managers_[contact->getAccountName()]->removeAuthFrom(contact->getJid());
+	}
+
+	void ViewActionsService::assignAvatar(Contact* contact, const QString& file) {
+		managers_[contact->getAccountName()]->assignAvatar(contact->getJid(), file);
+	}
+
+	void ViewActionsService::clearAvatar(Contact* contact) {
+		managers_[contact->getAccountName()]->clearAvatar(contact->getJid());
+	}
+
 }

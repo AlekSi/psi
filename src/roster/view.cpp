@@ -5,6 +5,8 @@
 #include <QHeaderView>
 #include <QMenuBar>
 #include <QDropEvent>
+#include <QFileDialog>
+#include <QMessageBox>
 
 #include "view.h"
 #include "model.h"
@@ -18,6 +20,8 @@
 #include "psitooltip.h"
 #include "transport.h"
 #include "viewactionsservice.h"
+#include "psioptions.h"
+#include "pgputil.h"
 
 #include "psiiconset.h"
 
@@ -78,6 +82,13 @@ namespace Roster {
 			{"hideResources", tr("Hide resources"), SLOT(menuHideResources()), ""},
 			{"showResources", tr("Show resources"), SLOT(menuShowResources()), ""},
 			{"userInfo", tr("User &info"), SLOT(menuUserInfo()), "psi/vCard"},
+			{"whiteboard", tr("Open a &whiteboard"), SLOT(menuOpenWhiteboard()), "psi/whiteboard"},
+			{"rename", tr("Re&name"), SLOT(menuRename()), ""},
+			{"resendAuthTo", tr("Resend authorization to"), SLOT(menuResendAuthTo()), ""},
+			{"rerequestAuthFrom", tr("Rerequest authorization from"), SLOT(menuRerequestAuthFrom()), ""},
+			{"removeAuthFrom", tr("Remove authorization from"), SLOT(menuRemoveAuthFrom()), ""},
+			{"assignAvatar", tr("&Assign custom picture"), SLOT(menuAssignAvatar()), ""},
+			{"clearAvatar", tr("&Clear custom picture"), SLOT(menuClearAvatar()), ""},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -151,17 +162,47 @@ namespace Roster {
 			menu->addSeparator();
 			menu->addAction(removeGroupAct_);
 			menu->addAction(removeGroupAndContactsAct_);
-		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) { 
-			qDebug() << "Context menu opened for contact" << contact->getName();
-
-			menu->addAction(menuActions_["sendMessage"]);
+		} else if ( dynamic_cast<Contact*>(item) ) { 
+			// Missing action: recieve event
+			if ( PsiOptions::instance()->getOption("options.ui.message.enabled").toBool() ) {
+				menu->addAction(menuActions_["sendMessage"]);
+			}
 			menu->addAction(menuActions_["openChat"]);
+			menu->addAction(menuActions_["whiteboard"]);
 			menu->addAction(menuActions_["executeCommand"]);
+			if ( PsiOptions::instance()->getOption("options.ui.menu.contact.active-chats").toBool() ) {
+				// Missing action: active chats
+			}
 			menu->addSeparator();
 			menu->addAction(menuActions_["sendFile"]);
+			// Missing action: voice call	
+			// Missing action: invite to chat
 			menu->addSeparator();
-			//menu->addAction(renameContactAct_);
-			menu->addAction(menuActions_["removeContact"]);
+			if ( ! PsiOptions::instance()->getOption("options.ui.contactlist.lockdown-roster").toBool() ) {
+				menu->addAction(menuActions_["rename"]);
+				// Missing action: move to group
+
+				QMenu* authMenu = new QMenu(tr("Authorization"), menu); // FIXME: missing icon
+				authMenu->addAction(menuActions_["resendAuthTo"]);
+				authMenu->addAction(menuActions_["rerequestAuthFrom"]);
+				authMenu->addAction(menuActions_["removeAuthFrom"]);
+				menu->addMenu(authMenu);
+
+				menu->addAction(menuActions_["removeContact"]);
+			}
+
+			if ( PsiOptions::instance()->getOption("options.ui.menu.contact.custom-picture").toBool() ) {
+				QMenu* pictureMenu = new QMenu(tr("&Picture"), menu);
+				pictureMenu->addAction(menuActions_["assignAvatar"]);
+				pictureMenu->addAction(menuActions_["clearAvatar"]); // FIXME: disable if not avatar assigned
+				menu->addMenu(pictureMenu);
+			}
+
+			if ( PGPUtil::instance().pgpAvailable() and 
+					PsiOptions::instance()->getOption("options.ui.menu.contact.custom-pgp-key").toBool() ) {
+				// Missing action: gpg yes/no 	
+			}
+
 			if ( isExpanded(index) ) {
 				menu->addAction(menuActions_["hideResources"]);
 			} else {
@@ -194,7 +235,7 @@ namespace Roster {
 			}
 		}
 
-		foreach(QAction* action, menu->actions()) {
+		foreach(QAction* action, menuActions_.values()) {
 			action->setData(QVariant::fromValue<Item*>(item));
 		}
 			
@@ -365,6 +406,54 @@ namespace Roster {
 		actionsService_->openChat(contact);
 	}
 
+	void View::menuOpenWhiteboard() {
+		QAction* action = static_cast<QAction*>(sender());
+		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
+		actionsService_->openWhiteboard(contact);
+	}
+
+	void View::menuResendAuthTo() {
+		QAction* action = static_cast<QAction*>(sender());
+		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
+		actionsService_->resendAuthTo(contact);
+		QMessageBox::information(this, tr("Authorize"), tr("Sent authorization to <b>%1</b>.").arg(contact->getName()));
+	}
+
+	void View::menuRerequestAuthFrom() {
+		QAction* action = static_cast<QAction*>(sender());
+		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
+		actionsService_->rerequestAuthFrom(contact);
+		QMessageBox::information(this, tr("Authorize"), tr("Rerequested authorization from <b>%1</b>.").arg(contact->getName()));
+	}
+
+	void View::menuRemoveAuthFrom() {
+		QAction* action = static_cast<QAction*>(sender());
+		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
+		int n = QMessageBox::information(this, tr("Remove"), 
+				tr("Are you sure you want to remove authorization from <b>%1</b>?").arg(contact->getName()),
+				tr("&Yes"), tr("&No"));
+
+		if ( n == 0 ) {
+			actionsService_->removeAuthFrom(contact);
+		}
+	}
+
+	void View::menuClearAvatar() {
+		QAction* action = static_cast<QAction*>(sender());
+		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
+		actionsService_->clearAvatar(contact);
+	}
+
+	void View::menuAssignAvatar() {
+		QAction* action = static_cast<QAction*>(sender());
+		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
+
+		QString file = QFileDialog::getOpenFileName(this, tr("Choose an image"), "", tr("All files (*.png *.jpg *.gif)"));
+		if ( ! file.isNull() ) {
+			actionsService_->assignAvatar(contact, file);
+		}
+	}
+
 	void View::menuRemoveGroupAndContacts() {
 	}
 
@@ -434,5 +523,6 @@ namespace Roster {
 		}
 		return index;
 	}
+
 }
 

@@ -47,7 +47,7 @@ namespace Roster {
 			void itemChanged(const UserListItem* xitem, const QString& acname);
 			void selfChanged(const UserListItem* xitem, const QString& acname);
 			void accountChanged(const QString& acname);
-		
+
 		private:
 			void buildRoster(const QString& acname);
 			void clear(Item* item);

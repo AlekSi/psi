@@ -56,8 +56,6 @@ public:
 	PsiAccount* account() const;
 	void setSelfAvatar(const QString& fileName);
 
-	void importManualAvatar(const Jid& j, const QString& fileName);
-	void removeManualAvatar(const Jid& j);
 	bool hasManualAvatar(const Jid& j);
 	
 	static QString getManualDir();
@@ -69,6 +67,8 @@ signals:
 
 public slots:
 	void updateAvatar(const Jid&);
+	void importManualAvatar(const Jid& j, const QString& fileName);
+	void removeManualAvatar(const Jid& j);
 
 protected slots:
 	void itemPublished(const Jid&, const QString&, const PubSubItem&);

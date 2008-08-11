@@ -27,6 +27,12 @@ namespace Roster {
 			void removeContact(const XMPP::Jid& jid);
 			void showHistory(const XMPP::Jid& jid);
 			void userInfo(const XMPP::Jid& jid);
+			void openWhiteboard(const XMPP::Jid& jid);
+			void resendAuthTo(const XMPP::Jid& jid);
+			void rerequestAuthFrom(const XMPP::Jid& jid);
+			void removeAuthFrom(const XMPP::Jid& jid);
+			void assignAvatar(const XMPP::Jid& jid, const QString& file);
+			void clearAvatar(const XMPP::Jid& jid);
 
 		signals:
 			void actionSendMessage(const Jid& jid);
@@ -36,6 +42,12 @@ namespace Roster {
 			void actionRemove(const Jid& jid);
 			void actionHistory(const Jid& jid);
 			void actionUserInfo(const Jid& jid);
+			void actionOpenWhiteboard(const Jid& jid);
+			void actionResendAuthTo(const Jid& jid);
+			void actionRerequestAuthFrom(const Jid& jid);
+			void actionRemoveAuthFrom(const Jid& jid);
+			void actionAssignAvatar(const Jid& jid, const QString& file);
+			void actionClearAvatar(const Jid& jid);
 	};
 
 }

@@ -28,7 +28,13 @@ namespace Roster {
 			void removeContact(Contact* contact);
 			void showHistory(Contact* contact); 
 			void userInfo(Contact* contact);
-		
+			void openWhiteboard(Contact* contact);
+			void resendAuthTo(Contact* contact);
+			void rerequestAuthFrom(Contact* contact);
+			void removeAuthFrom(Contact* contact);
+			void assignAvatar(Contact* contact, const QString& file);
+			void clearAvatar(Contact* contact);
+	
 		private:
 			QMap<QString, RosterActionsService*> managers_;
 	};

@@ -3,6 +3,7 @@
 #include "psidataservice.h"
 #include "psiaccount.h"
 #include "userlist.h"
+#include "avatars.h"
 
 namespace Roster {
 
@@ -62,4 +63,5 @@ namespace Roster {
 	void PsiDataService::updatedAccount() {
 		emit accountUpdated(acc_->jid().full());
 	}
+
 }

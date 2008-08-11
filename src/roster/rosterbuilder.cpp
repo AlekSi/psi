@@ -430,6 +430,7 @@ namespace Roster {
 
 	void RosterBuilder::unregisterAccount(const QString& acname) {
 		rosterServices_[acname]->disconnect();
+		delete rosterServices_[acname];
 		rosterServices_.remove(acname);
 	}
 
