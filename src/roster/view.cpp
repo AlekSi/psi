@@ -95,6 +95,7 @@ namespace Roster {
 			{"goAway", tr("Away"), SLOT(menuChangeStatus()), "status/away"},
 			{"goDND", tr("Do not disturb"), SLOT(menuChangeStatus()), "status/dnd"},
 			{"goChat", tr("Free for chat"), SLOT(menuChangeStatus()), "status/chat"},
+			{"goInvisible", tr("Invisible"), SLOT(menuChangeStatus()), "status/invisible"},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -208,12 +209,20 @@ namespace Roster {
 		} else if ( dynamic_cast<Account*>(item) ) {
 			QMenu* statusMenu = new QMenu(tr("&Status"));
 			statusMenu->addAction(menuActions_["goOnline"]);
-			statusMenu->addAction(menuActions_["goChat"]);
+			if ( PsiOptions::instance()->getOption("options.ui.menu.status.chat").toBool() ) {
+				statusMenu->addAction(menuActions_["goChat"]);
+			}
 			statusMenu->addSeparator();
 			statusMenu->addAction(menuActions_["goAway"]);
-			statusMenu->addAction(menuActions_["goXA"]);
+			if ( PsiOptions::instance()->getOption("options.ui.menu.status.xa").toBool() ) {
+				statusMenu->addAction(menuActions_["goXA"]);
+			}
 			statusMenu->addAction(menuActions_["goDND"]);
 			statusMenu->addSeparator();
+			if ( PsiOptions::instance()->getOption("options.ui.menu.status.invisible").toBool() ) {
+				statusMenu->addSeparator();
+				statusMenu->addAction(menuActions_["goInvisible"]);
+			}
 			statusMenu->addAction(menuActions_["goOffline"]);
 			menu->addMenu(statusMenu);
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
@@ -413,6 +422,8 @@ namespace Roster {
 			status = STATUS_XA;
 		} else if ( action == menuActions_["goDND"] ) {
 			status = STATUS_DND;
+		} else if ( action == menuActions_["goInvisible"] ) {
+			status = STATUS_INVISIBLE;
 		}
 
 		actionsService_->changeStatus(account, status);
