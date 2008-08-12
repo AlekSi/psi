@@ -40,6 +40,14 @@ namespace Roster {
 
 			// account actions
 			void changeStatus(Account* account, const StatusType status);
+			void newBlankMessage(Account* account);
+			void serviceDiscovery(Account* account);
+			void mood(Account* account);
+			void setAvatar(Account* account);
+			void unsetAvatar(Account* account);
+			void modifyAccount(Account* account);
+			void addContact(Account* account);
+			void xmlConsole(Account* account);
 	
 		private:
 			QMap<QString, RosterActionsService*> managers_;

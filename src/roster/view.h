@@ -57,6 +57,13 @@ namespace Roster {
 			void menuResendAuthTo();
 			void menuOpenWhiteboard();
 			void menuChangeStatus();
+			void menuMood();
+			void menuSetAvatarAccount();
+			void menuUnsetAvatarAccount();
+			void menuAddContact();
+			void menuServiceDiscovery();
+			void menuModifyAccount();
+			void menuNewBlankMessage();
 
 		signals:
 			void searchInput(const QString& text);

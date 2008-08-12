@@ -4,6 +4,12 @@
 #include "contact.h"
 #include "account.h"
 
+/* 
+ * This file is silly. 
+ * Repeating yourself 100 times is not what I like
+ * FIXME: do something about it
+ */
+
 namespace Roster {
 
 	ViewActionsService::ViewActionsService() {
@@ -75,6 +81,39 @@ namespace Roster {
 
 	void ViewActionsService::changeStatus(Account* account, const StatusType status) {
 		managers_[account->getAccountName()]->changeStatus(status);
+	}
+
+	void ViewActionsService::newBlankMessage(Account* account) {
+		XMPP::Jid jid;
+		managers_[account->getAccountName()]->sendMessage(jid);
+	}
+
+	void ViewActionsService::serviceDiscovery(Account* account) {
+		managers_[account->getAccountName()]->serviceDiscovery(account->getJid(), "");
+	}
+
+	void ViewActionsService::mood(Account* account) {
+		managers_[account->getAccountName()]->mood();
+	}
+
+	void ViewActionsService::setAvatar(Account* account) {
+		managers_[account->getAccountName()]->setAvatar();
+	}
+
+	void ViewActionsService::unsetAvatar(Account* account) {
+		managers_[account->getAccountName()]->unsetAvatar();
+	}
+
+	void ViewActionsService::modifyAccount(Account* account) {
+		managers_[account->getAccountName()]->modifyAccount();
+	}
+
+	void ViewActionsService::addContact(Account* account) {
+		managers_[account->getAccountName()]->addContact();
+	}
+
+	void ViewActionsService::xmlConsole(Account* account) {
+		managers_[account->getAccountName()]->xmlConsole();
 	}
 
 }

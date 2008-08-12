@@ -68,4 +68,8 @@ namespace Roster {
 		return acc_->status().type();
 	}
 
+	const XMPP::Jid PsiDataService::getJid() const {
+		return acc_->jid();
+	}
+
 }

@@ -234,7 +234,7 @@ namespace Roster {
 			Account* account = root_->findAccount(acname);
 			
 			if ( ! account ) {
-				account = new Account(acname);
+				account = new Account(acname, srv->getJid());
 				account->setAccountName(acname);
 				manager_->addAccount(account, root_);
 			}

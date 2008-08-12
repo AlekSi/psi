@@ -19,6 +19,13 @@ namespace Roster {
 		connect(this, SIGNAL(actionRerequestAuthFrom(const Jid&)), acc, SLOT(actionAuthRequest(const Jid&)));
 		connect(this, SIGNAL(actionRemoveAuthFrom(const Jid&)), acc, SLOT(actionAuthRemove(const Jid&)));
 		connect(this, SIGNAL(actionChangeStatus(int)), acc, SLOT(changeStatus(int)));
+		connect(this, SIGNAL(actionMood()), acc, SLOT(actionSetMood()));
+		connect(this, SIGNAL(actionAddContact()), acc, SLOT(openAddUserDlg()));
+		connect(this, SIGNAL(actionModifyAccount()), acc, SLOT(modify()));
+		connect(this, SIGNAL(actionSetAvatar()), acc, SLOT(actionSetAvatar()));
+		connect(this, SIGNAL(actionUnsetAvatar()), acc, SLOT(actionUnsetAvatar()));
+		connect(this, SIGNAL(actionServiceDiscovery(const Jid&, const QString&)), acc, SLOT(actionDisco(const Jid&, const QString&)));
+		connect(this, SIGNAL(actionXmlConsole()), acc, SLOT(showXmlConsole()));
 
 		connect(this, SIGNAL(actionAssignAvatar(const Jid&, const QString&)), 
 				acc->avatarFactory(), SLOT(importManualAvatar(const Jid&, const QString&)));
@@ -82,6 +89,34 @@ namespace Roster {
 
 	void RosterActionsService::changeStatus(const StatusType status) {
 		emit actionChangeStatus(status);
+	}
+
+	void RosterActionsService::serviceDiscovery(const XMPP::Jid& jid, const QString& node) {
+		emit actionServiceDiscovery(jid, node);
+	}
+
+	void RosterActionsService::mood() {
+		emit actionMood();
+	}
+
+	void RosterActionsService::setAvatar() {
+		emit actionSetAvatar();
+	}
+
+	void RosterActionsService::unsetAvatar() {
+		emit actionUnsetAvatar();
+	}
+
+	void RosterActionsService::modifyAccount() {
+		emit actionModifyAccount();
+	}
+
+	void RosterActionsService::addContact() {
+		emit actionAddContact();
+	}
+
+	void RosterActionsService::xmlConsole() {
+		emit actionXmlConsole();
 	}
 
 }

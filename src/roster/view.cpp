@@ -96,12 +96,19 @@ namespace Roster {
 			{"goDND", tr("Do not disturb"), SLOT(menuChangeStatus()), "status/dnd"},
 			{"goChat", tr("Free for chat"), SLOT(menuChangeStatus()), "status/chat"},
 			{"goInvisible", tr("Invisible"), SLOT(menuChangeStatus()), "status/invisible"},
+			{"mood", tr("Mood"), SLOT(menuMood()), ""},
+			{"setAvatarAccount", tr("Set avatar"), SLOT(menuSetAvatarAccount()), ""},
+			{"unsetAvatarAccount", tr("Unset avatar"), SLOT(menuUnsetAvatarAccount()), ""},
+			{"addContact", tr("&Add a contact"), SLOT(menuAddContact()), "psi/addContact"},
+			{"serviceDiscovery", tr("Service &Discovery"), SLOT(menuServiceDiscovery()), "psi/disco"},
+			{"xmlConsole", tr("&XML Console"), SLOT(menuXmlConsole()), "psi/xml"},
+			{"modifyAccount", tr("&Modify Account..."), SLOT(menuModifyAccount()), "psi/account"},
+			{"newBlankMessage", tr("New &blank message"), SLOT(menuNewBlankMessage()), "psi/sendMessage"},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
 
 		for ( int i = 0; ! QString(actionlist[i].name).isEmpty(); i++ ) {
-			// FIXME: no icon
 			menuActions_[actionlist[i].name] = new QAction(tr(actionlist[i].text), this);
 			if ( ! QString(actionlist[i].icon).isEmpty() ) {
 				// FIXME: use proxy for icon factory
@@ -225,6 +232,26 @@ namespace Roster {
 			}
 			statusMenu->addAction(menuActions_["goOffline"]);
 			menu->addMenu(statusMenu);
+
+			menu->addAction(menuActions_["mood"]);
+
+			QMenu* avatarMenu = new QMenu(tr("Avatar"));
+			avatarMenu->addAction(menuActions_["setAvatarAccount"]);
+			avatarMenu->addAction(menuActions_["unsetAvatarAccount"]);
+			menu->addMenu(avatarMenu);
+
+			// Missing action: bookmarks
+
+			menu->addAction(menuActions_["addContact"]);
+			menu->addAction(menuActions_["serviceDiscovery"]);
+			menu->addAction(menuActions_["newBlankMessage"]);
+			menu->addSeparator();
+			menu->addAction(menuActions_["xmlConsole"]);
+			menu->addSeparator();
+			menu->addAction(menuActions_["modifyAccount"]);
+			menu->addSeparator();
+
+			// Missing action: admin
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 			qDebug() << "Context menu opened for resource " << resource->getName();
 
@@ -358,7 +385,7 @@ namespace Roster {
 	void View::menuXmlConsole() {
 		QAction* action = static_cast<QAction*>(sender());
 		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		qDebug() << "xml console on account" << account->getName();
+		actionsService_->xmlConsole(account);
 	}
 
 	/* menu action for (contacts)->send to all */
@@ -484,6 +511,48 @@ namespace Roster {
 	}
 
 	void View::menuRemoveGroupAndContacts() {
+	}
+
+	void View::menuMood() {
+		QAction* action = static_cast<QAction*>(sender());
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		actionsService_->mood(account);
+	}
+
+	void View::menuSetAvatarAccount() {
+		QAction* action = static_cast<QAction*>(sender());
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		actionsService_->setAvatar(account);
+	}
+
+	void View::menuUnsetAvatarAccount() {
+		QAction* action = static_cast<QAction*>(sender());
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		actionsService_->unsetAvatar(account);
+	}
+
+	void View::menuAddContact() {
+		QAction* action = static_cast<QAction*>(sender());
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		actionsService_->unsetAvatar(account);
+	}
+
+	void View::menuServiceDiscovery() {
+		QAction* action = static_cast<QAction*>(sender());
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		actionsService_->serviceDiscovery(account);
+	}
+
+	void View::menuModifyAccount() {
+		QAction* action = static_cast<QAction*>(sender());
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		actionsService_->modifyAccount(account);
+	}
+
+	void View::menuNewBlankMessage() {
+		QAction* action = static_cast<QAction*>(sender());
+		Account* account = static_cast<Account*>(action->data().value<Item*>());
+		actionsService_->newBlankMessage(account);
 	}
 
 	bool View::viewportEvent(QEvent* event) {

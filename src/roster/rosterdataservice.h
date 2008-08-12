@@ -24,6 +24,7 @@ namespace Roster {
 			virtual const UserListItem* getSelf() const = 0;
 			virtual const bool isEnabled() const = 0;
 			virtual const StatusType getStatus() const = 0;
+			virtual const XMPP::Jid getJid() const = 0;
 
 		signals:
 			void itemUpdated(const UserListItem* xitem, const QString& acname);
