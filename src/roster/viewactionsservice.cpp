@@ -4,12 +4,6 @@
 #include "contact.h"
 #include "account.h"
 
-/* 
- * This file is silly. 
- * Repeating yourself 100 times is not what I like
- * FIXME: do something about it
- */
-
 namespace Roster {
 
 	ViewActionsService::ViewActionsService() {
@@ -19,101 +13,100 @@ namespace Roster {
 	}
 
 	void ViewActionsService::registerAccount(const QString& acname, PsiAccount* acc) {
-		RosterActionsService* manager = new RosterActionsService(acc);
-		managers_.insert(acname, manager);
+		services_.insert(acname, acc);
 	}
 
 	void ViewActionsService::unregisterAccount(const QString& acname) {
-		managers_.remove(acname);
+		services_.remove(acname);
 	}
 
 	void ViewActionsService::sendMessage(Contact* contact) {
-		managers_[contact->getAccountName()]->sendMessage(contact->getJid());
+		services_[contact->getAccountName()]->actionSendMessage(contact->getJid());
 	}
 
 	void ViewActionsService::openChat(Contact* contact) {
-		managers_[contact->getAccountName()]->openChat(contact->getJid());
+		services_[contact->getAccountName()]->actionOpenChat(contact->getJid());
 	}
 
 	void ViewActionsService::executeCommand(Contact* contact) {
-		managers_[contact->getAccountName()]->executeCommand(contact->getJid());
+		services_[contact->getAccountName()]->actionExecuteCommand(contact->getJid());
 	}
 
 	void ViewActionsService::sendFile(Contact* contact) {
-		managers_[contact->getAccountName()]->sendFile(contact->getJid());
+		services_[contact->getAccountName()]->actionSendFile(contact->getJid());
 	}
 
 	void ViewActionsService::removeContact(Contact* contact) {
-		managers_[contact->getAccountName()]->removeContact(contact->getJid());
+		services_[contact->getAccountName()]->actionRemove(contact->getJid());
 	}
 
 	void ViewActionsService::showHistory(Contact* contact) {
-		managers_[contact->getAccountName()]->showHistory(contact->getJid());
+		services_[contact->getAccountName()]->actionHistory(contact->getJid());
 	}
 
 	void ViewActionsService::userInfo(Contact* contact) {
-		managers_[contact->getAccountName()]->userInfo(contact->getJid());
+		services_[contact->getAccountName()]->actionInfo(contact->getJid());
 	}
 
 	void ViewActionsService::openWhiteboard(Contact* contact) {
-		managers_[contact->getAccountName()]->openWhiteboard(contact->getJid());
+		services_[contact->getAccountName()]->actionOpenWhiteboard(contact->getJid());
 	}
 
 	void ViewActionsService::resendAuthTo(Contact* contact) {
-		managers_[contact->getAccountName()]->resendAuthTo(contact->getJid());
+		services_[contact->getAccountName()]->actionAuth(contact->getJid());
 	}
 
 	void ViewActionsService::rerequestAuthFrom(Contact* contact) {
-		managers_[contact->getAccountName()]->rerequestAuthFrom(contact->getJid());
+		services_[contact->getAccountName()]->actionAuthRequest(contact->getJid());
 	}
 
 	void ViewActionsService::removeAuthFrom(Contact* contact) {
-		managers_[contact->getAccountName()]->removeAuthFrom(contact->getJid());
+		services_[contact->getAccountName()]->actionAuthRemove(contact->getJid());
 	}
 
 	void ViewActionsService::assignAvatar(Contact* contact, const QString& file) {
-		managers_[contact->getAccountName()]->assignAvatar(contact->getJid(), file);
+	//	services_[contact->getAccountName()]->assignAvatar(contact->getJid(), file);
 	}
 
 	void ViewActionsService::clearAvatar(Contact* contact) {
-		managers_[contact->getAccountName()]->clearAvatar(contact->getJid());
+	//	services_[contact->getAccountName()]->clearAvatar(contact->getJid());
 	}
 
 	void ViewActionsService::changeStatus(Account* account, const StatusType status) {
-		managers_[account->getAccountName()]->changeStatus(status);
+		services_[account->getAccountName()]->changeStatus(status);
 	}
 
 	void ViewActionsService::newBlankMessage(Account* account) {
 		XMPP::Jid jid;
-		managers_[account->getAccountName()]->sendMessage(jid);
+		services_[account->getAccountName()]->actionSendMessage(jid);
 	}
 
 	void ViewActionsService::serviceDiscovery(Account* account) {
-		managers_[account->getAccountName()]->serviceDiscovery(account->getJid(), "");
+		services_[account->getAccountName()]->actionDisco(account->getJid(), "");
 	}
 
 	void ViewActionsService::mood(Account* account) {
-		managers_[account->getAccountName()]->mood();
+		services_[account->getAccountName()]->actionSetMood();
 	}
 
 	void ViewActionsService::setAvatar(Account* account) {
-		managers_[account->getAccountName()]->setAvatar();
+		services_[account->getAccountName()]->actionSetAvatar();
 	}
 
 	void ViewActionsService::unsetAvatar(Account* account) {
-		managers_[account->getAccountName()]->unsetAvatar();
+		services_[account->getAccountName()]->actionUnsetAvatar();
 	}
 
 	void ViewActionsService::modifyAccount(Account* account) {
-		managers_[account->getAccountName()]->modifyAccount();
+		services_[account->getAccountName()]->modify();
 	}
 
 	void ViewActionsService::addContact(Account* account) {
-		managers_[account->getAccountName()]->addContact();
+		services_[account->getAccountName()]->openAddUserDlg();
 	}
 
 	void ViewActionsService::xmlConsole(Account* account) {
-		managers_[account->getAccountName()]->xmlConsole();
+		services_[account->getAccountName()]->showXmlConsole();
 	}
 
 }

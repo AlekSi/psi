@@ -22,9 +22,11 @@
 namespace Roster {
 	class RosterInstance;
 	class View;
+	class RosterActionsService;
 }
 using Roster::RosterInstance;
 using Roster::View;
+using Roster::RosterActionsService;
 
 #include "mainwin.h"
 #include "psicon.h"

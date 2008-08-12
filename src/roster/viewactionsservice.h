@@ -8,8 +8,9 @@
 
 class PsiAccount;
 
+class RosterActionsService;
+
 namespace Roster {
-	class RosterActionsService;
 	class Contact;
 	class Account;
 
@@ -50,7 +51,7 @@ namespace Roster {
 			void xmlConsole(Account* account);
 	
 		private:
-			QMap<QString, RosterActionsService*> managers_;
+			QMap<QString, RosterActionsService*> services_;
 	};
 
 }

@@ -1,9 +1,7 @@
 #ifndef ROSTER_ROSTERACTIONSSERVICE_H
 #define ROSTER_ROSTERACTIONSSERVICE_H
 
-#include <QObject>
-
-#include "globals.h"
+#include <QString>
 
 namespace XMPP {
 	class Jid;
@@ -13,61 +11,34 @@ using XMPP::Jid; // PsiAccount uses Jid instead of XMPP::Jid
 
 class PsiAccount;
 
-namespace Roster {
+//namespace Roster {
 
-	class RosterActionsService : public QObject {
-		Q_OBJECT
+	class RosterActionsService {
 
 		public:
-			RosterActionsService(PsiAccount* acc);
-			~RosterActionsService();
+			virtual void actionSendMessage(const XMPP::Jid& jid) = 0;
+			virtual void actionOpenChat(const XMPP::Jid& jid) = 0;
+			virtual void actionSendFile(const XMPP::Jid& jid) = 0;
+			virtual void actionRemove(const XMPP::Jid& jid) = 0;
+			virtual void actionHistory(const XMPP::Jid& jid) = 0;
+			virtual void actionOpenWhiteboard(const XMPP::Jid& jid) = 0;
+			virtual void actionAuth(const XMPP::Jid& jid) = 0;
+			virtual void actionAuthRequest(const XMPP::Jid& jid) = 0;
+			virtual void actionAuthRemove(const XMPP::Jid& jid) = 0;
+			virtual void actionSetMood() = 0;
+			virtual void actionSetAvatar() = 0;
+			virtual void actionUnsetAvatar() = 0;
+			virtual void actionDisco(const XMPP::Jid& jid, const QString& node) = 0;
 
-			void sendMessage(const XMPP::Jid& jid);
-			void openChat(const XMPP::Jid& jid);
-			void executeCommand(const XMPP::Jid& jid);
-			void sendFile(const XMPP::Jid& jid);
-			void removeContact(const XMPP::Jid& jid);
-			void showHistory(const XMPP::Jid& jid);
-			void userInfo(const XMPP::Jid& jid);
-			void openWhiteboard(const XMPP::Jid& jid);
-			void resendAuthTo(const XMPP::Jid& jid);
-			void rerequestAuthFrom(const XMPP::Jid& jid);
-			void removeAuthFrom(const XMPP::Jid& jid);
-			void assignAvatar(const XMPP::Jid& jid, const QString& file);
-			void clearAvatar(const XMPP::Jid& jid);
-			void changeStatus(const StatusType status);
-			void serviceDiscovery(const XMPP::Jid& jid, const QString& node);
-			void mood();
-			void setAvatar();
-			void unsetAvatar();
-			void modifyAccount();
-			void addContact();
-			void xmlConsole();
-
-		signals:
-			void actionSendMessage(const Jid& jid);
-			void actionOpenChat(const Jid& jid);
-			void actionExecuteCommand(const Jid& jid);
-			void actionSendFile(const Jid& jid);
-			void actionRemove(const Jid& jid);
-			void actionHistory(const Jid& jid);
-			void actionUserInfo(const Jid& jid);
-			void actionOpenWhiteboard(const Jid& jid);
-			void actionResendAuthTo(const Jid& jid);
-			void actionRerequestAuthFrom(const Jid& jid);
-			void actionRemoveAuthFrom(const Jid& jid);
-			void actionAssignAvatar(const Jid& jid, const QString& file);
-			void actionClearAvatar(const Jid& jid);
-			void actionChangeStatus(int status);
-			void actionAddContact();
-			void actionModifyAccount();
-			void actionSetAvatar();
-			void actionUnsetAvatar();
-			void actionMood();
-			void actionServiceDiscovery(const Jid& jid, const QString& node);
-			void actionXmlConsole();
+			// FIXME: change this here and in PsiAccount
+			virtual void openAddUserDlg() = 0;
+			virtual void modify() = 0;
+			virtual void changeStatus(int) = 0;
+			virtual void showXmlConsole() = 0;
+			virtual void actionExecuteCommand(const XMPP::Jid& jid, const QString& node = QString()) = 0;
+			virtual void actionInfo(const XMPP::Jid& jid, bool showStatusInfo = true) = 0;
 	};
 
-}
+//}
 
 #endif
