@@ -298,6 +298,10 @@ public slots:
 	void actionUnsetAvatar();
 	void featureActivated(QString feature, Jid jid, QString node);
 
+	// for RosterActionsService
+	void actionSetManualAvatar(const Jid& jid, const QString& file);
+	void actionUnsetManualAvatar(const Jid& jid);
+
 	void actionAssignKey(const Jid &);
 	void actionUnassignKey(const Jid &);
 

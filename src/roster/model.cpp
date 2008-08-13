@@ -46,10 +46,6 @@ namespace Roster {
 				return QString("%1 (%2)").arg(resource->getName(), QString::number(resource->getPriority()));
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 				return metacontact->getName();
-			} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
-				return transport->getName();
-			} else if ( Self* self = dynamic_cast<Self*>(item) ) {
-				return self->getName();
 			}
 		} else if ( role == Qt::DecorationRole ) { // left icon
 			if ( Group* group = dynamic_cast<Group*>(item) ) {
@@ -62,10 +58,6 @@ namespace Roster {
 				return statusIconProvider_->getIconForStatus(resource->getStatus());
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 				return statusIconProvider_->getIconForStatus(metacontact->getStatus());
-			} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
-				return statusIconProvider_->getIconForStatus(transport->getStatus());
-			} else if ( Self* self = dynamic_cast<Self*>(item) ) {
-				return statusIconProvider_->getIconForStatus(self->getStatus());
 			}
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
@@ -82,8 +74,6 @@ namespace Roster {
 				return contact->getAvatar(); 
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 				return metacontact->getAvatar();
-			} else if ( Self* self = dynamic_cast<Self*>(item) ) {
-				return self->getAvatar();
 			}
 		} else if ( role == StatusMessageRole and showStatusMessages_ ) { // statusMessage text
 			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
@@ -92,8 +82,6 @@ namespace Roster {
 				return resource->getStatusMessage();
 			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
 				return metacontact->getStatusMessage();
-			} else if ( Self* self = dynamic_cast<Self*>(item) ) {
-				return self->getStatusMessage();
 			}
 		} else if ( role == Qt::SizeHintRole ) { // size of item
 			if ( !index.data(AvatarRole).value<QIcon>().isNull() ) {
@@ -127,15 +115,8 @@ namespace Roster {
 			br.setColor(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.grouping.header-foreground").value<QColor>());
 		} else if ( dynamic_cast<Resource*>(item) ) {
 			br.setColor(Qt::gray); // FIXME: new option
-		} else {
-			StatusType status = STATUS_OFFLINE;
-			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-				status = contact->getStatus();
-			} else if ( Self* self = dynamic_cast<Self*>(item) ) {
-				status = self->getStatus();
-			} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
-				status = transport->getStatus();
-			}
+		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+			StatusType status = contact->getStatus();
 
 			if ( status == STATUS_ONLINE or status == STATUS_CHAT or status == STATUS_INVISIBLE ) {
 				br.setColor(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.status.online").value<QColor>());
@@ -192,24 +173,6 @@ namespace Roster {
 				Contact* contact = static_cast<Contact*>(item);	
 				tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(contact->getName()), Qt::escape(contact->getJid().full()));
 			}
-		} else if ( Self* self = dynamic_cast<Self*>(item) ) {
-			tip += QString("%1 &lt;%2&gt;\n").arg(Qt::escape(self->getName()), Qt::escape(self->getJid().full()));
-
-			foreach(Item* subitem, self->getItems()) {
-				Resource* resource = dynamic_cast<Resource*>(subitem);
-				tip += QString("<icon name=\"%3\"> <b>%1</b> (%2)\n")
-					.arg(resource->getName(), QString::number(resource->getPriority()), statusToText(resource->getStatus()));
-
-				if (! resource->getStatusMessage().isEmpty()) {
-					tip += "<u>StatusMessage message</u>\n";
-					tip += Qt::escape(resource->getStatusMessage()) + "\n";
-				}
-			}
-
-			/* if we're using joined accounts, put info on which account is this self on */
-			if ( self->getParent()->getAccountName().isEmpty() ) {
-				tip += QString("\n(Account: %1)\n").arg(Qt::escape(self->getAccountName()));
-			}
 		} else {
 			return QVariant();
 		}
@@ -243,20 +206,20 @@ namespace Roster {
 	Qt::ItemFlags Model::flags(const QModelIndex& index) const {
 		Item* item = index.data(ItemRole).value<Item*>();
 
-		if ( dynamic_cast<Contact*>(item) ) {
-			return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+		if ( dynamic_cast<Transport*>(item) ) {
+			return Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable;
+		} else if ( dynamic_cast<Self*>(item) ) {
+			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+		} else if ( dynamic_cast<Contact*>(item) ) {
+			return Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 		} else if ( dynamic_cast<Resource*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else if ( dynamic_cast<Group*>(item) ) {
-			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled;
+			return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 		} else if ( dynamic_cast<Metacontact*>(item) ) {
-			return Qt::ItemIsEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable;
-		} else if ( dynamic_cast<Transport*>(item) ) {
-			return Qt::ItemIsEnabled;
+			return Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable;
 		} else if ( dynamic_cast<Account*>(item) ) {
-			return Qt::ItemIsEnabled;
-		} else if ( dynamic_cast<Self*>(item) ) {
-			return Qt::ItemIsEnabled;
+			return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 		} else {
 			return Qt::ItemIsEnabled;
 		}

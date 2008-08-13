@@ -1,37 +1,16 @@
 #ifndef ROSTER_SELF_H
 #define ROSTER_SELF_H
 
-#include "groupitem.h"
 #include "globals.h"
+#include "contact.h"
 
 namespace Roster {
-	class Resource;
 
-	class Self : public GroupItem {
+	class Self : public Contact {
 		public:
 			Self(const QString& name, const XMPP::Jid& jid);
 			~Self();
 
-			const QString& getName() const;
-			const XMPP::Jid& getJid() const;
-			const QIcon& getAvatar() const;
-			const QString getStatusMessage() const;
-			void setStatus(const StatusType status);
-
-			void setName(const QString& name);
-			void setJid(const XMPP::Jid& jid);
-			void setAvatar(const QIcon& avatar);
-			void setStatusMessage(const QString& statusMessage);
-			const StatusType getStatus() const;
-
-			Resource* findResource(const QString& name) const;
-
-		private:
-			QString name_;
-			XMPP::Jid jid_;
-			QIcon avatar_;
-			QString statusMessage_;
-			StatusType status_;
 	};
 
 }

@@ -22,6 +22,7 @@
 #include "viewactionsservice.h"
 #include "psioptions.h"
 #include "pgputil.h"
+#include "self.h"
 
 #include "psiiconset.h"
 
@@ -116,28 +117,6 @@ namespace Roster {
 			}
 			connect(menuActions_[actionlist[i].name], SIGNAL(triggered()), this, actionlist[i].slot);
 		}
-
-		/* group */
-		sendMessageToGroupAct_ = new QAction(QIcon("icons/send.png"), tr("Send message to group"), this);
-		connect(sendMessageToGroupAct_, SIGNAL(triggered()), this, SLOT(menuSendMessageToGroup()));
-		renameGroupAct_ = new QAction(tr("Re&name"), this);
-		connect(renameGroupAct_, SIGNAL(triggered()), this, SLOT(menuRename()));
-		removeGroupAct_ = new QAction(QIcon("icons/remove.png"), tr("Remove group"), this);
-		connect(removeGroupAct_, SIGNAL(triggered()), this, SLOT(menuRemoveGroup()));
-		removeGroupAndContactsAct_ = new QAction(QIcon("icons/remove.png"),tr("Remove group and contacts"), this);
-		connect(removeGroupAndContactsAct_, SIGNAL(triggered()), this, SLOT(menuRemoveGroupAndContacts()));
-
-		/* resource */
-		sendMessageToResourceAct_ = new QAction(QIcon("icons/send.png"), tr("Send &message"), this);
-		connect(sendMessageToResourceAct_, SIGNAL(triggered()), this, SLOT(menuSendMessageToResource()));
-		openChatToResourceAct_ = new QAction(QIcon("icons/start-chat.png"), tr("Open &chat window"), this);
-		connect(openChatToResourceAct_, SIGNAL(triggered()), this, SLOT(menuOpenChatToResource()));
-		sendFileToResourceAct_ = new QAction(QIcon("icons/upload.png"), tr("Send file"), this);
-		connect(sendFileToResourceAct_, SIGNAL(triggered()), this, SLOT(menuSendFileToResource()));
-
-		/* multiple contacts */
-		sendToAllAct_ = new QAction(QIcon("icons/send.png"), tr("&Send to all"), this);
-		connect(sendToAllAct_, SIGNAL(triggered()), this, SLOT(menuSendToAll()));
 	}
 
 	/* build and display context menu */
@@ -154,35 +133,38 @@ namespace Roster {
 
 		if ( selectedIndexes().size() > 1 ) { // multiple items selected
 			qDebug() << "Context menu opened for multiple contacts";
-
-			menu->addAction(sendToAllAct_); 
 		} else if ( Group* group = dynamic_cast<Group*>(item) ) { 
 			qDebug() << "Context menu opened for group" << group->getName();
-			// FIXME: disable removing / renaming if that's not user group (i.e. generic)
-			menu->addAction(sendMessageToGroupAct_);
-			menu->addAction(renameGroupAct_);
-			menu->addSeparator();
-			menu->addAction(removeGroupAct_);
-			menu->addAction(removeGroupAndContactsAct_);
 		} else if ( dynamic_cast<Contact*>(item) ) { 
+			bool isSelf = dynamic_cast<Self*>(item);
+			bool isTransport = dynamic_cast<Transport*>(item);
+
 			// Missing action: recieve event
 			if ( PsiOptions::instance()->getOption("options.ui.message.enabled").toBool() ) {
 				menu->addAction(menuActions_["sendMessage"]);
 			}
 			menu->addAction(menuActions_["openChat"]);
 			menu->addAction(menuActions_["whiteboard"]);
-			menu->addAction(menuActions_["executeCommand"]);
 			if ( PsiOptions::instance()->getOption("options.ui.menu.contact.active-chats").toBool() ) {
 				// Missing action: active chats
 			}
 			menu->addSeparator();
-			menu->addAction(menuActions_["sendFile"]);
-			// Missing action: voice call	
-			// Missing action: invite to chat
-			menu->addSeparator();
-			if ( ! PsiOptions::instance()->getOption("options.ui.contactlist.lockdown-roster").toBool() ) {
+
+			if ( ! isTransport ) {
+				menu->addAction(menuActions_["sendFile"]);
+				// Missing action: voice call	
+				// Missing action: invite to chat
+				menu->addSeparator();
+			}
+
+			if ( ! PsiOptions::instance()->getOption("options.ui.contactlist.lockdown-roster").toBool() and ! isSelf ) {
 				menu->addAction(menuActions_["rename"]);
-				// Missing action: move to group
+				if ( isTransport ) {
+					// Missing action: log in
+					// Missing action: log out
+				} else {
+					// Missing action: move to group
+				}
 
 				QMenu* authMenu = new QMenu(tr("Authorization"), menu); // FIXME: missing icon
 				authMenu->addAction(menuActions_["resendAuthTo"]);
@@ -191,7 +173,15 @@ namespace Roster {
 				menu->addMenu(authMenu);
 
 				menu->addAction(menuActions_["removeContact"]);
+				menu->addSeparator();
 			}
+
+			if ( isExpanded(index) ) {
+				menu->addAction(menuActions_["hideResources"]);
+			} else {
+				menu->addAction(menuActions_["showResources"]);
+			}
+			menu->addSeparator();
 
 			if ( PsiOptions::instance()->getOption("options.ui.menu.contact.custom-picture").toBool() ) {
 				QMenu* pictureMenu = new QMenu(tr("&Picture"), menu);
@@ -205,12 +195,6 @@ namespace Roster {
 				// Missing action: gpg yes/no 	
 			}
 
-			if ( isExpanded(index) ) {
-				menu->addAction(menuActions_["hideResources"]);
-			} else {
-				menu->addAction(menuActions_["showResources"]);
-			}
-			menu->addSeparator();
 			menu->addAction(menuActions_["userInfo"]);
 			menu->addAction(menuActions_["history"]);
 		} else if ( dynamic_cast<Account*>(item) ) {
@@ -252,19 +236,11 @@ namespace Roster {
 			menu->addSeparator();
 
 			// Missing action: admin
-		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
-			qDebug() << "Context menu opened for resource " << resource->getName();
-
-			menu->addAction(sendMessageToResourceAct_);
-			menu->addAction(openChatToResourceAct_);
-			menu->addAction(sendFileToResourceAct_);
-		} else if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
-			Q_UNUSED(transport);
-			if ( isExpanded(index) ) {
-				menu->addAction(menuActions_["hideResources"]);
-			} else {
-				menu->addAction(menuActions_["showResources"]);
-			}
+		} else if ( dynamic_cast<Resource*>(item) ) {
+			menu->addAction(menuActions_["openChat"]);
+			menu->addAction(menuActions_["sendMessage"]);
+			menu->addAction(menuActions_["whiteboard"]);
+			menu->addAction(menuActions_["executeCommand"]);
 		}
 
 		foreach(QAction* action, menuActions_.values()) {
@@ -331,35 +307,30 @@ namespace Roster {
 
 	/* menu action for (contact)->send message */
 	void View::menuSendMessage() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->sendMessage(contact);
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->sendMessage(contact);
+		} else if ( Resource* resource = getActionItem<Resource*>() ) {
+			actionsService_->sendMessage(resource);
+		}
 	}
 
 	void View::menuExecuteCommand() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->executeCommand(contact);
+		if ( Resource* resource = getActionItem<Resource*>() ) {
+			actionsService_->executeCommand(resource);
+		}
 	}
 
 	void View::menuUserInfo() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->userInfo(contact);
+		if ( getActionItem<Contact*>() ) {
+			actionsService_->userInfo(getActionItem<Contact*>());
+		}
 	}
 
 	/* menu action for (contact)->history */
 	void View::menuHistory() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->showHistory(contact);
-	}
-
-	/* menu action for (group)->send message to group */
-	void View::menuSendMessageToGroup() {
-		QAction* action = static_cast<QAction*>(sender());
-		Group* group = static_cast<Group*>(action->data().value<Item*>());
-		qDebug() << "send message to group" << group->getName();
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->showHistory(contact);
+		}
 	}
 
 	/* menu action for (contact/group)->rename */
@@ -367,192 +338,161 @@ namespace Roster {
 		edit(senderItemIndex());
 	}
 
-	/* menu action for (account)->status->online */
-	void View::menuGoOnline() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		qDebug() << "go online on account" << account->getName();
-	}
-
-	/* menu action for (account)->status->offline */
-	void View::menuGoOffline() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		qDebug() << "go offline on account" << account->getName();
-	}
-
 	/* menu action for (account)->xml console */
 	void View::menuXmlConsole() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		actionsService_->xmlConsole(account);
-	}
-
-	/* menu action for (contacts)->send to all */
-	void View::menuSendToAll() {
-		qDebug() << "Send to all for following contacts";
-		foreach(QModelIndex index, selectedIndexes()) {
-			Item* item = index.data(Qt::UserRole).value<Item*>();
-			Contact* contact = dynamic_cast<Contact*>(item);
-			qDebug() << " + " << contact->getName();
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->xmlConsole(account);
 		}
 	}
 
 	void View::menuShowResources() {
 		QModelIndex index = senderItemIndex();
-		expand(index);
+		if ( index.isValid() ) {
+			expand(index);
+		}
 	}
 
 	void View::menuHideResources() {
 		QModelIndex index = senderItemIndex();
-		collapse(index);
-	}
-
-	void View::menuSendFileToResource() {
-	}
-
-	void View::menuOpenChatToResource() {
-	}
-
-	void View::menuSendMessageToResource() {
-	}
-
-	void View::menuRemoveGroup() {
+		if ( index.isValid() ) {
+			collapse(index);
+		}
 	}
 
 	void View::menuRemoveContact() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->removeContact(contact);
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->removeContact(contact);
+		}
 	}
 
 	void View::menuSendFile() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->sendFile(contact);
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->sendFile(contact);
+		}
 	}
 
 	void View::menuChangeStatus() {
 		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
 
-		StatusType status = STATUS_OFFLINE;
-		if ( action == menuActions_["goOnline"] ) {
-			status = STATUS_ONLINE;
-		} else if ( action == menuActions_["goChat"] ) {
-			status = STATUS_CHAT;
-		} else if ( action == menuActions_["goOffline"] ) {
-			status = STATUS_OFFLINE;
-		} else if ( action == menuActions_["goAway"] ) {
-			status = STATUS_AWAY;
-		} else if ( action == menuActions_["goXA"] ) {
-			status = STATUS_XA;
-		} else if ( action == menuActions_["goDND"] ) {
-			status = STATUS_DND;
-		} else if ( action == menuActions_["goInvisible"] ) {
-			status = STATUS_INVISIBLE;
+		if ( Account* account = getActionItem<Account*>() ) {
+			StatusType status = STATUS_OFFLINE;
+			if ( action == menuActions_["goOnline"] ) {
+				status = STATUS_ONLINE;
+			} else if ( action == menuActions_["goChat"] ) {
+				status = STATUS_CHAT;
+			} else if ( action == menuActions_["goOffline"] ) {
+				status = STATUS_OFFLINE;
+			} else if ( action == menuActions_["goAway"] ) {
+				status = STATUS_AWAY;
+			} else if ( action == menuActions_["goXA"] ) {
+				status = STATUS_XA;
+			} else if ( action == menuActions_["goDND"] ) {
+				status = STATUS_DND;
+			} else if ( action == menuActions_["goInvisible"] ) {
+				status = STATUS_INVISIBLE;
+			}
+
+			actionsService_->changeStatus(account, status);
 		}
-
-		actionsService_->changeStatus(account, status);
 	}
 
 	void View::menuOpenChat() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->openChat(contact);
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->openChat(contact);
+		} else if ( Resource* resource = getActionItem<Resource*>() ) {
+			actionsService_->openChat(resource);
+		}
 	}
 
 	void View::menuOpenWhiteboard() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->openWhiteboard(contact);
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->openWhiteboard(contact);
+		} else if ( Resource* resource = getActionItem<Resource*>() ) {
+			actionsService_->openWhiteboard(resource);
+		}
 	}
 
 	void View::menuResendAuthTo() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->resendAuthTo(contact);
-		QMessageBox::information(this, tr("Authorize"), tr("Sent authorization to <b>%1</b>.").arg(contact->getName()));
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->resendAuthTo(contact);
+			QMessageBox::information(this, tr("Authorize"), tr("Sent authorization to <b>%1</b>.").arg(contact->getName()));
+		}
 	}
 
 	void View::menuRerequestAuthFrom() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->rerequestAuthFrom(contact);
-		QMessageBox::information(this, tr("Authorize"), tr("Rerequested authorization from <b>%1</b>.").arg(contact->getName()));
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->rerequestAuthFrom(contact);
+			QMessageBox::information(this, tr("Authorize"), tr("Rerequested authorization from <b>%1</b>.").arg(contact->getName()));
+		}
 	}
 
 	void View::menuRemoveAuthFrom() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		int n = QMessageBox::information(this, tr("Remove"), 
-				tr("Are you sure you want to remove authorization from <b>%1</b>?").arg(contact->getName()),
-				tr("&Yes"), tr("&No"));
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			int n = QMessageBox::information(this, tr("Remove"), 
+					tr("Are you sure you want to remove authorization from <b>%1</b>?").arg(contact->getName()),
+					tr("&Yes"), tr("&No"));
 
-		if ( n == 0 ) {
-			actionsService_->removeAuthFrom(contact);
+			if ( n == 0 ) {
+				actionsService_->removeAuthFrom(contact);
+			}
 		}
 	}
 
 	void View::menuClearAvatar() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-		actionsService_->clearAvatar(contact);
-	}
-
-	void View::menuAssignAvatar() {
-		QAction* action = static_cast<QAction*>(sender());
-		Contact* contact = static_cast<Contact*>(action->data().value<Item*>());
-
-		QString file = QFileDialog::getOpenFileName(this, tr("Choose an image"), "", tr("All files (*.png *.jpg *.gif)"));
-		if ( ! file.isNull() ) {
-			actionsService_->assignAvatar(contact, file);
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->clearAvatar(contact);
 		}
 	}
 
-	void View::menuRemoveGroupAndContacts() {
+	void View::menuAssignAvatar() {
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			QString file = QFileDialog::getOpenFileName(this, tr("Choose an image"), "", tr("All files (*.png *.jpg *.gif)"));
+			if ( ! file.isNull() ) {
+				actionsService_->assignAvatar(contact, file);
+			}
+		}
 	}
 
 	void View::menuMood() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		actionsService_->mood(account);
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->mood(account);
+		}
 	}
 
 	void View::menuSetAvatarAccount() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		actionsService_->setAvatar(account);
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->setAvatar(account);
+		}
 	}
 
 	void View::menuUnsetAvatarAccount() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		actionsService_->unsetAvatar(account);
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->unsetAvatar(account);
+		}
 	}
 
 	void View::menuAddContact() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		actionsService_->unsetAvatar(account);
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->unsetAvatar(account);
+		}
 	}
 
 	void View::menuServiceDiscovery() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		actionsService_->serviceDiscovery(account);
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->serviceDiscovery(account);
+		}
 	}
 
 	void View::menuModifyAccount() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		actionsService_->modifyAccount(account);
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->modifyAccount(account);
+		}
 	}
 
 	void View::menuNewBlankMessage() {
-		QAction* action = static_cast<QAction*>(sender());
-		Account* account = static_cast<Account*>(action->data().value<Item*>());
-		actionsService_->newBlankMessage(account);
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->newBlankMessage(account);
+		}
 	}
 
 	bool View::viewportEvent(QEvent* event) {
@@ -620,6 +560,11 @@ namespace Roster {
 			index = indexList.at(0);
 		}
 		return index;
+	}
+
+	template<typename T> T View::getActionItem() {
+		QAction* action = static_cast<QAction*>(sender());
+		return dynamic_cast<T>(action->data().value<Item*>());
 	}
 
 }

@@ -22,7 +22,7 @@ namespace Roster {
 																		root_(root), 
 																		manager_(manager), 
 																		joinedAccounts_(false), 
-																		joinByName_(true),
+																		joinByName_(false),
 																		itemFilter_(FILTER_OFFLINE)	{
 	}
 

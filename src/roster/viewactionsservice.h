@@ -13,6 +13,7 @@ class RosterActionsService;
 namespace Roster {
 	class Contact;
 	class Account;
+	class Resource;
 
 	class ViewActionsService : public QObject {
 		Q_OBJECT
@@ -27,7 +28,6 @@ namespace Roster {
 			// contact actions
 			void sendMessage(Contact* contact);
 			void openChat(Contact* contact);
-			void executeCommand(Contact* contact);
 			void sendFile(Contact* contact);
 			void removeContact(Contact* contact);
 			void showHistory(Contact* contact); 
@@ -49,6 +49,12 @@ namespace Roster {
 			void modifyAccount(Account* account);
 			void addContact(Account* account);
 			void xmlConsole(Account* account);
+
+			// resource actions
+			void openChat(Resource* resource);
+			void openWhiteboard(Resource* resource);
+			void sendMessage(Resource* resource);
+			void executeCommand(Resource* resource);
 	
 		private:
 			QMap<QString, RosterActionsService*> services_;

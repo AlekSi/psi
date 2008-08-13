@@ -1,8 +1,11 @@
+#include <QDebug>
+
 #include "viewactionsservice.h"
 #include "psiaccount.h"
 #include "rosteractionsservice.h"
 #include "contact.h"
 #include "account.h"
+#include "resource.h"
 
 namespace Roster {
 
@@ -26,10 +29,6 @@ namespace Roster {
 
 	void ViewActionsService::openChat(Contact* contact) {
 		services_[contact->getAccountName()]->actionOpenChat(contact->getJid());
-	}
-
-	void ViewActionsService::executeCommand(Contact* contact) {
-		services_[contact->getAccountName()]->actionExecuteCommand(contact->getJid());
 	}
 
 	void ViewActionsService::sendFile(Contact* contact) {
@@ -65,11 +64,11 @@ namespace Roster {
 	}
 
 	void ViewActionsService::assignAvatar(Contact* contact, const QString& file) {
-	//	services_[contact->getAccountName()]->assignAvatar(contact->getJid(), file);
+		services_[contact->getAccountName()]->actionSetManualAvatar(contact->getJid(), file);
 	}
 
 	void ViewActionsService::clearAvatar(Contact* contact) {
-	//	services_[contact->getAccountName()]->clearAvatar(contact->getJid());
+		services_[contact->getAccountName()]->actionUnsetManualAvatar(contact->getJid());
 	}
 
 	void ViewActionsService::changeStatus(Account* account, const StatusType status) {
@@ -107,6 +106,26 @@ namespace Roster {
 
 	void ViewActionsService::xmlConsole(Account* account) {
 		services_[account->getAccountName()]->showXmlConsole();
+	}
+
+	void ViewActionsService::openChat(Resource* resource) {
+		XMPP::Jid jid = static_cast<Contact*>(resource->getParent())->getJid().withResource(resource->getName());
+		services_[resource->getAccountName()]->actionOpenChat(jid);
+	}
+
+	void ViewActionsService::sendMessage(Resource* resource) {
+		XMPP::Jid jid = static_cast<Contact*>(resource->getParent())->getJid().withResource(resource->getName());
+		services_[resource->getAccountName()]->actionSendMessage(jid);
+	}
+
+	void ViewActionsService::openWhiteboard(Resource* resource) {
+		XMPP::Jid jid = static_cast<Contact*>(resource->getParent())->getJid().withResource(resource->getName());
+		services_[resource->getAccountName()]->actionOpenWhiteboard(jid);
+	}
+
+	void ViewActionsService::executeCommand(Resource* resource) {
+		XMPP::Jid jid = static_cast<Contact*>(resource->getParent())->getJid().withResource(resource->getName());
+		services_[resource->getAccountName()]->actionExecuteCommand(jid);
 	}
 
 }

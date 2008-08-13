@@ -32,19 +32,10 @@ namespace Roster {
 
 			void menuHistory();
 			void menuSendMessage();
-			void menuSendMessageToGroup();
 			void menuRename();
 			void menuXmlConsole();
-			void menuGoOnline();
-			void menuGoOffline();
-			void menuSendToAll();
 			void menuShowResources();
 			void menuHideResources();
-			void menuRemoveGroup();
-			void menuRemoveGroupAndContacts();
-			void menuSendFileToResource();
-			void menuOpenChatToResource();
-			void menuSendMessageToResource();
 			void menuOpenChat();
 			void menuRemoveContact();
 			void menuSendFile();
@@ -75,15 +66,13 @@ namespace Roster {
 		private:
 			virtual bool viewportEvent(QEvent* event);
 			void keyPressEvent(QKeyEvent* event);
-
+	
+			template<typename T> T getActionItem();
 			QModelIndex senderItemIndex() const;
 			void initMenu();
 			void expandWithManager(const QModelIndex& index, bool expanded);
 
 			QMap<QString, QAction*> menuActions_;
-			QAction *sendMessageToGroupAct_, *renameGroupAct_, *removeGroupAct_, *removeGroupAndContactsAct_; // Group menu
-			QAction *sendToAllAct_; // Multiple contacts menu
-			QAction *sendMessageToResourceAct_, *openChatToResourceAct_, *sendFileToResourceAct_; // Resource menu
 
 			Manager* manager_;
 			ViewStateManager* vsm_;
