@@ -262,6 +262,8 @@ namespace Roster {
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 			if ( contact->getIncomingEvent() ) {
 				actionsService_->recvEvent(contact);
+			} else if ( PsiOptions::instance()->getOption("options.messages.default-outgoing-message-type").toString() == "message") {
+				actionsService_->sendMessage(contact);
 			} else {
 				actionsService_->openChat(contact);
 			}
