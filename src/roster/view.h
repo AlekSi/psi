@@ -37,6 +37,7 @@ namespace Roster {
 			void showContextMenu(const QPoint& position);
 			void doActivated(const QModelIndex& index);
 
+			// contact
 			void menuHistory();
 			void menuSendMessage();
 			void menuRename();
@@ -45,6 +46,7 @@ namespace Roster {
 			void menuHideResources();
 			void menuOpenChat();
 			void menuRemoveContact();
+			void menuRecvEvent();
 			void menuSendFile();
 			void menuExecuteCommand();
 			void menuUserInfo();
@@ -54,6 +56,8 @@ namespace Roster {
 			void menuRerequestAuthFrom();
 			void menuResendAuthTo();
 			void menuOpenWhiteboard();
+
+			// account
 			void menuChangeStatus();
 			void menuMood();
 			void menuSetAvatarAccount();

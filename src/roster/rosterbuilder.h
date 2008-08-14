@@ -65,9 +65,8 @@ namespace Roster {
 			Metacontact* addMetacontact(const QString& name, const QString& acname, GroupItem* parent);
 			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);
 
-
-			const bool isContactVisible(const UserListItem* xitem) const;
-			const bool isTransportVisible(const UserListItem* xitem) const;
+			const bool isContactVisible(const UserListItem* xitem, const QString& acname) const;
+			const bool isTransportVisible(const UserListItem* xitem, const QString& acname) const;
 
 			QMap<QString, RosterDataService*> rosterServices_;
 

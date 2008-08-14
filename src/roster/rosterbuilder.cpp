@@ -112,7 +112,7 @@ namespace Roster {
 
 			Contact* contact = parent ? parent->findContact(xitem->jid(), acname) : 0;
 
-			if ( isContactVisible(xitem) ) {
+			if ( isContactVisible(xitem, acname) ) {
 				if ( ! contact ) {
 					QString name = xitem->name().isEmpty() ? xitem->jid().full() : xitem->name();
 					contact = new Contact(name, xitem->jid());
@@ -176,7 +176,7 @@ namespace Roster {
 
 		Group* group = findGroup("Agents/Transports", acname, false);
 		Transport* transport = group ? group->findTransport(xitem->jid(), acname) : 0;
-		if ( ! isTransportVisible(xitem) ) {
+		if ( ! isTransportVisible(xitem, acname) ) {
 			if ( transport ) {
 				manager_->removeTransport(transport);
 				delete transport;
@@ -344,13 +344,19 @@ namespace Roster {
 		// FIXME: no real stuff here since this is currently not used
 	}
 
-	const bool RosterBuilder::isContactVisible(const UserListItem* xitem) const {
+	const bool RosterBuilder::isContactVisible(const UserListItem* xitem, const QString& acname) const {
+		RosterDataService* srv = rosterServices_[acname];
+
 		if ( ! searchText_.isEmpty() ) {
 			if ( xitem->name().toLower().contains(searchText_.toLower()) ) {
 				return true;
 			} else {
 				return false;
 			}
+		}
+
+		if ( srv->getIncomingEvent(xitem->jid()) ) {
+			return true;
 		}
 
 		foreach(UserResource xres, xitem->userResourceList()) {
@@ -368,7 +374,9 @@ namespace Roster {
 		return ! (itemFilter_ & FILTER_OFFLINE);
 	}
 
-	const bool RosterBuilder::isTransportVisible(const UserListItem* xitem) const {
+	const bool RosterBuilder::isTransportVisible(const UserListItem* xitem, const QString& acname) const {
+		RosterDataService* srv = rosterServices_[acname];
+
 		if ( ! searchText_.isEmpty() ) {
 			if ( xitem->name().toLower().contains(searchText_.toLower()) ) {
 				return true;
@@ -376,6 +384,11 @@ namespace Roster {
 				return false;
 			}
 		}
+
+		if ( srv->getIncomingEvent(xitem->jid()) ) {
+			return true;
+		}
+
 		return ! (itemFilter_ & FILTER_TRANSPORTS);
 	}
 

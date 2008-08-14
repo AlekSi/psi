@@ -113,6 +113,7 @@ namespace Roster {
 			{"updateMOTD", tr("Update MOTD"), SLOT(menuUpdateMOTD()), ""},
 			{"deleteMOTD", tr("Delete MOTD"), SLOT(menuDeleteMOTD()), "psi/remove"},
 			{"manageBookmarks", tr("Manage..."), SLOT(menuManageBookmarks()), ""},
+			{"recvEvent", tr("&Receive incoming event"), SLOT(menuRecvEvent()), ""},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -144,11 +145,13 @@ namespace Roster {
 			qDebug() << "Context menu opened for multiple contacts";
 		} else if ( Group* group = dynamic_cast<Group*>(item) ) { 
 			qDebug() << "Context menu opened for group" << group->getName();
-		} else if ( dynamic_cast<Contact*>(item) ) { 
+		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) { 
 			bool isSelf = dynamic_cast<Self*>(item);
 			bool isTransport = dynamic_cast<Transport*>(item);
 
-			// Missing action: recieve event
+			if ( contact->getIncomingEvent() ) {
+				menu->addAction(menuActions_["recvEvent"]);
+			}
 			if ( PsiOptions::instance()->getOption("options.ui.message.enabled").toBool() ) {
 				menu->addAction(menuActions_["sendMessage"]);
 			}
@@ -486,6 +489,12 @@ namespace Roster {
 	void View::menuClearAvatar() {
 		if ( Contact* contact = getActionItem<Contact*>() ) {
 			actionsService_->clearAvatar(contact);
+		}
+	}
+
+	void View::menuRecvEvent() {
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->recvEvent(contact);
 		}
 	}
 
