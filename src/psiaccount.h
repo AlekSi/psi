@@ -34,6 +34,7 @@
 #include "psiactions.h"
 
 #include "roster/rosteractionsservice.h"
+#include "roster/viewdataservice.h"
 
 namespace XMPP
 {
@@ -92,7 +93,8 @@ struct GCContact;
 
 class AvCallManager;
 
-class PsiAccount : public QObject, public RosterActionsService
+//FIXME is it really needed?
+class PsiAccount : public QObject, public RosterActionsService, public ViewDataService
 {
 	Q_OBJECT
 public:

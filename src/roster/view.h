@@ -10,6 +10,8 @@ namespace XMPP {
 	class Jid;
 }
 
+class ViewDataService;
+
 namespace Roster {
 	class Item;
 	class Manager;
@@ -25,6 +27,9 @@ namespace Roster {
 			void setManager(Manager* manager);
 			void setViewStateManager(ViewStateManager* vsm);
 			void setViewActionsService(ViewActionsService* actionsService);
+
+			void registerAccount(const QString& acname, ViewDataService* ds);
+			void unregisterAccount(const QString& acname); 
 
 		public slots:
 			void showContextMenu(const QPoint& position);
@@ -69,10 +74,13 @@ namespace Roster {
 	
 			template<typename T> T getActionItem();
 			QModelIndex senderItemIndex() const;
+			ViewDataService* getDataService(Item* item);
+
 			void initMenu();
 			void expandWithManager(const QModelIndex& index, bool expanded);
 
 			QMap<QString, QAction*> menuActions_;
+			QMap<QString, ViewDataService*> dataServices_;
 
 			Manager* manager_;
 			ViewStateManager* vsm_;

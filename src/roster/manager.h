@@ -7,6 +7,8 @@
 
 #include "globals.h"
 
+class PsiEvent;
+
 namespace Roster {
 	class Group;
 	class Contact;
@@ -44,7 +46,7 @@ namespace Roster {
 			void setAvatar(Contact* contact, const QIcon& avatar);
 			void setStatusMessage(Resource* resource, const QString& statusMessage);
 			void setStatus(Resource* resource, const StatusType status);
-			
+			void setIncomingEvent(Contact* contact, PsiEvent* event);
 			void setStatus(Account* account, const StatusType status);
 
 			void copyContact(Contact* contact, GroupItem* group);
@@ -62,7 +64,6 @@ namespace Roster {
 		private:
 			void setContactStatusMessage(Contact* contact, const QString& statusMessage);
 			void setContactStatus(Contact* contact, StatusType status);
-			void setTransportStatus(Transport* transport, StatusType status);
 			void addItem(Item* item, GroupItem* parent);
 			void resort(Item* item);
 

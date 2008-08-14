@@ -37,4 +37,13 @@ namespace Roster {
 	const StatusType Metacontact::getStatus() const {
 		return status_;
 	}
+
+	void Metacontact::setIncomingEvent(PsiEvent* event) {
+		incomingEvent_ = event;
+	}
+
+	PsiEvent* Metacontact::getIncomingEvent() const {
+		return incomingEvent_;
+	}
+
 }

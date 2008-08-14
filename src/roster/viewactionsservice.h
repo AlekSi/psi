@@ -38,6 +38,7 @@ namespace Roster {
 			void removeAuthFrom(Contact* contact);
 			void assignAvatar(Contact* contact, const QString& file);
 			void clearAvatar(Contact* contact);
+			void recvEvent(Contact* contact);
 
 			// account actions
 			void changeStatus(Account* account, const StatusType status);

@@ -5,6 +5,8 @@
 
 #include "globals.h"
 
+class PsiEvent;
+
 namespace Roster {
 	class StatusIconProvider : public QObject {
 		Q_OBJECT
@@ -12,6 +14,7 @@ namespace Roster {
 		public:
 			const QIcon getIconForStatus(const StatusType status) const;
 			const QIcon getIconForGroup(const bool expanded) const;
+			const QIcon getIconForEvent(PsiEvent* event) const;
 
 		signals:
 			void updated();	

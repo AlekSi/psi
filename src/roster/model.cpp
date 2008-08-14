@@ -48,17 +48,7 @@ namespace Roster {
 				return metacontact->getName();
 			}
 		} else if ( role == Qt::DecorationRole ) { // left icon
-			if ( Group* group = dynamic_cast<Group*>(item) ) {
-				return statusIconProvider_->getIconForGroup(group->isExpanded());
-			} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-				return statusIconProvider_->getIconForStatus(contact->getStatus());
-			} else if ( Account* account = dynamic_cast<Account*>(item) ) {
-				return statusIconProvider_->getIconForStatus(account->getStatus());
-			} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
-				return statusIconProvider_->getIconForStatus(resource->getStatus());
-			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
-				return statusIconProvider_->getIconForStatus(metacontact->getStatus());
-			}
+			return decorationRole(item);
 		} else if ( role == ItemRole ) { // pointer to real item
 			return QVariant::fromValue(item);
 		} else if ( role == Qt::BackgroundRole ) { // background color
@@ -101,6 +91,28 @@ namespace Roster {
 			return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.profile.header-background").value<QColor>());
 		} else if ( dynamic_cast<Group*>(item) ) {
 			return QBrush(PsiOptions::instance()->getOption("options.ui.look.colors.contactlist.grouping.header-background").value<QColor>());
+		}
+
+		return QVariant();
+	}
+
+	QVariant Model::decorationRole(Item* item) const {
+		if ( Group* group = dynamic_cast<Group*>(item) ) {
+			return statusIconProvider_->getIconForGroup(group->isExpanded());
+		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+			if ( contact->getIncomingEvent() ) {
+				return statusIconProvider_->getIconForEvent(contact->getIncomingEvent());
+			}
+			return statusIconProvider_->getIconForStatus(contact->getStatus());
+		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
+			return statusIconProvider_->getIconForStatus(account->getStatus());
+		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
+			return statusIconProvider_->getIconForStatus(resource->getStatus());
+		} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+			if ( metacontact->getIncomingEvent() ) {
+				return statusIconProvider_->getIconForEvent(metacontact->getIncomingEvent());
+			}
+			return statusIconProvider_->getIconForStatus(metacontact->getStatus());
 		}
 
 		return QVariant();

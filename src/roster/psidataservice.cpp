@@ -72,4 +72,8 @@ namespace Roster {
 		return acc_->jid();
 	}
 
+	PsiEvent* PsiDataService::getIncomingEvent(const XMPP::Jid& jid) const {
+		return acc_->eventQueue()->peek(jid);
+	}
+
 }

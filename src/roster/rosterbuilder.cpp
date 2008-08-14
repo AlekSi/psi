@@ -144,6 +144,9 @@ namespace Roster {
 				if ( contact->isExpanded() != vsm_->isContactExpanded(contact) ) {
 					manager_->updateState(contact, vsm_->isContactExpanded(contact));
 				}
+				if ( contact->getIncomingEvent() != srv->getIncomingEvent(contact->getJid()) ) {
+					manager_->setIncomingEvent(contact, srv->getIncomingEvent(contact->getJid()));
+				}
 
 				updateResources(xitem->userResourceList(), contact);
 			} else {
@@ -169,6 +172,8 @@ namespace Roster {
 	}
 
 	void RosterBuilder::updateTransport(const UserListItem* xitem, const QString& acname) {
+		RosterDataService* srv = rosterServices_[acname];
+
 		Group* group = findGroup("Agents/Transports", acname, false);
 		Transport* transport = group ? group->findTransport(xitem->jid(), acname) : 0;
 		if ( ! isTransportVisible(xitem) ) {
@@ -187,6 +192,9 @@ namespace Roster {
 
 			if ( transport->isExpanded() != vsm_->isTransportExpanded(transport) ) {
 				manager_->updateState(transport, vsm_->isTransportExpanded(transport));
+			}
+			if ( transport->getIncomingEvent() != srv->getIncomingEvent(transport->getJid()) ) {
+				manager_->setIncomingEvent(transport, srv->getIncomingEvent(transport->getJid()));
 			}
 
 			updateResources(xitem->userResourceList(), transport);

@@ -23,6 +23,7 @@
 #include "psioptions.h"
 #include "pgputil.h"
 #include "self.h"
+#include "viewdataservice.h"
 
 #include "psiiconset.h"
 
@@ -259,7 +260,11 @@ namespace Roster {
 			qDebug() << "Default action triggered on group" << group->getName();
 			setExpanded(index, !isExpanded(index));
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-			actionsService_->openChat(contact);
+			if ( contact->getIncomingEvent() ) {
+				actionsService_->recvEvent(contact);
+			} else {
+				actionsService_->openChat(contact);
+			}
 		} else if ( Account* account = dynamic_cast<Account*>(item) ) {
 			setExpanded(index, !isExpanded(index));
 			qDebug() << "Default action triggered on account" << account->getName();
@@ -565,6 +570,18 @@ namespace Roster {
 	template<typename T> T View::getActionItem() {
 		QAction* action = static_cast<QAction*>(sender());
 		return dynamic_cast<T>(action->data().value<Item*>());
+	}
+
+	void View::registerAccount(const QString& acname, ViewDataService* ds) {
+		dataServices_.insert(acname, ds);
+	}
+
+	void View::unregisterAccount(const QString& acname) {
+		dataServices_.remove(acname);
+	}
+
+	ViewDataService* View::getDataService(Item* item) {
+		return dataServices_[item->getAccountName()];
 	}
 
 }

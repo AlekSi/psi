@@ -2,10 +2,11 @@
 
 #include "contact.h"
 #include "resource.h"
+#include "psievent.h"
 
 namespace Roster {
 
-	Contact::Contact(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid), status_(STATUS_OFFLINE) {
+	Contact::Contact(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid), status_(STATUS_OFFLINE), incomingEvent_(NULL) {
 	}
 
 	Contact::Contact(const Contact& c) : GroupItem() {
@@ -56,6 +57,14 @@ namespace Roster {
 
 	const StatusType Contact::getStatus() const {
 		return status_;
+	}
+
+	void Contact::setIncomingEvent(PsiEvent* event) {
+		incomingEvent_ = event;
+	}
+
+	PsiEvent* Contact::getIncomingEvent() const {
+		return incomingEvent_;
 	}
 
 }

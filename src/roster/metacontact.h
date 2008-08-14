@@ -7,6 +7,8 @@
 #include "groupitem.h"
 #include "globals.h"
 
+class PsiEvent;
+
 namespace Roster {
 
 	class Metacontact : public GroupItem {
@@ -17,17 +19,20 @@ namespace Roster {
 			const QString getStatusMessage() const;
 			const QIcon& getAvatar() const;
 			const StatusType getStatus() const;
+			PsiEvent* getIncomingEvent() const;
 
 			void setName(const QString& name);
 			void setAvatar(const QIcon& avatar); 
 			void setStatusMessage(const QString& statusMessage);
 			void setStatus(const StatusType status);
+			void setIncomingEvent(PsiEvent* event);
 
 		private:
 			QString name_;
 			QString statusMessage_;
 			QIcon avatar_;
 			StatusType status_;
+			PsiEvent* incomingEvent_;
 	};
 }
 

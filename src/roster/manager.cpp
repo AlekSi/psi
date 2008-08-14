@@ -8,8 +8,10 @@
 #include "metacontact.h"
 #include "transport.h"
 #include "self.h"
+#include "psievent.h"
 
 namespace Roster {
+
 	void Manager::renameContact(Contact* contact, QString newName) {
 		contact->setName(newName);
 		emit itemUpdated(contact);
@@ -163,21 +165,12 @@ namespace Roster {
 			if ( contact->getIndexOf(resource) == 0 ) {
 				setContactStatus(contact, status);
 			}
-		} else if ( Transport* transport = static_cast<Transport*>(resource->getParent()) ) {
-			if ( transport->getIndexOf(resource) == 0 ) {
-				setTransportStatus(transport, status);
-			}
 		}
 	}
 
 	void Manager::setStatus(Account* account, const StatusType status) {
 		account->setStatus(status);
 		emit itemUpdated(account);
-	}
-
-	void Manager::setTransportStatus(Transport* transport, StatusType status) {
-		transport->setStatus(status);
-		emit itemUpdated(transport);
 	}
 
 	void Manager::resort(Item* item) {
@@ -337,5 +330,26 @@ namespace Roster {
 	void Manager::removeTransport(Transport* transport) {
 		removeItem(transport);
 	}	
+
+	void Manager::setIncomingEvent(Contact* contact, PsiEvent* event) {
+		contact->setIncomingEvent(event);
+		emit itemUpdated(contact);
+
+		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
+			metacontact->setIncomingEvent(NULL);
+
+			foreach(Item* item, metacontact->getItems()) {
+				if ( Contact* subContact = dynamic_cast<Contact*>(item) ) {
+					if ( subContact->getIncomingEvent() ) {
+						metacontact->setIncomingEvent(subContact->getIncomingEvent());
+						break;
+					}
+				}
+			}
+
+			emit itemUpdated(metacontact);
+		}
+	}
+
 }
 

@@ -128,4 +128,8 @@ namespace Roster {
 		services_[resource->getAccountName()]->actionExecuteCommand(jid);
 	}
 
+	void ViewActionsService::recvEvent(Contact* contact) {
+		services_[contact->getAccountName()]->actionRecvEvent(contact->getJid());
+	}
+
 }

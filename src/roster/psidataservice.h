@@ -5,10 +5,12 @@
 #include <QIcon>
 
 #include "rosterdataservice.h"
+#include "psievent.h"
 
 class PsiAccount;
 class UserListItem;
 class UserResource;
+class PsiEvent;
 
 using XMPP::Jid;
 
@@ -28,6 +30,7 @@ namespace Roster {
 			const bool isEnabled() const;
 			const StatusType getStatus() const;
 			const XMPP::Jid getJid() const;
+			PsiEvent* getIncomingEvent(const XMPP::Jid& jid) const;
 
 		private slots:
 			void updatedContact(const UserListItem& item);

@@ -31,6 +31,7 @@ class PsiAccount;
 			virtual void actionDisco(const XMPP::Jid& jid, const QString& node) = 0;
 			virtual void actionSetManualAvatar(const XMPP::Jid& jid, const QString& file) = 0;
 			virtual void actionUnsetManualAvatar(const XMPP::Jid& jid) = 0;
+			virtual void actionRecvEvent(const XMPP::Jid& jid) = 0;
 
 			// FIXME: change this here and in PsiAccount
 			virtual void openAddUserDlg() = 0;

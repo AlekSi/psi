@@ -71,6 +71,7 @@ namespace Roster {
 
 		rb_->registerAccount(acname, srv);
 		actionsService_->registerAccount(acname, acc);
+		view_->registerAccount(acname, acc);
 
 		rb_->rebuild();
 	}
@@ -80,6 +81,7 @@ namespace Roster {
 
 		rb_->unregisterAccount(acname);
 		actionsService_->unregisterAccount(acname);
+		view_->unregisterAccount(acname);
 
 		rb_->rebuild();
 	}
@@ -89,6 +91,7 @@ namespace Roster {
 		QString acname = acc->jid().full();
 		rb_->unregisterAccount(acname);
 		actionsService_->unregisterAccount(acname);
+		view_->unregisterAccount(acname);
 
 		accountAdded(acc);
 	}

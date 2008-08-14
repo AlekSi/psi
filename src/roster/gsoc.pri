@@ -26,7 +26,8 @@ HEADERS += \
 	$$PWD/self.h \
 	$$PWD/rosterinstance.h \
 	$$PWD/viewactionsservice.h \
-	$$PWD/rosteractionsservice.h 
+	$$PWD/rosteractionsservice.h  \
+	$$PWD/viewdataservice.h
 
 SOURCES += \
 	$$PWD/model.cpp \
