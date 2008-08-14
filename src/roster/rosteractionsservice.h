@@ -10,6 +10,7 @@ namespace XMPP {
 using XMPP::Jid; // PsiAccount uses Jid instead of XMPP::Jid
 
 class PsiAccount;
+class ConferenceBookmark;
 
 //namespace Roster {
 
@@ -32,6 +33,8 @@ class PsiAccount;
 			virtual void actionSetManualAvatar(const XMPP::Jid& jid, const QString& file) = 0;
 			virtual void actionUnsetManualAvatar(const XMPP::Jid& jid) = 0;
 			virtual void actionRecvEvent(const XMPP::Jid& jid) = 0;
+			virtual void actionManageBookmarks() = 0;
+			virtual void actionJoin(const ConferenceBookmark& bookmark, bool connectImmediately) = 0;
 
 			// FIXME: change this here and in PsiAccount
 			virtual void openAddUserDlg() = 0;

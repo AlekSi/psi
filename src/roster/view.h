@@ -6,6 +6,8 @@
 #include <QModelIndex>
 #include <QMap>
 
+#include "conferencebookmark.h"
+
 namespace XMPP {
 	class Jid;
 }
@@ -61,6 +63,15 @@ namespace Roster {
 			void menuModifyAccount();
 			void menuNewBlankMessage();
 
+			// account->admin
+			void menuOnlineUsers();
+			void menuSendServerMessage();
+			void menuSetMOTD();
+			void menuUpdateMOTD();
+			void menuDeleteMOTD();
+			void menuManageBookmarks();
+			void menuJoinConference();
+
 		signals:
 			void searchInput(const QString& text);
 
@@ -80,6 +91,7 @@ namespace Roster {
 			void expandWithManager(const QModelIndex& index, bool expanded);
 
 			QMap<QString, QAction*> menuActions_;
+			QMap<QAction*, ConferenceBookmark> bookmarkActions_;
 			QMap<QString, ViewDataService*> dataServices_;
 
 			Manager* manager_;

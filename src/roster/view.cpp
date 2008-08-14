@@ -24,6 +24,7 @@
 #include "pgputil.h"
 #include "self.h"
 #include "viewdataservice.h"
+#include "conferencebookmark.h"
 
 #include "psiiconset.h"
 
@@ -106,6 +107,12 @@ namespace Roster {
 			{"xmlConsole", tr("&XML Console"), SLOT(menuXmlConsole()), "psi/xml"},
 			{"modifyAccount", tr("&Modify Account..."), SLOT(menuModifyAccount()), "psi/account"},
 			{"newBlankMessage", tr("New &blank message"), SLOT(menuNewBlankMessage()), "psi/sendMessage"},
+			{"onlineUsers", tr("Online users"), SLOT(menuOnlineUsers()), "psi/disco"},
+			{"sendServerMessage", tr("Send server message"), SLOT(menuSendServerMessage()), "psi/sendMessage"},
+			{"setMOTD", tr("Set MOTD"), SLOT(menuSetMOTD()), ""},
+			{"updateMOTD", tr("Update MOTD"), SLOT(menuUpdateMOTD()), ""},
+			{"deleteMOTD", tr("Delete MOTD"), SLOT(menuDeleteMOTD()), "psi/remove"},
+			{"manageBookmarks", tr("Manage..."), SLOT(menuManageBookmarks()), ""},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -131,6 +138,7 @@ namespace Roster {
 
 		Q_ASSERT(index.data(Qt::UserRole).canConvert<Item*>());
 		Item* item = index.data(Qt::UserRole).value<Item*>();
+		ViewDataService* dataService = getDataService(item);
 
 		if ( selectedIndexes().size() > 1 ) { // multiple items selected
 			qDebug() << "Context menu opened for multiple contacts";
@@ -219,13 +227,32 @@ namespace Roster {
 			menu->addMenu(statusMenu);
 
 			menu->addAction(menuActions_["mood"]);
+			menuActions_["mood"]->setEnabled(dataService->hasPep());
 
 			QMenu* avatarMenu = new QMenu(tr("Avatar"));
 			avatarMenu->addAction(menuActions_["setAvatarAccount"]);
 			avatarMenu->addAction(menuActions_["unsetAvatarAccount"]);
 			menu->addMenu(avatarMenu);
+			avatarMenu->setEnabled(dataService->hasPep());
 
-			// Missing action: bookmarks
+			QMenu* bookmarkMenu = new QMenu(tr("Bookmarks"));
+			bookmarkMenu->addAction(menuActions_["manageBookmarks"]);
+			bookmarkMenu->addSeparator();
+
+			foreach(QAction* action, bookmarkActions_.keys()) {
+				delete action;
+			}
+			bookmarkActions_.clear();
+
+			foreach(ConferenceBookmark c, dataService->conferences()) {
+				QAction* action = new QAction( QString("Join %1").arg(c.name()), bookmarkMenu );
+				action->setData(QVariant::fromValue<Item*>(item));
+				connect(action, SIGNAL(triggered()), SLOT(menuJoinConference()));
+				bookmarkActions_.insert(action, c);
+				bookmarkMenu->addAction(action);
+			}
+			menu->addMenu(bookmarkMenu);
+			bookmarkMenu->setEnabled(dataService->isAvailable());
 
 			menu->addAction(menuActions_["addContact"]);
 			menu->addAction(menuActions_["serviceDiscovery"]);
@@ -234,9 +261,20 @@ namespace Roster {
 			menu->addAction(menuActions_["xmlConsole"]);
 			menu->addSeparator();
 			menu->addAction(menuActions_["modifyAccount"]);
-			menu->addSeparator();
 
-			// Missing action: admin
+			if ( PsiOptions::instance()->getOption("options.ui.menu.account.admin").toBool() ) {
+				menu->addSeparator();
+				QMenu* adminMenu = new QMenu(tr("&Admin"));
+				adminMenu->addAction(menuActions_["onlineUsers"]);
+				adminMenu->addAction(menuActions_["sendServerMessage"]);
+				adminMenu->addSeparator();
+				adminMenu->addAction(menuActions_["setMOTD"]);
+				adminMenu->addAction(menuActions_["updateMOTD"]);
+				adminMenu->addAction(menuActions_["deleteMOTD"]);
+				menu->addMenu(adminMenu);
+				adminMenu->setEnabled(dataService->isAvailable());
+			}
+
 		} else if ( dynamic_cast<Resource*>(item) ) {
 			menu->addAction(menuActions_["openChat"]);
 			menu->addAction(menuActions_["sendMessage"]);
@@ -584,6 +622,53 @@ namespace Roster {
 
 	ViewDataService* View::getDataService(Item* item) {
 		return dataServices_[item->getAccountName()];
+	}
+
+	void View::menuOnlineUsers() {
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->onlineUsers(account);
+		}
+	}
+
+	void View::menuSendServerMessage() {
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->sendServerMessage(account);
+		}
+	}
+
+	void View::menuSetMOTD() {
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->setMOTD(account);
+		}
+	}
+
+	void View::menuUpdateMOTD() {
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->updateMOTD(account);
+		}
+	}
+
+	void View::menuDeleteMOTD() {
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->deleteMOTD(account);
+		}
+	}
+
+	void View::menuManageBookmarks() {
+		if ( Account* account = getActionItem<Account*>() ) {
+			actionsService_->manageBookmarks(account);
+		}
+	}
+
+	void View::menuJoinConference() {
+		QAction* action = static_cast<QAction*>(sender());
+
+		if ( Account* account = getActionItem<Account*>() ) {
+			QMap<QAction*, ConferenceBookmark>::iterator it = bookmarkActions_.find(action); 
+			if ( it != bookmarkActions_.end() ) {
+				actionsService_->joinConference(account, it.value());
+			}
+		}
 	}
 
 }

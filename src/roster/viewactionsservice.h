@@ -9,6 +9,7 @@
 class PsiAccount;
 
 class RosterActionsService;
+class ConferenceBookmark;
 
 namespace Roster {
 	class Contact;
@@ -50,6 +51,13 @@ namespace Roster {
 			void modifyAccount(Account* account);
 			void addContact(Account* account);
 			void xmlConsole(Account* account);
+			void setMOTD(Account* account);
+			void updateMOTD(Account* account);
+			void deleteMOTD(Account* account);
+			void onlineUsers(Account* account);
+			void sendServerMessage(Account* account);
+			void manageBookmarks(Account* account);
+			void joinConference(Account* account, ConferenceBookmark c);
 
 			// resource actions
 			void openChat(Resource* resource);

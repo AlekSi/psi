@@ -6,6 +6,7 @@
 #include "contact.h"
 #include "account.h"
 #include "resource.h"
+#include "conferencebookmark.h"
 
 namespace Roster {
 
@@ -130,6 +131,39 @@ namespace Roster {
 
 	void ViewActionsService::recvEvent(Contact* contact) {
 		services_[contact->getAccountName()]->actionRecvEvent(contact->getJid());
+	}
+
+	void ViewActionsService::setMOTD(Account* account) {
+		XMPP::Jid jid = account->getJid().host() + "/announce/motd";
+		services_[account->getAccountName()]->actionSendMessage(jid);
+	}
+
+	void ViewActionsService::updateMOTD(Account* account) {
+		XMPP::Jid jid = account->getJid().host() + "/announce/motd/update";
+		services_[account->getAccountName()]->actionSendMessage(jid);
+	}
+
+	void ViewActionsService::deleteMOTD(Account* account) {
+		XMPP::Jid jid = account->getJid().host() + "/announce/motd/delete";
+		services_[account->getAccountName()]->actionSendMessage(jid);
+	}
+
+	void ViewActionsService::onlineUsers(Account* account) {
+		XMPP::Jid jid = account->getJid().host() + "/admin";
+		services_[account->getAccountName()]->actionDisco(jid, "");
+	}
+
+	void ViewActionsService::sendServerMessage(Account* account) {
+		XMPP::Jid jid = account->getJid().host() + "/announce/online";
+		services_[account->getAccountName()]->actionSendMessage(jid);
+	}
+
+	void ViewActionsService::manageBookmarks(Account* account) {
+		services_[account->getAccountName()]->actionManageBookmarks();
+	}
+
+	void ViewActionsService::joinConference(Account* account, ConferenceBookmark c) {
+		services_[account->getAccountName()]->actionJoin(c, true);
 	}
 
 }
