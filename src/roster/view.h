@@ -56,6 +56,9 @@ namespace Roster {
 			void menuRerequestAuthFrom();
 			void menuResendAuthTo();
 			void menuOpenWhiteboard();
+			void menuInvite();
+			void menuAssignKey();
+			void menuUnassignKey();
 
 			// account
 			void menuChangeStatus();
@@ -66,6 +69,7 @@ namespace Roster {
 			void menuServiceDiscovery();
 			void menuModifyAccount();
 			void menuNewBlankMessage();
+			void menuJoinConference();
 
 			// account->admin
 			void menuOnlineUsers();
@@ -74,7 +78,6 @@ namespace Roster {
 			void menuUpdateMOTD();
 			void menuDeleteMOTD();
 			void menuManageBookmarks();
-			void menuJoinConference();
 
 		signals:
 			void searchInput(const QString& text);
@@ -96,6 +99,7 @@ namespace Roster {
 
 			QMap<QString, QAction*> menuActions_;
 			QMap<QAction*, ConferenceBookmark> bookmarkActions_;
+			QMap<QAction*, QString> inviteActions_;
 			QMap<QString, ViewDataService*> dataServices_;
 
 			Manager* manager_;

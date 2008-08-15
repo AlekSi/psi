@@ -27,6 +27,7 @@ namespace Roster {
 			virtual const StatusType getStatus() const = 0;
 			virtual const XMPP::Jid getJid() const = 0;
 			virtual PsiEvent* getIncomingEvent(const XMPP::Jid& jid) const = 0;
+			virtual const bool hasManualAvatar(const XMPP::Jid& jid) const = 0;
 
 		signals:
 			void itemUpdated(const UserListItem* xitem, const QString& acname);

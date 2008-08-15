@@ -351,5 +351,15 @@ namespace Roster {
 		}
 	}
 
+	void Manager::setHasPGPKey(Contact* contact, const bool h) {
+		contact->setHasPGPKey(h);
+		emit itemUpdated(contact);
+	}
+
+	void Manager::setHasManualAvatar(Contact* contact, const bool h) {
+		contact->setHasManualAvatar(h);
+		emit itemUpdated(contact);
+	}
+
 }
 

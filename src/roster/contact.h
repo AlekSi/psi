@@ -23,6 +23,8 @@ namespace Roster {
 			const QString getStatusMessage() const;
 			const StatusType getStatus() const;
 			PsiEvent* getIncomingEvent() const;
+			const bool hasPGPKey() const;
+			const bool hasManualAvatar() const;
 
 			void setName(const QString& name);
 			void setJid(const XMPP::Jid& jid);
@@ -30,6 +32,8 @@ namespace Roster {
 			void setStatusMessage(const QString& statusMessage);
 			void setStatus(const StatusType status);
 			void setIncomingEvent(PsiEvent* event);
+			void setHasPGPKey(const bool h);
+			void setHasManualAvatar(const bool h);
 
 		private:
 			QString name_;
@@ -38,6 +42,7 @@ namespace Roster {
 			QString statusMessage_;
 			StatusType status_;
 			PsiEvent* incomingEvent_;
+			bool hasPGPKey_, hasManualAvatar_;
 	};
 }
 

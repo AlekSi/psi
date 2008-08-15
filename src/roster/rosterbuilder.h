@@ -62,6 +62,8 @@ namespace Roster {
 			void updateSelf(const UserListItem* xitem, const QString& acname);
 			void updateAccount(const QString& acname);
 
+			void updateContactProps(const UserListItem* xitem, Contact* contact);
+
 			Metacontact* addMetacontact(const QString& name, const QString& acname, GroupItem* parent);
 			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);
 

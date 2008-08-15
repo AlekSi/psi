@@ -108,6 +108,7 @@ public:
 	bool isActive() const;
 	bool isConnected() const;
 	const QString &name() const;
+
 	bool hasPep() const;
 
 	void showXmlConsole();

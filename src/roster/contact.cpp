@@ -6,7 +6,7 @@
 
 namespace Roster {
 
-	Contact::Contact(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid), status_(STATUS_OFFLINE), incomingEvent_(NULL) {
+	Contact::Contact(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid), status_(STATUS_OFFLINE), incomingEvent_(NULL), hasPGPKey_(false), hasManualAvatar_(false) {
 	}
 
 	Contact::Contact(const Contact& c) : GroupItem() {
@@ -67,5 +67,20 @@ namespace Roster {
 		return incomingEvent_;
 	}
 
+	void Contact::setHasPGPKey(const bool h) {
+		hasPGPKey_ = h;
+	}
+
+	const bool Contact::hasPGPKey() const {
+		return hasPGPKey_;
+	}
+
+	const bool Contact::hasManualAvatar() const {
+		return hasManualAvatar_;
+	}
+
+	void Contact::setHasManualAvatar(const bool h) {
+		hasManualAvatar_ = h;
+	}
 }
 

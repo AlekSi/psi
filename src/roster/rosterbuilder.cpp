@@ -93,8 +93,6 @@ namespace Roster {
 	}
 
 	void RosterBuilder::updateContact(const UserListItem* xitem, const QString& acname) {
-		RosterDataService* srv = rosterServices_[acname];
-
 		QList<QString> groups = xitem->groups();
 		if ( groups.isEmpty() ) {
 			groups.append("General");
@@ -140,15 +138,7 @@ namespace Roster {
 				}
 
 				// update contact data
-				manager_->setAvatar(contact, srv->getAvatar(contact->getJid()));
-				if ( contact->isExpanded() != vsm_->isContactExpanded(contact) ) {
-					manager_->updateState(contact, vsm_->isContactExpanded(contact));
-				}
-				if ( contact->getIncomingEvent() != srv->getIncomingEvent(contact->getJid()) ) {
-					manager_->setIncomingEvent(contact, srv->getIncomingEvent(contact->getJid()));
-				}
-
-				updateResources(xitem->userResourceList(), contact);
+				updateContactProps(xitem, contact);
 			} else {
 				if ( contact ) {
 					manager_->removeContact(contact);
@@ -172,8 +162,6 @@ namespace Roster {
 	}
 
 	void RosterBuilder::updateTransport(const UserListItem* xitem, const QString& acname) {
-		RosterDataService* srv = rosterServices_[acname];
-
 		Group* group = findGroup("Agents/Transports", acname, false);
 		Transport* transport = group ? group->findTransport(xitem->jid(), acname) : 0;
 		if ( ! isTransportVisible(xitem, acname) ) {
@@ -190,14 +178,7 @@ namespace Roster {
 				manager_->addTransport(transport, group);
 			}
 
-			if ( transport->isExpanded() != vsm_->isTransportExpanded(transport) ) {
-				manager_->updateState(transport, vsm_->isTransportExpanded(transport));
-			}
-			if ( transport->getIncomingEvent() != srv->getIncomingEvent(transport->getJid()) ) {
-				manager_->setIncomingEvent(transport, srv->getIncomingEvent(transport->getJid()));
-			}
-
-			updateResources(xitem->userResourceList(), transport);
+			updateContactProps(xitem, transport);
 		}
 	}
 
@@ -427,12 +408,28 @@ namespace Roster {
 				manager_->addSelf(self, acc);
 			}
 
-			if ( self->isExpanded() != vsm_->isSelfExpanded(self) ) {
-				manager_->updateState(self, vsm_->isSelfExpanded(self));
-			}
-
-			updateResources(xitem->userResourceList(), self);	
+			updateContactProps(xitem, self);
 		}
+	}
+
+	void RosterBuilder::updateContactProps(const UserListItem* xitem, Contact* contact) {
+		RosterDataService* srv = rosterServices_[contact->getAccountName()];
+
+		manager_->setAvatar(contact, srv->getAvatar(contact->getJid()));
+		if ( contact->isExpanded() != vsm_->isContactExpanded(contact) ) {
+			manager_->updateState(contact, vsm_->isContactExpanded(contact));
+		}
+		if ( contact->getIncomingEvent() != srv->getIncomingEvent(contact->getJid()) ) {
+			manager_->setIncomingEvent(contact, srv->getIncomingEvent(contact->getJid()));
+		}
+		if ( contact->hasPGPKey() == xitem->publicKeyID().isEmpty() ) {
+			manager_->setHasPGPKey(contact, ! xitem->publicKeyID().isEmpty());
+		}
+		if ( contact->hasManualAvatar() != srv->hasManualAvatar(contact->getJid()) ) {
+			manager_->setHasManualAvatar(contact, srv->hasManualAvatar(contact->getJid()));
+		}
+
+		updateResources(xitem->userResourceList(), contact);
 	}
 
 	void RosterBuilder::accountChanged(const QString& acname) {

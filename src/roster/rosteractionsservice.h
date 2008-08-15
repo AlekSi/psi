@@ -35,6 +35,9 @@ class ConferenceBookmark;
 			virtual void actionRecvEvent(const XMPP::Jid& jid) = 0;
 			virtual void actionManageBookmarks() = 0;
 			virtual void actionJoin(const ConferenceBookmark& bookmark, bool connectImmediately) = 0;
+			virtual void actionInvite(const XMPP::Jid& jid, const QString& groupchat) = 0;
+			virtual void actionAssignKey(const XMPP::Jid& jid) = 0;
+			virtual void actionUnassignKey(const XMPP::Jid& jid) = 0;
 
 			// FIXME: change this here and in PsiAccount
 			virtual void openAddUserDlg() = 0;

@@ -76,4 +76,8 @@ namespace Roster {
 		return acc_->eventQueue()->peek(jid);
 	}
 
+	const bool PsiDataService::hasManualAvatar(const XMPP::Jid& jid) const {
+		return acc_->avatarFactory()->hasManualAvatar(jid);
+	}
+
 }

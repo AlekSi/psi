@@ -48,6 +48,8 @@ namespace Roster {
 			void setStatus(Resource* resource, const StatusType status);
 			void setIncomingEvent(Contact* contact, PsiEvent* event);
 			void setStatus(Account* account, const StatusType status);
+			void setHasPGPKey(Contact* contact, const bool h);
+			void setHasManualAvatar(Contact* contact, const bool h);
 
 			void copyContact(Contact* contact, GroupItem* group);
 			void moveContact(Contact* contact, GroupItem* group);

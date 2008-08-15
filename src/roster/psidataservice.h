@@ -31,6 +31,7 @@ namespace Roster {
 			const StatusType getStatus() const;
 			const XMPP::Jid getJid() const;
 			PsiEvent* getIncomingEvent(const XMPP::Jid& jid) const;
+			const bool hasManualAvatar(const XMPP::Jid& jid) const;
 
 		private slots:
 			void updatedContact(const UserListItem& item);

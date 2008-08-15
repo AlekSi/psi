@@ -40,6 +40,9 @@ namespace Roster {
 			void assignAvatar(Contact* contact, const QString& file);
 			void clearAvatar(Contact* contact);
 			void recvEvent(Contact* contact);
+			void invite(Contact* contact, QString groupchat);
+			void assignKey(Contact* contact);
+			void unassignKey(Contact* contact);
 
 			// account actions
 			void changeStatus(Account* account, const StatusType status);

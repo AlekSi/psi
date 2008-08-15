@@ -114,6 +114,8 @@ namespace Roster {
 			{"deleteMOTD", tr("Delete MOTD"), SLOT(menuDeleteMOTD()), "psi/remove"},
 			{"manageBookmarks", tr("Manage..."), SLOT(menuManageBookmarks()), ""},
 			{"recvEvent", tr("&Receive incoming event"), SLOT(menuRecvEvent()), ""},
+			{"assignKey", tr("Assign Open&PGP key"), SLOT(menuAssignKey()), "psi/gpg-yes"},
+			{"unassignKey", tr("Unassign Open&PGP key"), SLOT(menuUnassignKey()), "psi/gpg-no"},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -130,6 +132,7 @@ namespace Roster {
 
 	/* build and display context menu */
 	void View::showContextMenu(const QPoint& position) {
+		// FIXME: memory leaking here with undeleted actions and menus!
 		QModelIndex index = indexAt(position);
 		if ( ! index.isValid() ) {
 			return;
@@ -165,7 +168,20 @@ namespace Roster {
 			if ( ! isTransport ) {
 				menu->addAction(menuActions_["sendFile"]);
 				// Missing action: voice call	
-				// Missing action: invite to chat
+				
+				QMenu* inviteMenu = new QMenu(tr("Invite"));
+				inviteActions_.clear();
+
+				foreach(QString groupchat, dataService->groupchats()) {
+					QAction* action = new QAction(groupchat, inviteMenu);
+					action->setData(QVariant::fromValue<Item*>(item));
+					connect(action, SIGNAL(triggered()), SLOT(menuInvite()));
+					inviteActions_.insert(action, groupchat);
+					inviteMenu->addAction(action);
+				}
+
+				menu->addMenu(inviteMenu);
+				inviteMenu->setEnabled(!inviteMenu->isEmpty());
 				menu->addSeparator();
 			}
 
@@ -198,13 +214,18 @@ namespace Roster {
 			if ( PsiOptions::instance()->getOption("options.ui.menu.contact.custom-picture").toBool() ) {
 				QMenu* pictureMenu = new QMenu(tr("&Picture"), menu);
 				pictureMenu->addAction(menuActions_["assignAvatar"]);
-				pictureMenu->addAction(menuActions_["clearAvatar"]); // FIXME: disable if not avatar assigned
+				pictureMenu->addAction(menuActions_["clearAvatar"]);
+				menuActions_["clearAvatar"]->setEnabled(contact->hasManualAvatar());
 				menu->addMenu(pictureMenu);
 			}
 
 			if ( PGPUtil::instance().pgpAvailable() and 
 					PsiOptions::instance()->getOption("options.ui.menu.contact.custom-pgp-key").toBool() ) {
-				// Missing action: gpg yes/no 	
+				if ( contact->hasPGPKey() ) {
+					menu->addAction(menuActions_["unassignKey"]);
+				} else {
+					menu->addAction(menuActions_["assignKey"]);
+				}
 			}
 
 			menu->addAction(menuActions_["userInfo"]);
@@ -242,9 +263,6 @@ namespace Roster {
 			bookmarkMenu->addAction(menuActions_["manageBookmarks"]);
 			bookmarkMenu->addSeparator();
 
-			foreach(QAction* action, bookmarkActions_.keys()) {
-				delete action;
-			}
 			bookmarkActions_.clear();
 
 			foreach(ConferenceBookmark c, dataService->conferences()) {
@@ -527,7 +545,7 @@ namespace Roster {
 
 	void View::menuAddContact() {
 		if ( Account* account = getActionItem<Account*>() ) {
-			actionsService_->unsetAvatar(account);
+			actionsService_->addContact(account);
 		}
 	}
 
@@ -677,6 +695,29 @@ namespace Roster {
 			if ( it != bookmarkActions_.end() ) {
 				actionsService_->joinConference(account, it.value());
 			}
+		}
+	}
+
+	void View::menuInvite() {
+		QAction* action = static_cast<QAction*>(sender());
+
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			if ( inviteActions_.contains(action) ) {
+				actionsService_->invite(contact, inviteActions_[action]);
+				QMessageBox::information(this, tr("Invitation"), tr("Sent groupchat invitation to <b>%1</b>.").arg(inviteActions_[action]));
+			}
+		}
+	}
+
+	void View::menuAssignKey() {
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->assignKey(contact);
+		}
+	}
+
+	void View::menuUnassignKey() {
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->unassignKey(contact);
 		}
 	}
 

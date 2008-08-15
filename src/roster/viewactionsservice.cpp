@@ -166,4 +166,16 @@ namespace Roster {
 		services_[account->getAccountName()]->actionJoin(c, true);
 	}
 
+	void ViewActionsService::invite(Contact* contact, QString groupchat) {
+		services_[contact->getAccountName()]->actionInvite(contact->getJid(), groupchat);
+	}
+
+	void ViewActionsService::assignKey(Contact* contact) {
+		services_[contact->getAccountName()]->actionAssignKey(contact->getJid());
+	}
+
+	void ViewActionsService::unassignKey(Contact* contact) {
+		services_[contact->getAccountName()]->actionUnassignKey(contact->getJid());
+	}
+
 }
