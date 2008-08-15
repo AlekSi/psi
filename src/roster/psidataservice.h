@@ -36,6 +36,7 @@ namespace Roster {
 		private slots:
 			void updatedContact(const UserListItem& item);
 			void updatedAccount();
+			void removedGroup(const UserListItem* item, const QString& group);
 
 		private:
 			PsiAccount* acc_;

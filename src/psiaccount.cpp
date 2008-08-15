@@ -3489,6 +3489,8 @@ void PsiAccount::actionGroupRemove(const Jid &j, const QString &g)
 	JT_Roster *r = new JT_Roster(d->client->rootTask());
 	r->set(u->jid(), u->name(), u->groups());
 	r->go(true);
+
+	emit removedGroup(u, g);
 }
 
 void PsiAccount::actionRegister(const Jid &j)
@@ -5120,6 +5122,18 @@ void PsiAccount::actionManageBookmarks() {
 		dlg = new BookmarkManageDlg(this);
 		dlg->show();
 	}
+}
+
+QStringList PsiAccount::groups() const {
+	QSet<QString> set;
+
+	for ( uint i = 0; i < userList()->count(); i++ ) {
+		foreach(QString group, userList()->at(i)->groups()) {
+			set.insert(group);
+		}
+	}
+
+	return QStringList::fromSet(set);
 }
 
 #include "psiaccount.moc"

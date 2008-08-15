@@ -60,6 +60,11 @@ namespace Roster {
 			void menuAssignKey();
 			void menuUnassignKey();
 
+			// contact group handling
+			void menuMoveToGroup();
+			void menuAddGroup();
+			void menuMoveToNone();
+
 			// account
 			void menuChangeStatus();
 			void menuMood();

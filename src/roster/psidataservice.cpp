@@ -10,6 +10,7 @@ namespace Roster {
 	PsiDataService::PsiDataService(PsiAccount* acc) : acc_(acc) {
 		connect(acc_, SIGNAL(updateContact(const UserListItem&)), SLOT(updatedContact(const UserListItem&)));
 		connect(acc_, SIGNAL(updatedAccount()), SLOT(updatedAccount()));
+		connect(acc_, SIGNAL(removedGroup(const UserListItem*, const QString&)), SLOT(removedGroup(const UserListItem*, const QString&)));
 	}
 
 	PsiDataService::~PsiDataService() {
@@ -78,6 +79,10 @@ namespace Roster {
 
 	const bool PsiDataService::hasManualAvatar(const XMPP::Jid& jid) const {
 		return acc_->avatarFactory()->hasManualAvatar(jid);
+	}
+
+	void PsiDataService::removedGroup(const UserListItem* item, const QString& group) {
+		emit groupRemoved(item, group, acc_->jid().full());
 	}
 
 }

@@ -47,6 +47,7 @@ namespace Roster {
 			void itemChanged(const UserListItem* xitem, const QString& acname);
 			void selfChanged(const UserListItem* xitem, const QString& acname);
 			void accountChanged(const QString& acname);
+			void groupRemoved(const UserListItem* xitem, const QString& group, const QString& acname);
 
 		private:
 			void buildRoster(const QString& acname);
@@ -67,7 +68,7 @@ namespace Roster {
 			Metacontact* addMetacontact(const QString& name, const QString& acname, GroupItem* parent);
 			Group* addGroup(const QString& groupName, const QString& acname, GroupItem* parent);
 
-			const bool isContactVisible(const UserListItem* xitem, const QString& acname) const;
+			const bool isContactVisible(const UserListItem* xitem, const QString& xgroup, const QString& acname) const;
 			const bool isTransportVisible(const UserListItem* xitem, const QString& acname) const;
 
 			QMap<QString, RosterDataService*> rosterServices_;

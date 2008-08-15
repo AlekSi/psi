@@ -110,6 +110,7 @@ public:
 	const QString &name() const;
 
 	bool hasPep() const;
+	QStringList groups() const;
 
 	void showXmlConsole();
 	void openAddUserDlg();
@@ -224,6 +225,7 @@ signals:
 	void encryptedMessageSent(int, bool, int, const QString &);
 	void enabledChanged();
 	void startBounce();
+	void removedGroup(const UserListItem*, const QString&); // to notify RosterBuilder
 
 public slots:
 	void setStatus(const XMPP::Status &, bool withStatus = false);

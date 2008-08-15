@@ -14,6 +14,7 @@
 #include "transport.h"
 #include "self.h"
 #include "userlist.h"
+#include "psioptions.h"
 
 namespace Roster {
 
@@ -95,7 +96,22 @@ namespace Roster {
 	void RosterBuilder::updateContact(const UserListItem* xitem, const QString& acname) {
 		QList<QString> groups = xitem->groups();
 		if ( groups.isEmpty() ) {
-			groups.append("General");
+			groups.append(tr("General"));
+		} else if ( ! groups.contains(tr("General")) ) {
+			// remove from "General", just in case
+			GroupItem* parent = findGroup(tr("General"), acname);
+
+			if ( joinByName_ and parent ) {
+				Metacontact* metacontact = parent->findMetacontact(xitem->name());
+				if ( metacontact ) {
+					parent = metacontact;
+				}
+			}
+
+			Contact* contact = parent ? parent->findContact(xitem->jid(), acname) : 0;
+			if ( contact ) {
+				manager_->removeContact(contact);
+			}
 		}
 
 		foreach(QString xgroup, groups) {
@@ -110,7 +126,7 @@ namespace Roster {
 
 			Contact* contact = parent ? parent->findContact(xitem->jid(), acname) : 0;
 
-			if ( isContactVisible(xitem, acname) ) {
+			if ( isContactVisible(xitem, xgroup, acname) ) {
 				if ( ! contact ) {
 					QString name = xitem->name().isEmpty() ? xitem->jid().full() : xitem->name();
 					contact = new Contact(name, xitem->jid());
@@ -304,6 +320,8 @@ namespace Roster {
 		connect(rosterService, SIGNAL(selfUpdated(const UserListItem*, const QString&)), 
 				SLOT(selfChanged(const UserListItem*, const QString&)));
 		connect(rosterService, SIGNAL(accountUpdated(const QString&)), SLOT(accountChanged(const QString&)));
+		connect(rosterService, SIGNAL(groupRemoved(const UserListItem*, const QString&, const QString&)), 
+				SLOT(groupRemoved(const UserListItem*, const QString&, const QString&)));
 	}
 
 	void RosterBuilder::setJoinByName(bool joinByName) {
@@ -325,7 +343,7 @@ namespace Roster {
 		// FIXME: no real stuff here since this is currently not used
 	}
 
-	const bool RosterBuilder::isContactVisible(const UserListItem* xitem, const QString& acname) const {
+	const bool RosterBuilder::isContactVisible(const UserListItem* xitem, const QString& xgroup, const QString& acname) const {
 		RosterDataService* srv = rosterServices_[acname];
 
 		if ( ! searchText_.isEmpty() ) {
@@ -334,6 +352,13 @@ namespace Roster {
 			} else {
 				return false;
 			}
+		}
+
+		if ( xgroup == "Hidden" and ! PsiOptions::instance()->getOption("options.ui.contactlist.show.hidden-contacts-group").toBool() ) {
+			return false;
+		}
+		if ( xgroup == "Always visible" ) { // FIXME: new option: always visible group
+			return true;
 		}
 
 		if ( srv->getIncomingEvent(xitem->jid()) ) {
@@ -463,6 +488,22 @@ namespace Roster {
 		rosterServices_[acname]->disconnect();
 		delete rosterServices_[acname];
 		rosterServices_.remove(acname);
+	}
+
+	void RosterBuilder::groupRemoved(const UserListItem* xitem, const QString& group, const QString& acname) {
+		GroupItem* parent = findGroup(group, acname);
+
+		if ( joinByName_ and parent ) {
+			Metacontact* metacontact = parent->findMetacontact(xitem->name());
+			if ( metacontact ) {
+				parent = metacontact;
+			}
+		}
+
+		Contact* contact = parent ? parent->findContact(xitem->jid(), acname) : 0;
+		if ( contact ) {
+			manager_->removeContact(contact);
+		}
 	}
 
 }

@@ -43,6 +43,8 @@ namespace Roster {
 			void invite(Contact* contact, QString groupchat);
 			void assignKey(Contact* contact);
 			void unassignKey(Contact* contact);
+			void moveToGroup(Contact* contact, const QString& target);
+			void moveToNone(Contact* contact);
 
 			// account actions
 			void changeStatus(Account* account, const StatusType status);

@@ -178,4 +178,13 @@ namespace Roster {
 		services_[contact->getAccountName()]->actionUnassignKey(contact->getJid());
 	}
 
+	void ViewActionsService::moveToGroup(Contact* contact, const QString& target) {
+		services_[contact->getAccountName()]->actionGroupRemove(contact->getJid(), contact->getGroupPath());
+		services_[contact->getAccountName()]->actionGroupAdd(contact->getJid(), target);
+	}
+
+	void ViewActionsService::moveToNone(Contact* contact) {
+		services_[contact->getAccountName()]->actionGroupRemove(contact->getJid(), contact->getGroupPath());
+	}
+
 }

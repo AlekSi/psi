@@ -7,6 +7,8 @@
 #include <QDropEvent>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QLineEdit>
+#include <QInputDialog>
 
 #include "view.h"
 #include "model.h"
@@ -116,6 +118,7 @@ namespace Roster {
 			{"recvEvent", tr("&Receive incoming event"), SLOT(menuRecvEvent()), ""},
 			{"assignKey", tr("Assign Open&PGP key"), SLOT(menuAssignKey()), "psi/gpg-yes"},
 			{"unassignKey", tr("Unassign Open&PGP key"), SLOT(menuUnassignKey()), "psi/gpg-no"},
+			{"addGroup", tr("&Create new..."), SLOT(menuAddGroup()), ""},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -191,7 +194,34 @@ namespace Roster {
 					// Missing action: log in
 					// Missing action: log out
 				} else {
-					// Missing action: move to group
+					// move to group
+					QMenu* groupMenu = new QMenu(tr("&Group"));
+					QAction* noneAction = groupMenu->addAction("&None", this, SLOT(menuMoveToNone()));
+					noneAction->setData(QVariant::fromValue<Item*>(item));
+					if ( contact->getGroupPath() == "General" ) {
+						noneAction->setCheckable(true);
+						noneAction->setChecked(true);
+					}
+					groupMenu->addSeparator();
+
+					QStringList groups = dataService->groups();
+					qSort(groups);
+					groups.removeOne(tr("Hidden"));
+					groups.removeOne(tr("Always visible"));
+					foreach(QString group, groups) {
+						QAction* action = groupMenu->addAction(group, this, SLOT(menuMoveToGroup()));
+						action->setData(QVariant::fromValue<Item*>(item));
+						if ( contact->getGroupPath() == group ) {
+							action->setCheckable(true);
+							action->setChecked(true);
+						}
+					}
+					groupMenu->addSeparator();
+					groupMenu->addAction(tr("Hidden"), this, SLOT(menuMoveToGroup()))->setData(QVariant::fromValue<Item*>(item));
+					groupMenu->addAction(tr("Always visible"), this, SLOT(menuMoveToGroup()))->setData(QVariant::fromValue<Item*>(item));
+					groupMenu->addSeparator();
+					groupMenu->addAction(menuActions_["addGroup"]);
+					menu->addMenu(groupMenu);
 				}
 
 				QMenu* authMenu = new QMenu(tr("Authorization"), menu); // FIXME: missing icon
@@ -718,6 +748,39 @@ namespace Roster {
 	void View::menuUnassignKey() {
 		if ( Contact* contact = getActionItem<Contact*>() ) {
 			actionsService_->unassignKey(contact);
+		}
+	}
+
+	void View::menuMoveToGroup() {
+		QAction* action = static_cast<QAction*>(sender());
+
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			if ( action->text() == tr("Hidden") ) {
+				actionsService_->moveToGroup(contact, "Hidden");
+			} else if ( action->text() == tr("Always visible") ) {
+				actionsService_->moveToGroup(contact, "Always visible");
+			} else {
+				actionsService_->moveToGroup(contact, action->text());
+			}
+		}
+	}
+
+	void View::menuMoveToNone() {
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			actionsService_->moveToNone(contact);
+		}
+	}
+
+	void View::menuAddGroup() {
+		if ( Contact* contact = getActionItem<Contact*>() ) {
+			bool ok = false;
+			QString group = QInputDialog::getText(tr("Create New Group"), tr("Enter the new Group name:"), 
+					QLineEdit::Normal, QString::null, &ok, this);
+			if ( ! ok or group.isEmpty() ) {
+				return;
+			}
+	
+			actionsService_->moveToGroup(contact, group);	
 		}
 	}
 
