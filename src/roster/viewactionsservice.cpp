@@ -7,6 +7,7 @@
 #include "account.h"
 #include "resource.h"
 #include "conferencebookmark.h"
+#include "group.h"
 
 namespace Roster {
 
@@ -187,4 +188,11 @@ namespace Roster {
 		services_[contact->getAccountName()]->actionGroupRemove(contact->getJid(), contact->getGroupPath());
 	}
 
+	void ViewActionsService::rename(Contact* contact, const QString& name) {
+		services_[contact->getAccountName()]->actionRename(contact->getJid(), name);
+	}
+
+	void ViewActionsService::rename(Group* group, const QString& name) {
+		services_[group->getAccountName()]->actionGroupRename(group->getGroupPath(), name);
+	}
 }

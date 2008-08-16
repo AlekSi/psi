@@ -22,8 +22,10 @@
 #include "transport.h"
 #include "self.h"
 #include "psioptions.h"
+#include "viewactionsservice.h"
 
 namespace Roster {
+
 	Model::Model(Roster* root) : root_(root), showAvatars_(true), showStatusMessages_(true), statusIconProvider_(NULL) {
 	}
 
@@ -229,9 +231,9 @@ namespace Roster {
 		} else if ( dynamic_cast<Group*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 		} else if ( dynamic_cast<Metacontact*>(item) ) {
-			return Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable;
+			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else if ( dynamic_cast<Account*>(item) ) {
-			return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else {
 			return Qt::ItemIsEnabled;
 		}
@@ -455,7 +457,10 @@ namespace Roster {
 		Item* item = index.data(ItemRole).value<Item*>();
 
 		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
-			manager_->renameContact(contact, value.toString());
+			actionsService_->rename(contact, value.toString());	
+			return true;
+		} else if ( Group* group = dynamic_cast<Group*>(item) ) {
+			actionsService_->rename(group, value.toString());
 			return true;
 		}
 
@@ -466,16 +471,16 @@ namespace Roster {
 		emit layoutChanged();
 	}
 
-	void Model::setRosterBuilder(RosterBuilder* rb) {
-		rb_ = rb;
-	}
-
 	void Model::setStatusIconProvider(StatusIconProvider* statusIconProvider) {
 		if ( statusIconProvider_ ) {
 			disconnect(statusIconProvider_, SIGNAL(updated()), this, SLOT(iconsChanged()));
 		}
 		statusIconProvider_ = statusIconProvider;
 		connect(statusIconProvider_, SIGNAL(updated()), SLOT(iconsChanged()));
+	}
+
+	void Model::setViewActionsService(ViewActionsService* actionsService) {
+		actionsService_ = actionsService;
 	}
 
 }

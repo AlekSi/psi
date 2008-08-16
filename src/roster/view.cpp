@@ -149,8 +149,8 @@ namespace Roster {
 
 		if ( selectedIndexes().size() > 1 ) { // multiple items selected
 			qDebug() << "Context menu opened for multiple contacts";
-		} else if ( Group* group = dynamic_cast<Group*>(item) ) { 
-			qDebug() << "Context menu opened for group" << group->getName();
+		} else if ( dynamic_cast<Group*>(item) ) { 
+			menu->addAction(menuActions_["rename"]);
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) { 
 			bool isSelf = dynamic_cast<Self*>(item);
 			bool isTransport = dynamic_cast<Transport*>(item);

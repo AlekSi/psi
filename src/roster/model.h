@@ -14,6 +14,7 @@ namespace Roster {
 	class RosterBuilder;
 	class StatusIconProvider;
 	class GroupItem;
+	class ViewActionsService;
 
 	class Model : public QAbstractItemModel	{
 		Q_OBJECT
@@ -37,8 +38,8 @@ namespace Roster {
 			QModelIndex getIndex(const unsigned int id) const;
 			void setManager(Manager* manager);
 			Manager* getManager() const;
-			void setRosterBuilder(RosterBuilder* rb);
 			void setStatusIconProvider(StatusIconProvider* statusIconProvider);
+			void setViewActionsService(ViewActionsService* actionsService);
 
 		public slots:
 			void setShowAvatars(bool showAvatars);
@@ -64,9 +65,9 @@ namespace Roster {
 
 			Roster* root_;
 			Manager* manager_;
-			RosterBuilder* rb_;
 			bool showAvatars_, showStatusMessages_;
 			StatusIconProvider* statusIconProvider_;
+			ViewActionsService* actionsService_;
 	};
 };
 

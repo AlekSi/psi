@@ -15,6 +15,7 @@ namespace Roster {
 	class Contact;
 	class Account;
 	class Resource;
+	class Group;
 
 	class ViewActionsService : public QObject {
 		Q_OBJECT
@@ -45,6 +46,10 @@ namespace Roster {
 			void unassignKey(Contact* contact);
 			void moveToGroup(Contact* contact, const QString& target);
 			void moveToNone(Contact* contact);
+			void rename(Contact* contact, const QString& name);
+
+			// group actions
+			void rename(Group* group, const QString& name);
 
 			// account actions
 			void changeStatus(Account* account, const StatusType status);

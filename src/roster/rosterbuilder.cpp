@@ -361,7 +361,8 @@ namespace Roster {
 			return true;
 		}
 
-		if ( srv->getIncomingEvent(xitem->jid()) ) {
+		if ( srv->getIncomingEvent(xitem->jid()) and 
+				PsiOptions::instance()->getOption("options.ui.contactlist.ensure-contact-visible-on-event").toBool() ) {
 			return true;
 		}
 
@@ -452,6 +453,10 @@ namespace Roster {
 		}
 		if ( contact->hasManualAvatar() != srv->hasManualAvatar(contact->getJid()) ) {
 			manager_->setHasManualAvatar(contact, srv->hasManualAvatar(contact->getJid()));
+		}
+		QString name = xitem->name().isEmpty() ? xitem->jid().full() : xitem->name();
+		if ( contact->getName() != name ) {
+			manager_->renameContact(contact, name);
 		}
 
 		updateResources(xitem->userResourceList(), contact);

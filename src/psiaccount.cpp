@@ -3235,6 +3235,7 @@ void PsiAccount::actionGroupRename(const QString &oldname, const QString &newnam
 	foreach(UserListItem* u, d->userList) {
 		if(u->inGroup(oldname)) {
 			u->removeGroup(oldname);
+			emit removedGroup(u, oldname);
 			u->addGroup(newname);
 			cpUpdate(*u);
                         if(u->inList()) {

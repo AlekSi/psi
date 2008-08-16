@@ -40,7 +40,7 @@ namespace Roster {
 		model_->setManager(manager_);
 		view_->setManager(manager_);
 		view_->setViewActionsService(actionsService_);
-		model_->setRosterBuilder(rb_);
+		model_->setViewActionsService(actionsService_);
 	}
 
 	RosterInstance::~RosterInstance() {
