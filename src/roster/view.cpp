@@ -163,7 +163,7 @@ namespace Roster {
 		} else if ( Group* group = dynamic_cast<Group*>(item) ) { 
 			menu->addAction(menuActions_["sendToGroup"]);
 			menu->addAction(menuActions_["rename"]);
-			menuActions_["rename"]->setEnabled(!isSpecial(group));
+			menuActions_["rename"]->setEnabled( (!isSpecial(group)) and dataService->isAvailable() );
 			menu->addSeparator();
 			menu->addAction(menuActions_["removeGroup"]);
 			menu->addAction(menuActions_["removeGroupAll"]);
