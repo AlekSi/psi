@@ -178,7 +178,7 @@ namespace Roster {
 	}
 
 	void RosterBuilder::updateTransport(const UserListItem* xitem, const QString& acname) {
-		Group* group = findGroup("Agents/Transports", acname, false);
+		Group* group = findGroup(tr("Agents/Transports"), acname, false);
 		Transport* transport = group ? group->findTransport(xitem->jid(), acname) : 0;
 		if ( ! isTransportVisible(xitem, acname) ) {
 			if ( transport ) {
@@ -187,7 +187,7 @@ namespace Roster {
 			}
 		} else {
 			if ( ! transport ) {
-				Group* group = findGroup("Agents/Transports", acname, true);
+				Group* group = findGroup(tr("Agents/Transports"), acname, true);
 				QString name = xitem->name().isEmpty() ? xitem->jid().full() : xitem->name();
 				transport = new Transport(name, xitem->jid());
 				transport->setAccountName(acname);

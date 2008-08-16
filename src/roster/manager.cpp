@@ -75,8 +75,18 @@ namespace Roster {
 
 	void Manager::removeItem(Item* item) { 
 		emit itemToBeRemoved(item);
-		item->getParent()->removeItem(item);
+
+		GroupItem* parent = item->getParent();
+		parent->removeItem(item);
+
 		emit itemRemoved(item);
+
+		if ( Group* group = dynamic_cast<Group*>(parent) ) {
+			if ( group->getNbItems() == 0 ) {
+				removeGroup(group);
+			}
+		}
+
 	}
 
 	void Manager::addResource(Resource* resource, GroupItem* groupItem) {

@@ -19,6 +19,7 @@ namespace Roster {
 	class Manager;
 	class ViewStateManager;
 	class ViewActionsService;
+	class Group;
 
     class View : public QTreeView {
 		Q_OBJECT
@@ -98,6 +99,7 @@ namespace Roster {
 			template<typename T> T getActionItem();
 			QModelIndex senderItemIndex() const;
 			ViewDataService* getDataService(Item* item);
+			bool isSpecial(Group* group) const;
 
 			void initMenu();
 			void expandWithManager(const QModelIndex& index, bool expanded);

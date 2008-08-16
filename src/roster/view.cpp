@@ -133,6 +133,14 @@ namespace Roster {
 		}
 	}
 
+	// FIXME: magic strings sucks
+	bool View::isSpecial(Group* group) const {
+		return ( group->getGroupPath() == "General" or
+				group->getGroupPath() == tr("Agents/Transports") or
+				group->getGroupPath() == tr("Hidden") or
+				group->getGroupPath() == tr("Always visible") ); 
+	}
+
 	/* build and display context menu */
 	void View::showContextMenu(const QPoint& position) {
 		// FIXME: memory leaking here with undeleted actions and menus!
@@ -149,8 +157,9 @@ namespace Roster {
 
 		if ( selectedIndexes().size() > 1 ) { // multiple items selected
 			qDebug() << "Context menu opened for multiple contacts";
-		} else if ( dynamic_cast<Group*>(item) ) { 
+		} else if ( Group* group = dynamic_cast<Group*>(item) ) { 
 			menu->addAction(menuActions_["rename"]);
+			menuActions_["rename"]->setEnabled(!isSpecial(group));
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) { 
 			bool isSelf = dynamic_cast<Self*>(item);
 			bool isTransport = dynamic_cast<Transport*>(item);
@@ -190,6 +199,7 @@ namespace Roster {
 
 			if ( ! PsiOptions::instance()->getOption("options.ui.contactlist.lockdown-roster").toBool() and ! isSelf ) {
 				menu->addAction(menuActions_["rename"]);
+				menuActions_["rename"]->setEnabled(true);
 				if ( isTransport ) {
 					// Missing action: log in
 					// Missing action: log out
