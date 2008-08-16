@@ -34,6 +34,7 @@ namespace Roster {
 			void selfUpdated(const UserListItem* xitem, const QString& acname);
 			void accountUpdated(const QString& acname);
 			void groupRemoved(const UserListItem* item, const QString& group, const QString& acname);
+			void itemRemoved(const UserListItem* item, const QString& acname);
 	};
 }
 

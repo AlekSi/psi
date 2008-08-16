@@ -66,6 +66,10 @@ namespace Roster {
 			void menuAddGroup();
 			void menuMoveToNone();
 
+			// group
+			void menuRemoveGroup();
+			void menuRemoveGroupAndContacts();
+
 			// account
 			void menuChangeStatus();
 			void menuMood();

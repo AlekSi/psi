@@ -93,25 +93,28 @@ namespace Roster {
 		}
 	}
 
+	void RosterBuilder::removeContactFromGroup(const UserListItem* xitem, const QString& group, const QString& acname) {
+		GroupItem* parent = findGroup(group, acname);
+
+		if ( joinByName_ and parent ) {
+			Metacontact* metacontact = parent->findMetacontact(xitem->name());
+			if ( metacontact ) {
+				parent = metacontact;
+			}
+		}
+
+		Contact* contact = parent ? parent->findContact(xitem->jid(), acname) : 0;
+		if ( contact ) {
+			manager_->removeContact(contact);
+		}
+	}
+
 	void RosterBuilder::updateContact(const UserListItem* xitem, const QString& acname) {
 		QList<QString> groups = xitem->groups();
 		if ( groups.isEmpty() ) {
 			groups.append(tr("General"));
 		} else if ( ! groups.contains(tr("General")) ) {
-			// remove from "General", just in case
-			GroupItem* parent = findGroup(tr("General"), acname);
-
-			if ( joinByName_ and parent ) {
-				Metacontact* metacontact = parent->findMetacontact(xitem->name());
-				if ( metacontact ) {
-					parent = metacontact;
-				}
-			}
-
-			Contact* contact = parent ? parent->findContact(xitem->jid(), acname) : 0;
-			if ( contact ) {
-				manager_->removeContact(contact);
-			}
+			removeContactFromGroup(xitem, tr("General"), acname);
 		}
 
 		foreach(QString xgroup, groups) {
@@ -322,6 +325,8 @@ namespace Roster {
 		connect(rosterService, SIGNAL(accountUpdated(const QString&)), SLOT(accountChanged(const QString&)));
 		connect(rosterService, SIGNAL(groupRemoved(const UserListItem*, const QString&, const QString&)), 
 				SLOT(groupRemoved(const UserListItem*, const QString&, const QString&)));
+		connect(rosterService, SIGNAL(itemRemoved(const UserListItem*, const QString&)), 
+				SLOT(itemRemoved(const UserListItem*, const QString&)));
 	}
 
 	void RosterBuilder::setJoinByName(bool joinByName) {
@@ -339,8 +344,11 @@ namespace Roster {
 	}
 
 	void RosterBuilder::itemRemoved(const UserListItem* xitem, const QString& acname) {
-		Q_UNUSED(xitem); Q_UNUSED(acname);
-		// FIXME: no real stuff here since this is currently not used
+		removeContactFromGroup(xitem, tr("General"), acname);
+		removeContactFromGroup(xitem, tr("Agents/Transports"), acname);
+		foreach(QString group, xitem->groups()) {
+			removeContactFromGroup(xitem, group, acname);
+		}
 	}
 
 	const bool RosterBuilder::isContactVisible(const UserListItem* xitem, const QString& xgroup, const QString& acname) const {

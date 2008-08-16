@@ -50,6 +50,9 @@ namespace Roster {
 
 			// group actions
 			void rename(Group* group, const QString& name);
+			void sendMessage(Group* group);
+			void remove(Group* group);
+			void removeAll(Group* group);
 
 			// account actions
 			void changeStatus(Account* account, const StatusType status);

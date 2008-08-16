@@ -56,6 +56,7 @@ namespace Roster {
 			void buildAllAccounts();
 
 			Group* findGroup(const QString& groupName, const QString& acname, bool create = false);
+			void removeContactFromGroup(const UserListItem* xitem, const QString& group, const QString& acname);
 
 			void updateResources(const UserResourceList list, GroupItem* groupItem);
 			void updateContact(const UserListItem* xitem, const QString& acname);

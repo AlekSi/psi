@@ -220,6 +220,7 @@ signals:
 	void updateContact(const UserListItem &);
 	void updateContact(const Jid &);
 	void updateContact(const Jid &, bool);
+	void removedContact(const UserListItem*);
 	void nickChanged();
 	void pgpKeyChanged();
 	void encryptedMessageSent(int, bool, int, const QString &);
@@ -310,6 +311,8 @@ public slots:
 	// for RosterActionsService
 	void actionSetManualAvatar(const Jid& jid, const QString& file);
 	void actionUnsetManualAvatar(const Jid& jid);
+	void actionGroupDelete(const QString& group);
+	void actionGroupDeleteAll(const QString& group);
 
 	void actionAssignKey(const Jid &);
 	void actionUnassignKey(const Jid &);

@@ -11,6 +11,7 @@ namespace Roster {
 		connect(acc_, SIGNAL(updateContact(const UserListItem&)), SLOT(updatedContact(const UserListItem&)));
 		connect(acc_, SIGNAL(updatedAccount()), SLOT(updatedAccount()));
 		connect(acc_, SIGNAL(removedGroup(const UserListItem*, const QString&)), SLOT(removedGroup(const UserListItem*, const QString&)));
+		connect(acc_, SIGNAL(removedContact(const UserListItem*)), SLOT(removedContact(const UserListItem*)));
 	}
 
 	PsiDataService::~PsiDataService() {
@@ -83,6 +84,10 @@ namespace Roster {
 
 	void PsiDataService::removedGroup(const UserListItem* item, const QString& group) {
 		emit groupRemoved(item, group, acc_->jid().full());
+	}
+
+	void PsiDataService::removedContact(const UserListItem* item) {
+		emit itemRemoved(item, acc_->jid().full());
 	}
 
 }

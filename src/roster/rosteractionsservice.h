@@ -40,8 +40,12 @@ class ConferenceBookmark;
 			virtual void actionUnassignKey(const XMPP::Jid& jid) = 0;
 			virtual void actionGroupAdd(const XMPP::Jid& jid, const QString& group) = 0;
 			virtual void actionGroupRemove(const XMPP::Jid& jid, const QString& group) = 0;
-			virtual void actionRename(const Jid &, const QString &) = 0;
-			virtual void actionGroupRename(const QString &, const QString &) = 0;
+			virtual void actionRename(const XMPP::Jid& jid, const QString &) = 0;
+			virtual void actionGroupRename(const QString& oldname, const QString& newname) = 0;
+			virtual void actionSendMessage(const QList<XMPP::Jid>& jids) = 0;
+			
+			virtual void actionGroupDelete(const QString& group) = 0;
+			virtual void actionGroupDeleteAll(const QString& group) = 0;
 
 			// FIXME: change this here and in PsiAccount
 			virtual void openAddUserDlg() = 0;

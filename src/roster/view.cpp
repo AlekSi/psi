@@ -119,6 +119,9 @@ namespace Roster {
 			{"assignKey", tr("Assign Open&PGP key"), SLOT(menuAssignKey()), "psi/gpg-yes"},
 			{"unassignKey", tr("Unassign Open&PGP key"), SLOT(menuUnassignKey()), "psi/gpg-no"},
 			{"addGroup", tr("&Create new..."), SLOT(menuAddGroup()), ""},
+			{"sendToGroup", tr("Send message to group"), SLOT(menuSendMessage()), "psi/sendMessage"},
+			{"removeGroup", tr("Remove group"), SLOT(menuRemoveGroup()), "psi/remove"},
+			{"removeGroupAll", tr("Remove group and contacts"), SLOT(menuRemoveGroupAndContacts()), "psi/remove"},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -158,8 +161,12 @@ namespace Roster {
 		if ( selectedIndexes().size() > 1 ) { // multiple items selected
 			qDebug() << "Context menu opened for multiple contacts";
 		} else if ( Group* group = dynamic_cast<Group*>(item) ) { 
+			menu->addAction(menuActions_["sendToGroup"]);
 			menu->addAction(menuActions_["rename"]);
 			menuActions_["rename"]->setEnabled(!isSpecial(group));
+			menu->addSeparator();
+			menu->addAction(menuActions_["removeGroup"]);
+			menu->addAction(menuActions_["removeGroupAll"]);
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) { 
 			bool isSelf = dynamic_cast<Self*>(item);
 			bool isTransport = dynamic_cast<Transport*>(item);
@@ -417,6 +424,8 @@ namespace Roster {
 			actionsService_->sendMessage(contact);
 		} else if ( Resource* resource = getActionItem<Resource*>() ) {
 			actionsService_->sendMessage(resource);
+		} else if ( Group* group = getActionItem<Group*>() ) {
+			actionsService_->sendMessage(group);
 		}
 	}
 
@@ -791,6 +800,26 @@ namespace Roster {
 			}
 	
 			actionsService_->moveToGroup(contact, group);	
+		}
+	}
+
+	void View::menuRemoveGroup() {
+		if ( Group* group = getActionItem<Group*>() ) {
+			int n = QMessageBox::information(this, tr("Remove Group"),
+					tr("This will cause all contacts in this group to be disassociated with it.\n\nProceed?"), tr("&Yes"), tr("&No"));
+			if ( n == 0 ) {
+				actionsService_->remove(group);
+			}
+		}
+	}
+
+	void View::menuRemoveGroupAndContacts() {
+		if ( Group* group = getActionItem<Group*>() ) {
+			int n = QMessageBox::information(this, tr("Remove Group and Contacts"),
+					tr("WARNING!  This will remove all contacts associated with this group!\n\nProceed?"), tr("&Yes"), tr("&No"));
+			if ( n == 0 ) {
+				actionsService_->removeAll(group);
+			}
 		}
 	}
 

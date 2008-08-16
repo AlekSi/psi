@@ -8,6 +8,7 @@
 #include "resource.h"
 #include "conferencebookmark.h"
 #include "group.h"
+#include "metacontact.h"
 
 namespace Roster {
 
@@ -27,6 +28,21 @@ namespace Roster {
 
 	void ViewActionsService::sendMessage(Contact* contact) {
 		services_[contact->getAccountName()]->actionSendMessage(contact->getJid());
+	}
+
+	void ViewActionsService::sendMessage(Group* group) {
+		QList<XMPP::Jid> jids;
+		foreach(Item* item, group->getItems()) {
+			if ( Contact* contact= dynamic_cast<Contact*>(item) ) {
+				jids.append(contact->getJid());
+			} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
+				if ( metacontact->getNbItems() > 0 ) {
+					jids.append(static_cast<Contact*>(metacontact->getItems().at(0))->getJid());
+				}
+			}
+		}
+
+		services_[group->getAccountName()]->actionSendMessage(jids);
 	}
 
 	void ViewActionsService::openChat(Contact* contact) {
@@ -195,4 +211,13 @@ namespace Roster {
 	void ViewActionsService::rename(Group* group, const QString& name) {
 		services_[group->getAccountName()]->actionGroupRename(group->getGroupPath(), name);
 	}
+
+	void ViewActionsService::remove(Group* group) {
+		services_[group->getAccountName()]->actionGroupDelete(group->getGroupPath());
+	}
+
+	void ViewActionsService::removeAll(Group* group) {
+		services_[group->getAccountName()]->actionGroupDeleteAll(group->getGroupPath());
+	}
+
 }
