@@ -9,6 +9,7 @@
 #include "conferencebookmark.h"
 #include "group.h"
 #include "metacontact.h"
+#include "groupitem.h"
 
 namespace Roster {
 
@@ -200,6 +201,10 @@ namespace Roster {
 		services_[contact->getAccountName()]->actionGroupAdd(contact->getJid(), target);
 	}
 
+	void ViewActionsService::copyToGroup(Contact* contact, const QString& target) {
+		services_[contact->getAccountName()]->actionGroupAdd(contact->getJid(), target);
+	}
+
 	void ViewActionsService::moveToNone(Contact* contact) {
 		services_[contact->getAccountName()]->actionGroupRemove(contact->getJid(), contact->getGroupPath());
 	}
@@ -209,7 +214,13 @@ namespace Roster {
 	}
 
 	void ViewActionsService::rename(Group* group, const QString& name) {
-		services_[group->getAccountName()]->actionGroupRename(group->getGroupPath(), name);
+		if ( group->getAccountName().isEmpty() ) {
+			foreach(RosterActionsService* srv, services_) {
+				srv->actionGroupRename(group->getGroupPath(), name);
+			}
+		} else {
+			services_[group->getAccountName()]->actionGroupRename(group->getGroupPath(), name);
+		}
 	}
 
 	void ViewActionsService::remove(Group* group) {
@@ -218,6 +229,15 @@ namespace Roster {
 
 	void ViewActionsService::removeAll(Group* group) {
 		services_[group->getAccountName()]->actionGroupDeleteAll(group->getGroupPath());
+	}
+
+	void ViewActionsService::moveGroup(Group* group, GroupItem* parent) {
+		QString target = parent->getGroupPath();
+		if ( ! target.isEmpty() ) {
+			target.append(SEPARATOR);
+		}
+		target.append(group->getName());
+		rename(group, target);
 	}
 
 }

@@ -16,6 +16,7 @@ namespace Roster {
 	class Account;
 	class Resource;
 	class Group;
+	class GroupItem;
 
 	class ViewActionsService : public QObject {
 		Q_OBJECT
@@ -45,6 +46,7 @@ namespace Roster {
 			void assignKey(Contact* contact);
 			void unassignKey(Contact* contact);
 			void moveToGroup(Contact* contact, const QString& target);
+			void copyToGroup(Contact* contact, const QString& target);
 			void moveToNone(Contact* contact);
 			void rename(Contact* contact, const QString& name);
 
@@ -53,6 +55,7 @@ namespace Roster {
 			void sendMessage(Group* group);
 			void remove(Group* group);
 			void removeAll(Group* group);
+			void moveGroup(Group* group, GroupItem* parent);
 
 			// account actions
 			void changeStatus(Account* account, const StatusType status);

@@ -229,11 +229,11 @@ namespace Roster {
 		} else if ( dynamic_cast<Resource*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else if ( dynamic_cast<Group*>(item) ) {
-			return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+			return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDropEnabled | Qt::ItemIsDragEnabled;
 		} else if ( dynamic_cast<Metacontact*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else if ( dynamic_cast<Account*>(item) ) {
-			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+			return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;
 		} else {
 			return Qt::ItemIsEnabled;
 		}
@@ -321,7 +321,8 @@ namespace Roster {
 			unsigned int id;
 			stream >> id;
 
-			QModelIndexList indexList = match(index(0, 0, QModelIndex()), IdRole, id, 1, Qt::MatchWrap | Qt::MatchExactly | Qt::MatchRecursive);
+			QModelIndexList indexList = match(index(0, 0, QModelIndex()), IdRole, id, 1, 
+					Qt::MatchWrap | Qt::MatchExactly | Qt::MatchRecursive);
 			if ( indexList.isEmpty() ) {
 				qDebug() << "Item not found on roster. Maybe it was deleted while dragging?";
 				continue;
@@ -334,31 +335,31 @@ namespace Roster {
 		
 		Item* parentItem = parent.data(ItemRole).value<Item*>();
 
-		if ( Contact* parentContact = dynamic_cast<Contact*>(parentItem) ) {
-			qDebug() << items.size() << "item(s) has been dropped on contact" << parentContact->getName();
-		} else if ( Group* parentGroup = dynamic_cast<Group*>(parentItem) ) {
+		if ( Group* parentGroup = dynamic_cast<Group*>(parentItem) ) {
+			// we're moving items to group
 			foreach(Item* item, items) {
-				Contact* contact = dynamic_cast<Contact*>(item);
-				if ( contact ) {
-					if ( action == Qt::CopyAction ) {
-						manager_->copyContact(contact, parentGroup);
-					} else if ( action == Qt::MoveAction ) {
-						manager_->moveContact(contact, parentGroup);
+				if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+					if ( action == Qt::MoveAction ) { // move contact
+						actionsService_->moveToGroup(contact, parentGroup->getGroupPath());
+					} else if ( action == Qt::CopyAction ) { // copy contact
+						actionsService_->copyToGroup(contact, parentGroup->getGroupPath());
+					}
+				} else if ( Group* group = dynamic_cast<Group*>(item) ) {
+					if ( action == Qt::MoveAction ) {
+						actionsService_->moveGroup(group, parentGroup);
 					}
 				}
 			}
-			qDebug() << "Following items has been dropped on group" << parentGroup->getName();
 		} else if ( Account* parentAccount = dynamic_cast<Account*>(parentItem) ) {
-			qDebug() << items.size() << "item(s) has been dropped on account" << parentAccount->getName();
+			foreach(Item* item, items) {
+				if ( Group* group = dynamic_cast<Group*>(item) ) {
+					if ( action == Qt::MoveAction ) {
+						actionsService_->moveGroup(group, parentAccount);
+					}
+				}
+			}
 		}
 		
-
-		if ( action == Qt::CopyAction ) {
-			qDebug() << "action was 'copy'";
-		} else if ( action == Qt::MoveAction ) {
-			qDebug() << "action was 'move'";
-		}
-
 		return true;
 	}
 
