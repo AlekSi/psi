@@ -504,8 +504,6 @@ namespace Roster {
 		QAction* action = static_cast<QAction*>(sender());
 
 		if ( Account* account = getActionItem<Account*>() ) {
-			qDebug() << "hop";
-			qDebug() << account->getJid().full();
 			StatusType status = STATUS_OFFLINE;
 			if ( action == menuActions_["goOnline"] ) {
 				status = STATUS_ONLINE;

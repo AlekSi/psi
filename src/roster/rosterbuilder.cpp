@@ -427,7 +427,6 @@ namespace Roster {
 	}
 
 	void RosterBuilder::itemChanged(const UserListItem* xitem, const QString& acname) {
-		qDebug() << "start" << xitem->name();
 		RosterDataService* srv = rosterServices_[acname];
 
 		if ( ! srv->isEnabled() ) {
@@ -441,7 +440,6 @@ namespace Roster {
 		} else {
 			updateContact(xitem, acname);
 		}
-		qDebug() << "done" << xitem->name();
 	}
 
 	void RosterBuilder::updateSelf(const UserListItem* xitem, const QString& acname) {
