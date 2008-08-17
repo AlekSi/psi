@@ -203,7 +203,7 @@ namespace Roster {
 
 				foreach(QString groupchat, dataService->groupchats()) {
 					QAction* action = new QAction(groupchat, inviteMenu);
-					action->setData(QVariant::fromValue<Item*>(item));
+					action->setData(item->getId());
 					connect(action, SIGNAL(triggered()), SLOT(menuInvite()));
 					inviteActions_.insert(action, groupchat);
 					inviteMenu->addAction(action);
@@ -224,7 +224,7 @@ namespace Roster {
 					// move to group
 					QMenu* groupMenu = new QMenu(tr("&Group"));
 					QAction* noneAction = groupMenu->addAction("&None", this, SLOT(menuMoveToNone()));
-					noneAction->setData(QVariant::fromValue<Item*>(item));
+					noneAction->setData(item->getId());
 					if ( contact->getGroupPath() == tr("General") ) {
 						noneAction->setCheckable(true);
 						noneAction->setChecked(true);
@@ -240,15 +240,15 @@ namespace Roster {
 					groups.removeOne(tr("Agents/Transports"));
 					foreach(QString group, groups) {
 						QAction* action = groupMenu->addAction(group, this, SLOT(menuMoveToGroup()));
-						action->setData(QVariant::fromValue<Item*>(item));
+						action->setData(item->getId());
 						if ( contact->getGroupPath() == group ) {
 							action->setCheckable(true);
 							action->setChecked(true);
 						}
 					}
 					groupMenu->addSeparator();
-					groupMenu->addAction(tr("Hidden"), this, SLOT(menuMoveToGroup()))->setData(QVariant::fromValue<Item*>(item));
-					groupMenu->addAction(tr("Always visible"), this, SLOT(menuMoveToGroup()))->setData(QVariant::fromValue<Item*>(item));
+					groupMenu->addAction(tr("Hidden"), this, SLOT(menuMoveToGroup()))->setData(item->getId());
+					groupMenu->addAction(tr("Always visible"), this, SLOT(menuMoveToGroup()))->setData(item->getId());
 					groupMenu->addSeparator();
 					groupMenu->addAction(menuActions_["addGroup"]);
 					menu->addMenu(groupMenu);
@@ -329,7 +329,7 @@ namespace Roster {
 
 			foreach(ConferenceBookmark c, dataService->conferences()) {
 				QAction* action = new QAction( QString("Join %1").arg(c.name()), bookmarkMenu );
-				action->setData(QVariant::fromValue<Item*>(item));
+				action->setData(item->getId());
 				connect(action, SIGNAL(triggered()), SLOT(menuJoinConference()));
 				bookmarkActions_.insert(action, c);
 				bookmarkMenu->addAction(action);
@@ -366,7 +366,7 @@ namespace Roster {
 		}
 
 		foreach(QAction* action, menuActions_.values()) {
-			action->setData(QVariant::fromValue<Item*>(item));
+			action->setData(item->getId());
 		}
 			
 		menu->popup( this->mapToGlobal(position) );
@@ -702,7 +702,18 @@ namespace Roster {
 	template<typename T> T View::getActionItem() {
 		// FIXME: this should return 0 when pointer is not valid anymore
 		QAction* action = static_cast<QAction*>(sender());
-		return dynamic_cast<T>(action->data().value<Item*>());
+		QModelIndexList indexList = model()->match(model()->index(0, 0, QModelIndex()), IdRole, action->data().toInt(), 1, 
+				Qt::MatchWrap | Qt::MatchExactly | Qt::MatchRecursive);
+
+		if ( ! indexList.isEmpty() ) {
+			QModelIndex index = indexList.at(0);
+			if ( index.isValid() ) {
+				Item* item = index.data(ItemRole).value<Item*>();
+				return dynamic_cast<T>(item);
+			}
+		}
+
+		return NULL;
 	}
 
 	void View::registerAccount(const QString& acname, ViewDataService* ds) {
