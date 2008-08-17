@@ -160,7 +160,7 @@ namespace Roster {
 					.arg(resource->getName(), QString::number(resource->getPriority()), statusToText(resource->getStatus()));
 
 				if (! resource->getStatusMessage().isEmpty()) {
-					tip += "<u>StatusMessage message</u>\n";
+					tip += "<u>Status message</u>\n";
 					tip += Qt::escape(resource->getStatusMessage()) + "\n";
 				}
 			}
@@ -178,7 +178,7 @@ namespace Roster {
 				.arg(resource->getName(), QString::number(resource->getPriority()), statusToText(resource->getStatus()));
 
 			if (! resource->getStatusMessage().isEmpty()) {
-				tip += "<u>StatusMessage message</u>\n";
+				tip += "<u>Status message</u>\n";
 				tip += Qt::escape(resource->getStatusMessage()) + "\n";
 			}
 		} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
