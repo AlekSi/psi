@@ -25,7 +25,7 @@ namespace Roster {
 																		manager_(manager), 
 																		joinedAccounts_(false), 
 																		joinByName_(false),
-																		itemFilter_(FILTER_OFFLINE | FILTER_SELF)	{
+																		itemFilter_(FILTER_ALL)	{
 	}
 
 	void RosterBuilder::rebuild() {
@@ -50,6 +50,30 @@ namespace Roster {
 			setFilter(getFilter() & (~FILTER_OFFLINE));
 		} else {
 			setFilter(getFilter() | FILTER_OFFLINE);
+		}
+	}
+
+	void RosterBuilder::setShowTransports(bool show) {
+		if ( show ) {
+			setFilter(getFilter() & (~FILTER_TRANSPORTS));
+		} else {
+			setFilter(getFilter() | FILTER_TRANSPORTS);
+		}
+	}
+
+	void RosterBuilder::setShowAway(bool show) {
+		if ( show ) {
+			setFilter(getFilter() & (~ (FILTER_AWAY|FILTER_DND|FILTER_XA) ));
+		} else {
+			setFilter(getFilter() | FILTER_TRANSPORTS | FILTER_AWAY | FILTER_XA | FILTER_DND);
+		}
+	}
+
+	void RosterBuilder::setShowHidden(bool show) {
+		if ( show ) {
+			setFilter(getFilter() & (~FILTER_HIDDEN));
+		} else {
+			setFilter(getFilter() | FILTER_HIDDEN);
 		}
 	}
 
@@ -382,7 +406,7 @@ namespace Roster {
 			}
 		}
 
-		if ( xgroup == "Hidden" and ! PsiOptions::instance()->getOption("options.ui.contactlist.show.hidden-contacts-group").toBool() ) {
+		if ( xgroup == "Hidden" and (itemFilter_ & FILTER_HIDDEN) ) {
 			return false;
 		}
 		if ( xgroup == "Always visible" ) { // FIXME: new option: always visible group

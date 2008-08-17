@@ -38,6 +38,10 @@ namespace Roster {
 	const unsigned int FILTER_XA = 8;
 	const unsigned int FILTER_TRANSPORTS = 16;
 	const unsigned int FILTER_SELF = 32;
+	const unsigned int FILTER_HIDDEN = 64;
+
+	const unsigned int FILTER_ALL = FILTER_OFFLINE | FILTER_DND | FILTER_AWAY | 
+									FILTER_XA | FILTER_TRANSPORTS | FILTER_SELF | FILTER_HIDDEN;
 
 	const QString statusToText(const StatusType& status);
 

@@ -74,6 +74,7 @@ using Roster::View;
 #include "roster/view.h"
 #include "roster/rosterinstance.h"
 #include "roster/rosterbuilder.h"
+#include "roster/model.h"
 
 using namespace XMPP;
 
@@ -393,6 +394,9 @@ MainWin::MainWin(bool _onTop, bool _asTool, PsiCon* psi, const char* name, Roste
 	d->getAction("show_self")->addTo(viewMenu);
 	viewMenu->insertSeparator();
 	d->getAction("show_statusmsg")->addTo(viewMenu);
+	d->getAction("show_avatars")->addTo(viewMenu);
+	viewMenu->insertSeparator();
+	d->getAction("join_accounts")->addTo(viewMenu);
 
 	// Mac-only menus
 #ifdef Q_WS_MAC
@@ -469,11 +473,17 @@ void MainWin::registerAction( IconAction* action )
 		{ "show_offline", toggled, cvlist, SLOT( setShowOffline(bool) ) },
 		{ "show_offline", toggled, ri->getRosterBuilder(), SLOT( setShowOffline(bool) ) },
 		{ "show_away",    toggled, cvlist, SLOT( setShowAway(bool) ) },
+		{ "show_away",    toggled, ri->getRosterBuilder(), SLOT( setShowAway(bool) ) },
 		{ "show_hidden",  toggled, cvlist, SLOT( setShowHidden(bool) ) },
+		{ "show_hidden",  toggled, ri->getRosterBuilder(), SLOT( setShowHidden(bool) ) },
 		{ "show_agents",  toggled, cvlist, SLOT( setShowAgents(bool) ) },
+		{ "show_agents",  toggled, ri->getRosterBuilder(), SLOT( setShowTransports(bool) ) },
 		{ "show_self",    toggled, cvlist, SLOT( setShowSelf(bool) ) },
 		{ "show_self",    toggled, ri->getRosterBuilder(), SLOT( setShowSelf(bool) ) },
 		{ "show_statusmsg", toggled, cvlist, SLOT( setShowStatusMsg(bool) ) },
+		{ "show_statusmsg", toggled, ri->getModel(), SLOT( setShowStatusMessages(bool) ) },
+		{ "show_avatars", toggled, ri->getModel(), SLOT( setShowAvatars(bool) ) },
+		{ "join_accounts", toggled, ri->getRosterBuilder(), SLOT( setJoinedAccounts(bool) ) },
 
 		{ "button_options", activated, this, SIGNAL( doOptions() ) },
 

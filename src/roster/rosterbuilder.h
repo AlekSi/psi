@@ -41,6 +41,9 @@ namespace Roster {
 			void setFilter(unsigned int itemFilter);
 			void setShowOffline(bool show);
 			void setShowSelf(bool show);
+			void setShowTransports(bool show);
+			void setShowHidden(bool show);
+			void setShowAway(bool show);
 
 			void itemAdded(const UserListItem* xitem, const QString& acname);
 			void itemRemoved(const UserListItem* xitem, const QString& acname);

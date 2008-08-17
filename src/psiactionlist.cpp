@@ -145,6 +145,12 @@ void PsiActionList::Private::createMainWin()
 		IconAction *showStatusMsg = new IconAction(tr("Show Status Messages"), "psi/statusmsg", tr("Show Status Messages"), 0, viewGroups, 0, true);
 		showSelf->setWhatsThis(tr("Toggles visibility of status messages of contacts"));
 
+		IconAction *showAvatars = new IconAction(tr("Show Avatars"), "psi/addContact", tr("Show Avatars"), 0, viewGroups, 0, true);
+		showAvatars->setWhatsThis(tr("Toggles visibility of avatars of contacts"));
+
+		IconAction *joinAccounts = new IconAction(tr("Join accounts"), "psi/addContact", tr("Join accounts"), 0, viewGroups, 0, true);
+		joinAccounts->setWhatsThis(tr("Toggles joined accounts view"));
+
 		ActionNames actions[] = {
 			{ "view_groups",  viewGroups  },
 			{ "show_offline", showOffline },
@@ -152,7 +158,9 @@ void PsiActionList::Private::createMainWin()
 			{ "show_hidden",  showHidden  },
 			{ "show_agents",  showAgents  },
 			{ "show_self",    showSelf    },
+			{ "show_avatars", showAvatars },
 			{ "show_statusmsg", showStatusMsg },
+			{ "join_accounts", joinAccounts },
 			{ "", 0 }
 		};
 
