@@ -74,7 +74,7 @@ namespace Roster {
 		addItem(account, parent);
 	}
 
-	void Manager::removeItem(Item* item) { 
+	void Manager::removeItem(Item* item, bool delGroup) { 
 		emit itemToBeRemoved(item);
 
 		GroupItem* parent = item->getParent();
@@ -83,11 +83,11 @@ namespace Roster {
 		emit itemRemoved(item);
 
 		if ( Group* group = dynamic_cast<Group*>(parent) ) {
-			if ( group->getNbItems() == 0 ) {
+			if ( group->getNbItems() == 0 and delGroup ) {
 				removeGroup(group);
+				delete group;
 			}
 		}
-
 	}
 
 	void Manager::addResource(Resource* resource, GroupItem* groupItem) {

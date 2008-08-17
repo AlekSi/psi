@@ -245,7 +245,7 @@ namespace Roster {
 	void RosterBuilder::buildRoster(const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 
-		foreach(UserListItem* xitem, srv->getRosterItems()) { // FIXME: isn't this calling getRosterItems many times?
+		foreach(UserListItem* xitem, srv->getRosterItems()) { 
 			if ( srv->isTransport(xitem->jid()) ) {
 				updateTransport(xitem, acname);
 			} else if ( ! srv->inList(xitem->jid()) ) {
@@ -310,7 +310,7 @@ namespace Roster {
 		if ( GroupItem* g = dynamic_cast<GroupItem*>(item) ) {
 			foreach(Item* subitem, g->getItems()) {
 				clear(subitem);
-				manager_->removeItem(subitem);
+				manager_->removeItem(subitem, false); // false magic - do NOT delete empty groups
 				delete subitem;
 			}
 		}

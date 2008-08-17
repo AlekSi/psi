@@ -55,7 +55,7 @@ namespace Roster {
 			void copyContact(Contact* contact, GroupItem* group);
 			void moveContact(Contact* contact, GroupItem* group);
 
-			void removeItem(Item* item);
+			void removeItem(Item* item, bool delGroup = true);
 
 		signals:
 			void itemUpdated(Item* item);
