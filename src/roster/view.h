@@ -115,7 +115,6 @@ namespace Roster {
 
 			QMap<QString, QAction*> menuActions_;
 			QMap<QAction*, ConferenceBookmark> bookmarkActions_;
-			QMap<QAction*, QString> inviteActions_;
 			QMap<QString, ViewDataService*> dataServices_;
 
 			Manager* manager_;

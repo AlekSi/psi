@@ -199,14 +199,11 @@ namespace Roster {
 				// Missing action: voice call	
 				
 				QMenu* inviteMenu = new QMenu(tr("Invite"));
-				inviteActions_.clear();
 
 				foreach(QString groupchat, dataService->groupchats()) {
-					QAction* action = new QAction(groupchat, inviteMenu);
+					QAction* action = inviteMenu->addAction(groupchat, this, SLOT(menuInvite()));
 					action->setData(item->getId());
-					connect(action, SIGNAL(triggered()), SLOT(menuInvite()));
-					inviteActions_.insert(action, groupchat);
-					inviteMenu->addAction(action);
+					action->setProperty("name", groupchat);
 				}
 
 				menu->addMenu(inviteMenu);
@@ -775,12 +772,11 @@ namespace Roster {
 
 	void View::menuInvite() {
 		QAction* action = static_cast<QAction*>(sender());
+		QString name = action->property("name").toString();
 
 		if ( Contact* contact = getActionItem<Contact*>() ) {
-			if ( inviteActions_.contains(action) ) {
-				actionsService_->invite(contact, inviteActions_[action]);
-				QMessageBox::information(this, tr("Invitation"), tr("Sent groupchat invitation to <b>%1</b>.").arg(inviteActions_[action]));
-			}
+			actionsService_->invite(contact, name);
+			QMessageBox::information(this, tr("Invitation"), tr("Sent groupchat invitation to <b>%1</b>.").arg(name));
 		}
 	}
 
