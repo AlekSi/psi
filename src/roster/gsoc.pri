@@ -27,7 +27,8 @@ HEADERS += \
 	$$PWD/rosterinstance.h \
 	$$PWD/viewactionsservice.h \
 	$$PWD/rosteractionsservice.h  \
-	$$PWD/viewdataservice.h
+	$$PWD/viewdataservice.h \
+	$$PWD/notinlist.h
 
 SOURCES += \
 	$$PWD/model.cpp \
@@ -50,5 +51,6 @@ SOURCES += \
 	$$PWD/transport.cpp \
 	$$PWD/self.cpp \
 	$$PWD/rosterinstance.cpp \
-	$$PWD/viewactionsservice.cpp 
+	$$PWD/viewactionsservice.cpp \
+	$$PWD/notinlist.cpp
 

@@ -90,4 +90,14 @@ namespace Roster {
 		emit itemRemoved(item, acc_->jid().full());
 	}
 
+	const bool PsiDataService::inList(const XMPP::Jid& jid) const {
+		UserListItem* item = acc_->find(jid);
+
+		if ( item ) {
+			return item->inList();
+		}
+
+		return false;
+	}
+
 }

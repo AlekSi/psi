@@ -43,6 +43,7 @@ class ConferenceBookmark;
 			virtual void actionRename(const XMPP::Jid& jid, const QString &) = 0;
 			virtual void actionGroupRename(const QString& oldname, const QString& newname) = 0;
 			virtual void actionSendMessage(const QList<XMPP::Jid>& jids) = 0;
+			virtual void actionAdd(const XMPP::Jid& jid) = 0;
 			
 			virtual void actionGroupDelete(const QString& group) = 0;
 			virtual void actionGroupDeleteAll(const QString& group) = 0;

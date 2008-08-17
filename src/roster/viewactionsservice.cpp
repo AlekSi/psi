@@ -10,6 +10,7 @@
 #include "group.h"
 #include "metacontact.h"
 #include "groupitem.h"
+#include "notinlist.h"
 
 namespace Roster {
 
@@ -238,6 +239,11 @@ namespace Roster {
 		}
 		target.append(group->getName());
 		rename(group, target);
+	}
+
+	void ViewActionsService::addAuthorize(NotInList* nil) {
+		services_[nil->getAccountName()]->actionAdd(nil->getJid());
+		services_[nil->getAccountName()]->actionAuth(nil->getJid());
 	}
 
 }

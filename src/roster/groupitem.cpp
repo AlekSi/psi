@@ -8,6 +8,7 @@
 #include "self.h"
 #include "resource.h"
 #include "transport.h"
+#include "notinlist.h"
 
 namespace Roster {
 
@@ -125,6 +126,18 @@ namespace Roster {
 			if ( Transport* transport = dynamic_cast<Transport*>(item) ) {
 				if ( transport->getJid().full() == jid.full() and transport->getAccountName() == acname ) {
 					return transport;
+				}
+			}
+		}
+
+		return NULL;
+	}
+
+	NotInList* GroupItem::findNil(const XMPP::Jid& jid, const QString& acname) const {
+		foreach(Item* item, items_) {
+			if ( NotInList* nil = dynamic_cast<NotInList*>(item) ) {
+				if ( nil->getJid().full() == jid.full() and nil->getAccountName() == acname ) {
+					return nil;
 				}
 			}
 		}

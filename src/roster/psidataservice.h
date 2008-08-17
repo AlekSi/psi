@@ -26,6 +26,7 @@ namespace Roster {
 			const QList<UserListItem*> getRosterItems() const;
 			const QIcon getAvatar(const XMPP::Jid& jid) const;
 			const bool isTransport(const XMPP::Jid& jid) const;
+			const bool inList(const XMPP::Jid& jid) const;
 			const UserListItem* getSelf() const;
 			const bool isEnabled() const;
 			const StatusType getStatus() const;

@@ -20,6 +20,7 @@ namespace Roster {
 	class Transport;
 	class Self;
 	class GroupItem;
+	class NotInList;
 	
 	class Manager : public QObject {
 		Q_OBJECT
@@ -32,6 +33,7 @@ namespace Roster {
 			void addTransport(Transport* transport, GroupItem* groupItem);
 			void addMetacontact(Metacontact* metacontact, GroupItem* group);
 			void addSelf(Self* self, GroupItem* groupItem);
+			void addNil(NotInList* nil, GroupItem* groupItem);
 
 			void removeContact(Contact* contact);	
 			void removeResource(Resource* resource);
@@ -40,6 +42,7 @@ namespace Roster {
 			void removeTransport(Transport* transport);
 			void removeGroup(Group* group);
 			void removeSelf(Self* self);
+			void removeNil(NotInList* nil);
 
 			void updateState(GroupItem* groupItem, bool expanded);
 			void renameContact(Contact* contact, QString newName);

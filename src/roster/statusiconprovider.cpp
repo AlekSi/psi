@@ -16,7 +16,7 @@ namespace Roster {
 	}
 
 	const QIcon StatusIconProvider::getIconForEvent(PsiEvent* event) const {
-		return PsiIconset::instance()->event2icon(event)->icon();
+		return event ? PsiIconset::instance()->event2icon(event)->icon() : QIcon();
 	}
 
 }

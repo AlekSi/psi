@@ -15,6 +15,7 @@
 #include "self.h"
 #include "userlist.h"
 #include "psioptions.h"
+#include "notinlist.h"
 
 namespace Roster {
 
@@ -24,7 +25,7 @@ namespace Roster {
 																		manager_(manager), 
 																		joinedAccounts_(false), 
 																		joinByName_(false),
-																		itemFilter_(FILTER_OFFLINE)	{
+																		itemFilter_(FILTER_OFFLINE | FILTER_SELF)	{
 	}
 
 	void RosterBuilder::rebuild() {
@@ -201,12 +202,29 @@ namespace Roster {
 		}
 	}
 
+	void RosterBuilder::updateNil(const UserListItem* xitem, const QString& acname) {
+		Group* group = findGroup(tr("Not in list"), acname, false);
+		NotInList* nil = group ? group->findNil(xitem->jid(), acname) : 0;
+
+		if ( ! nil ) {
+			Group* group = findGroup(tr("Not in list"), acname, true);
+			QString name = xitem->name().isEmpty() ? xitem->jid().full() : xitem->name();
+			nil = new NotInList(name, xitem->jid());
+			nil->setAccountName(acname);
+			manager_->addNil(nil, group);
+		}
+
+		updateContactProps(xitem, nil);
+	}
+
 	void RosterBuilder::buildRoster(const QString& acname) {
 		RosterDataService* srv = rosterServices_[acname];
 
 		foreach(UserListItem* xitem, srv->getRosterItems()) { // FIXME: isn't this calling getRosterItems many times?
 			if ( srv->isTransport(xitem->jid()) ) {
 				updateTransport(xitem, acname);
+			} else if ( ! srv->inList(xitem->jid()) ) {
+				updateNil(xitem, acname);
 			} else {
 				updateContact(xitem, acname);
 			}
@@ -346,6 +364,7 @@ namespace Roster {
 	void RosterBuilder::itemRemoved(const UserListItem* xitem, const QString& acname) {
 		removeContactFromGroup(xitem, tr("General"), acname);
 		removeContactFromGroup(xitem, tr("Agents/Transports"), acname);
+		removeContactFromGroup(xitem, tr("Not in list"), acname);
 		foreach(QString group, xitem->groups()) {
 			removeContactFromGroup(xitem, group, acname);
 		}
@@ -408,6 +427,7 @@ namespace Roster {
 	}
 
 	void RosterBuilder::itemChanged(const UserListItem* xitem, const QString& acname) {
+		qDebug() << "start" << xitem->name();
 		RosterDataService* srv = rosterServices_[acname];
 
 		if ( ! srv->isEnabled() ) {
@@ -416,9 +436,12 @@ namespace Roster {
 
 		if ( srv->isTransport(xitem->jid()) ) {
 			updateTransport(xitem, acname);
+		} else if ( ! srv->inList(xitem->jid()) ) {
+			updateNil(xitem, acname);
 		} else {
 			updateContact(xitem, acname);
 		}
+		qDebug() << "done" << xitem->name();
 	}
 
 	void RosterBuilder::updateSelf(const UserListItem* xitem, const QString& acname) {

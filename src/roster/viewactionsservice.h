@@ -17,6 +17,7 @@ namespace Roster {
 	class Resource;
 	class Group;
 	class GroupItem;
+	class NotInList;
 
 	class ViewActionsService : public QObject {
 		Q_OBJECT
@@ -49,6 +50,9 @@ namespace Roster {
 			void copyToGroup(Contact* contact, const QString& target);
 			void moveToNone(Contact* contact);
 			void rename(Contact* contact, const QString& name);
+
+			// not in list actions
+			void addAuthorize(NotInList* nil);
 
 			// group actions
 			void rename(Group* group, const QString& name);

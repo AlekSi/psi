@@ -42,14 +42,12 @@ namespace Roster {
 			void menuHistory();
 			void menuSendMessage();
 			void menuRename();
-			void menuXmlConsole();
 			void menuShowResources();
 			void menuHideResources();
 			void menuOpenChat();
 			void menuRemoveContact();
 			void menuRecvEvent();
 			void menuSendFile();
-			void menuExecuteCommand();
 			void menuUserInfo();
 			void menuAssignAvatar();
 			void menuClearAvatar();
@@ -66,6 +64,12 @@ namespace Roster {
 			void menuAddGroup();
 			void menuMoveToNone();
 
+			// resource
+			void menuExecuteCommand();
+
+			// not in list
+			void menuAddAuthorize();
+
 			// group
 			void menuRemoveGroup();
 			void menuRemoveGroupAndContacts();
@@ -80,6 +84,7 @@ namespace Roster {
 			void menuModifyAccount();
 			void menuNewBlankMessage();
 			void menuJoinConference();
+			void menuXmlConsole();
 
 			// account->admin
 			void menuOnlineUsers();

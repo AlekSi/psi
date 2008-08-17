@@ -16,6 +16,7 @@ namespace Roster {
 	class Self;
 	class Resource;
 	class Transport;
+	class NotInList;
 
 	// generic class for roster items that can contain other items
 	class GroupItem : public Item {
@@ -37,6 +38,7 @@ namespace Roster {
 			virtual Self* findSelf(const QString& acname) const;
 			virtual Resource* findResource(const QString& name) const;
 			virtual Transport* findTransport(const XMPP::Jid& jid, const QString& acname) const;
+			virtual NotInList* findNil(const XMPP::Jid& jid, const QString& acname) const;
 
 			virtual void setExpanded(const bool expanded);
 			virtual const bool isExpanded() const;

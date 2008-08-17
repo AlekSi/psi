@@ -63,6 +63,7 @@ namespace Roster {
 			void updateTransport(const UserListItem* xitem, const QString& acname);
 			void updateSelf(const UserListItem* xitem, const QString& acname);
 			void updateAccount(const QString& acname);
+			void updateNil(const UserListItem* xitem, const QString& acname);
 
 			void updateContactProps(const UserListItem* xitem, Contact* contact);
 

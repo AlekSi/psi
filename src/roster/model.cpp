@@ -23,6 +23,7 @@
 #include "self.h"
 #include "psioptions.h"
 #include "viewactionsservice.h"
+#include "notinlist.h"
 
 namespace Roster {
 
@@ -222,6 +223,8 @@ namespace Roster {
 
 		if ( dynamic_cast<Transport*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsSelectable;
+		} else if ( dynamic_cast<NotInList*>(item) ) {
+			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else if ( dynamic_cast<Self*>(item) ) {
 			return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 		} else if ( dynamic_cast<Contact*>(item) ) {

@@ -9,6 +9,7 @@
 #include "transport.h"
 #include "self.h"
 #include "psievent.h"
+#include "notinlist.h"
 
 namespace Roster {
 
@@ -271,7 +272,11 @@ namespace Roster {
 	}	
 
 	void Manager::addTransport(Transport* transport, GroupItem* groupItem) {
-		groupItem->addItem(transport);
+		addItem(transport, groupItem);
+	}
+
+	void Manager::addNil(NotInList* nil, GroupItem* groupItem) {
+		addItem(nil, groupItem);
 	}
 
 	void Manager::removeGroup(Group* group) {
@@ -339,6 +344,10 @@ namespace Roster {
 
 	void Manager::removeTransport(Transport* transport) {
 		removeItem(transport);
+	}	
+
+	void Manager::removeNil(NotInList* nil) {
+		removeItem(nil);
 	}	
 
 	void Manager::setIncomingEvent(Contact* contact, PsiEvent* event) {

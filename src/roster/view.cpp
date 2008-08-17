@@ -27,6 +27,7 @@
 #include "self.h"
 #include "viewdataservice.h"
 #include "conferencebookmark.h"
+#include "notinlist.h"
 
 #include "psiiconset.h"
 
@@ -122,6 +123,7 @@ namespace Roster {
 			{"sendToGroup", tr("Send message to group"), SLOT(menuSendMessage()), "psi/sendMessage"},
 			{"removeGroup", tr("Remove group"), SLOT(menuRemoveGroup()), "psi/remove"},
 			{"removeGroupAll", tr("Remove group and contacts"), SLOT(menuRemoveGroupAndContacts()), "psi/remove"},
+			{"addAuthorize", tr("Add/Authorize to contact list"), SLOT(menuAddAuthorize()), "psi/addContact"},
 
 			{"", tr(""), SLOT(menu()), ""}
 		};
@@ -138,10 +140,11 @@ namespace Roster {
 
 	// FIXME: magic strings sucks
 	bool View::isSpecial(Group* group) const {
-		return ( group->getGroupPath() == "General" or
+		return ( group->getGroupPath() == tr("General") or
 				group->getGroupPath() == tr("Agents/Transports") or
 				group->getGroupPath() == tr("Hidden") or
-				group->getGroupPath() == tr("Always visible") ); 
+				group->getGroupPath() == tr("Always visible") or
+				group->getGroupPath() == tr("Not in list") );
 	}
 
 	/* build and display context menu */
@@ -170,9 +173,16 @@ namespace Roster {
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) { 
 			bool isSelf = dynamic_cast<Self*>(item);
 			bool isTransport = dynamic_cast<Transport*>(item);
+			bool notInList = dynamic_cast<NotInList*>(item);
 
+			if ( notInList and ! PsiOptions::instance()->getOption("options.ui.contactlist.lockdown-roster").toBool() ) {
+				menu->addAction(menuActions_["addAuthorize"]);
+				menuActions_["addAuthorize"]->setEnabled(dataService->isAvailable());
+				menu->addSeparator();
+			}
 			if ( contact->getIncomingEvent() ) {
 				menu->addAction(menuActions_["recvEvent"]);
+				menu->addSeparator();
 			}
 			if ( PsiOptions::instance()->getOption("options.ui.message.enabled").toBool() ) {
 				menu->addAction(menuActions_["sendMessage"]);
@@ -204,7 +214,7 @@ namespace Roster {
 				menu->addSeparator();
 			}
 
-			if ( ! PsiOptions::instance()->getOption("options.ui.contactlist.lockdown-roster").toBool() and ! isSelf ) {
+			if ( ! PsiOptions::instance()->getOption("options.ui.contactlist.lockdown-roster").toBool() and ! isSelf and ! notInList ) {
 				menu->addAction(menuActions_["rename"]);
 				menuActions_["rename"]->setEnabled(true);
 				if ( isTransport ) {
@@ -215,7 +225,7 @@ namespace Roster {
 					QMenu* groupMenu = new QMenu(tr("&Group"));
 					QAction* noneAction = groupMenu->addAction("&None", this, SLOT(menuMoveToNone()));
 					noneAction->setData(QVariant::fromValue<Item*>(item));
-					if ( contact->getGroupPath() == "General" ) {
+					if ( contact->getGroupPath() == tr("General") ) {
 						noneAction->setCheckable(true);
 						noneAction->setChecked(true);
 					}
@@ -225,6 +235,9 @@ namespace Roster {
 					qSort(groups);
 					groups.removeOne(tr("Hidden"));
 					groups.removeOne(tr("Always visible"));
+					groups.removeOne(tr("General"));
+					groups.removeOne(tr("Not in list"));
+					groups.removeOne(tr("Agents/Transports"));
 					foreach(QString group, groups) {
 						QAction* action = groupMenu->addAction(group, this, SLOT(menuMoveToGroup()));
 						action->setData(QVariant::fromValue<Item*>(item));
@@ -241,11 +254,13 @@ namespace Roster {
 					menu->addMenu(groupMenu);
 				}
 
-				QMenu* authMenu = new QMenu(tr("Authorization"), menu); // FIXME: missing icon
-				authMenu->addAction(menuActions_["resendAuthTo"]);
-				authMenu->addAction(menuActions_["rerequestAuthFrom"]);
-				authMenu->addAction(menuActions_["removeAuthFrom"]);
-				menu->addMenu(authMenu);
+				if ( ! notInList ) {
+					QMenu* authMenu = new QMenu(tr("Authorization"), menu); // FIXME: missing icon
+					authMenu->addAction(menuActions_["resendAuthTo"]);
+					authMenu->addAction(menuActions_["rerequestAuthFrom"]);
+					authMenu->addAction(menuActions_["removeAuthFrom"]);
+					menu->addMenu(authMenu);
+				}
 
 				menu->addAction(menuActions_["removeContact"]);
 				menu->addSeparator();
@@ -362,8 +377,7 @@ namespace Roster {
 		Q_ASSERT(index.data(Qt::UserRole).canConvert<Item*>());
 		Item* item = index.data(Qt::UserRole).value<Item*>();
 
-		if ( Group* group = dynamic_cast<Group*>(item) ) {
-			qDebug() << "Default action triggered on group" << group->getName();
+		if ( dynamic_cast<Group*>(item) ) {
 			setExpanded(index, !isExpanded(index));
 		} else if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
 			if ( contact->getIncomingEvent() ) {
@@ -490,6 +504,8 @@ namespace Roster {
 		QAction* action = static_cast<QAction*>(sender());
 
 		if ( Account* account = getActionItem<Account*>() ) {
+			qDebug() << "hop";
+			qDebug() << account->getJid().full();
 			StatusType status = STATUS_OFFLINE;
 			if ( action == menuActions_["goOnline"] ) {
 				status = STATUS_ONLINE;
@@ -684,6 +700,7 @@ namespace Roster {
 	}
 
 	template<typename T> T View::getActionItem() {
+		// FIXME: this should return 0 when pointer is not valid anymore
 		QAction* action = static_cast<QAction*>(sender());
 		return dynamic_cast<T>(action->data().value<Item*>());
 	}
@@ -820,6 +837,13 @@ namespace Roster {
 			if ( n == 0 ) {
 				actionsService_->removeAll(group);
 			}
+		}
+	}
+
+	void View::menuAddAuthorize() {
+		if ( NotInList* nil = getActionItem<NotInList*>() ) {
+			actionsService_->addAuthorize(nil);
+			QMessageBox::information(this, tr("Add"), tr("Added/Authorized <b>%1</b> to the contact list.").arg(nil->getName()));
 		}
 	}
 
