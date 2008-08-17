@@ -6,7 +6,7 @@
 
 namespace Roster {
 
-	Contact::Contact(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid), status_(STATUS_OFFLINE), incomingEvent_(NULL), hasPGPKey_(false), hasManualAvatar_(false) {
+	Contact::Contact(const QString& name, const XMPP::Jid& jid) : GroupItem(), name_(name), jid_(jid), status_(STATUS_OFFLINE), incomingEvent_(NoEvent), hasPGPKey_(false), hasManualAvatar_(false) {
 	}
 
 	Contact::Contact(const Contact& c) : GroupItem() {
@@ -59,11 +59,11 @@ namespace Roster {
 		return status_;
 	}
 
-	void Contact::setIncomingEvent(PsiEvent* event) {
+	void Contact::setIncomingEvent(const EventType event) {
 		incomingEvent_ = event;
 	}
 
-	PsiEvent* Contact::getIncomingEvent() const {
+	const EventType Contact::getIncomingEvent() const {
 		return incomingEvent_;
 	}
 

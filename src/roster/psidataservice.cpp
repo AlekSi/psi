@@ -4,6 +4,7 @@
 #include "psiaccount.h"
 #include "userlist.h"
 #include "avatars.h"
+#include "psievent.h"
 
 namespace Roster {
 
@@ -74,8 +75,40 @@ namespace Roster {
 		return acc_->jid();
 	}
 
-	PsiEvent* PsiDataService::getIncomingEvent(const XMPP::Jid& jid) const {
-		return acc_->eventQueue()->peek(jid);
+	// this sucks, there's same thing in psiconset.cpp, which is quite stupid
+	const EventType PsiDataService::getIncomingEvent(const XMPP::Jid& jid) const {
+		PsiEvent* event = acc_->eventQueue()->peek(jid);
+
+		if ( ! event ) {
+			return NoEvent;
+		}
+
+		if ( event->type() == PsiEvent::Message ) {
+			MessageEvent* me = static_cast<MessageEvent*>(event);
+			const Message &m = me->message();
+			if ( m.type() == "headline" ) {
+				return MessageHeadlineEvent;
+			} else if ( m.type() == "error" ) {
+				return MessageErrorEvent;
+			} else if ( m.type() == "chat" ) {
+				return MessageChatEvent;
+			} else {
+				return MessageMessageEvent;
+			}
+		} else if ( event->type() == PsiEvent::File ) {
+			return FileEvent;
+		} else if ( event->type() == PsiEvent::HttpAuth ) {
+			return HttpAuthEvent;
+		} else if ( event->type() == PsiEvent::PGP ) {
+			return PGPEvent;
+		} else if ( event->type() == PsiEvent::RosterExchange ) {
+			return RosterExchangeEvent;
+		} else if ( event->type() == PsiEvent::Auth ) {
+			return AuthEvent;
+		} else {
+			qDebug() << "This should never ever happen";
+			return NoEvent;
+		}
 	}
 
 	const bool PsiDataService::hasManualAvatar(const XMPP::Jid& jid) const {

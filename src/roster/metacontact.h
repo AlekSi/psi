@@ -19,20 +19,20 @@ namespace Roster {
 			const QString getStatusMessage() const;
 			const QIcon& getAvatar() const;
 			const StatusType getStatus() const;
-			PsiEvent* getIncomingEvent() const;
+			const EventType getIncomingEvent() const;
 
 			void setName(const QString& name);
 			void setAvatar(const QIcon& avatar); 
 			void setStatusMessage(const QString& statusMessage);
 			void setStatus(const StatusType status);
-			void setIncomingEvent(PsiEvent* event);
+			void setIncomingEvent(const EventType event);
 
 		private:
 			QString name_;
 			QString statusMessage_;
 			QIcon avatar_;
 			StatusType status_;
-			PsiEvent* incomingEvent_;
+			EventType incomingEvent_;
 	};
 }
 

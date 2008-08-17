@@ -350,12 +350,12 @@ namespace Roster {
 		removeItem(nil);
 	}	
 
-	void Manager::setIncomingEvent(Contact* contact, PsiEvent* event) {
+	void Manager::setIncomingEvent(Contact* contact, const EventType event) {
 		contact->setIncomingEvent(event);
 		emit itemUpdated(contact);
 
 		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
-			metacontact->setIncomingEvent(NULL);
+			metacontact->setIncomingEvent(NoEvent);
 
 			foreach(Item* item, metacontact->getItems()) {
 				if ( Contact* subContact = dynamic_cast<Contact*>(item) ) {

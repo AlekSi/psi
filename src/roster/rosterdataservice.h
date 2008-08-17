@@ -11,7 +11,6 @@ namespace XMPP {
 }
 
 class UserListItem;
-class PsiEvent;
 
 namespace Roster {
 
@@ -26,7 +25,7 @@ namespace Roster {
 			virtual const bool isEnabled() const = 0;
 			virtual const StatusType getStatus() const = 0;
 			virtual const XMPP::Jid getJid() const = 0;
-			virtual PsiEvent* getIncomingEvent(const XMPP::Jid& jid) const = 0;
+			virtual const EventType getIncomingEvent(const XMPP::Jid& jid) const = 0;
 			virtual const bool hasManualAvatar(const XMPP::Jid& jid) const = 0;
 			virtual const bool inList(const XMPP::Jid& jid) const = 0;
 

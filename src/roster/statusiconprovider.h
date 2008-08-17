@@ -14,7 +14,7 @@ namespace Roster {
 		public:
 			const QIcon getIconForStatus(const StatusType status) const;
 			const QIcon getIconForGroup(const bool expanded) const;
-			const QIcon getIconForEvent(PsiEvent* event) const;
+			const QIcon getIconForEvent(const EventType event) const;
 
 		signals:
 			void updated();	

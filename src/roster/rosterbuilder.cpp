@@ -117,6 +117,7 @@ namespace Roster {
 		} else if ( ! groups.contains(tr("General")) ) {
 			removeContactFromGroup(xitem, tr("General"), acname);
 		}
+		removeContactFromGroup(xitem, tr("Not in list"), acname);
 
 		foreach(QString xgroup, groups) {
 			GroupItem* parent = findGroup(xgroup, acname);

@@ -15,8 +15,21 @@ namespace Roster {
 		}
 	}
 
-	const QIcon StatusIconProvider::getIconForEvent(PsiEvent* event) const {
-		return event ? PsiIconset::instance()->event2icon(event)->icon() : QIcon();
+	const QIcon StatusIconProvider::getIconForEvent(const EventType event) const {
+		switch (event) {
+			case MessageMessageEvent:
+				return IconsetFactory::iconPtr("psi/message")->icon();
+			case MessageHeadlineEvent:
+				return IconsetFactory::iconPtr("psi/headline")->icon();
+			case MessageChatEvent:
+				return IconsetFactory::iconPtr("psi/chat")->icon();
+			case MessageErrorEvent:
+				return IconsetFactory::iconPtr("psi/system")->icon();
+			case FileEvent:
+				return IconsetFactory::iconPtr("psi/file")->icon();
+			default:
+				return IconsetFactory::iconPtr("psi/system")->icon();
+		}
 	}
 
 }

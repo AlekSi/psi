@@ -3,7 +3,7 @@
 
 namespace Roster {
 
-	Metacontact::Metacontact(const QString& name) : name_(name), status_(STATUS_OFFLINE) {
+	Metacontact::Metacontact(const QString& name) : name_(name), status_(STATUS_OFFLINE), incomingEvent_(NoEvent) {
 	}
 
 	const QString& Metacontact::getName() const {
@@ -38,11 +38,11 @@ namespace Roster {
 		return status_;
 	}
 
-	void Metacontact::setIncomingEvent(PsiEvent* event) {
+	void Metacontact::setIncomingEvent(const EventType event) {
 		incomingEvent_ = event;
 	}
 
-	PsiEvent* Metacontact::getIncomingEvent() const {
+	const EventType Metacontact::getIncomingEvent() const {
 		return incomingEvent_;
 	}
 

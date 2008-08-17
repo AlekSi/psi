@@ -4,6 +4,7 @@
 #include <Qt>
 #include "common.h"
 #include "xmpp_jid.h"
+#include "psievent.h"
 
 namespace Roster {
 
@@ -14,6 +15,19 @@ namespace Roster {
 		IdRole = Qt::UserRole + 1,
 		AvatarRole = Qt::UserRole + 2,
 		StatusMessageRole = Qt::UserRole + 3
+	};
+
+	enum EventType {
+		NoEvent = 0,
+		PGPEvent,
+		FileEvent,
+		RosterExchangeEvent,
+		HttpAuthEvent,
+		AuthEvent,
+		MessageMessageEvent,
+		MessageChatEvent,
+		MessageHeadlineEvent,
+		MessageErrorEvent
 	};
 
 	typedef XMPP::Status::Type StatusType;

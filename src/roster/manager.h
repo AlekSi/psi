@@ -7,8 +7,6 @@
 
 #include "globals.h"
 
-class PsiEvent;
-
 namespace Roster {
 	class Group;
 	class Contact;
@@ -49,7 +47,7 @@ namespace Roster {
 			void setAvatar(Contact* contact, const QIcon& avatar);
 			void setStatusMessage(Resource* resource, const QString& statusMessage);
 			void setStatus(Resource* resource, const StatusType status);
-			void setIncomingEvent(Contact* contact, PsiEvent* event);
+			void setIncomingEvent(Contact* contact, const EventType event);
 			void setStatus(Account* account, const StatusType status);
 			void setHasPGPKey(Contact* contact, const bool h);
 			void setHasManualAvatar(Contact* contact, const bool h);

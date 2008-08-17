@@ -7,8 +7,6 @@
 #include "groupitem.h"
 #include "globals.h"
 
-class PsiEvent;
-
 namespace Roster {
 	// single contact on roster
 	class Contact : public GroupItem {
@@ -22,7 +20,7 @@ namespace Roster {
 			const QIcon& getAvatar() const;
 			const QString getStatusMessage() const;
 			const StatusType getStatus() const;
-			PsiEvent* getIncomingEvent() const;
+			const EventType getIncomingEvent() const;
 			const bool hasPGPKey() const;
 			const bool hasManualAvatar() const;
 
@@ -31,7 +29,7 @@ namespace Roster {
 			void setAvatar(const QIcon& avatar);
 			void setStatusMessage(const QString& statusMessage);
 			void setStatus(const StatusType status);
-			void setIncomingEvent(PsiEvent* event);
+			void setIncomingEvent(const EventType event);
 			void setHasPGPKey(const bool h);
 			void setHasManualAvatar(const bool h);
 
@@ -41,7 +39,7 @@ namespace Roster {
 			QIcon avatar_;
 			QString statusMessage_;
 			StatusType status_;
-			PsiEvent* incomingEvent_;
+			EventType incomingEvent_;
 			bool hasPGPKey_, hasManualAvatar_;
 	};
 }
