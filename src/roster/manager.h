@@ -46,6 +46,7 @@ namespace Roster {
 			void renameContact(Contact* contact, QString newName);
 			void setAvatar(Contact* contact, const QIcon& avatar);
 			void setStatusMessage(Resource* resource, const QString& statusMessage);
+			void setClientInfo(Resource* resource, const QString& clientOS, const QString& clientVersion, const QString& clientName);
 			void setStatus(Resource* resource, const StatusType status);
 			void setIncomingEvent(Contact* contact, const EventType event);
 			void setStatus(Account* account, const StatusType status);

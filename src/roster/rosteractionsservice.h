@@ -19,6 +19,7 @@ class ConferenceBookmark;
 		public:
 			virtual void actionSendMessage(const XMPP::Jid& jid) = 0;
 			virtual void actionOpenChat(const XMPP::Jid& jid) = 0;
+			virtual void actionOpenChatSpecific(const XMPP::Jid& jid) = 0;
 			virtual void actionSendFile(const XMPP::Jid& jid) = 0;
 			virtual void actionRemove(const XMPP::Jid& jid) = 0;
 			virtual void actionHistory(const XMPP::Jid& jid) = 0;

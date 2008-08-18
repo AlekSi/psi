@@ -130,7 +130,7 @@ namespace Roster {
 
 	void ViewActionsService::openChat(Resource* resource) {
 		XMPP::Jid jid = static_cast<Contact*>(resource->getParent())->getJid().withResource(resource->getName());
-		services_[resource->getAccountName()]->actionOpenChat(jid);
+		services_[resource->getAccountName()]->actionOpenChatSpecific(jid);
 	}
 
 	void ViewActionsService::sendMessage(Resource* resource) {

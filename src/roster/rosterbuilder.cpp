@@ -91,18 +91,23 @@ namespace Roster {
 		foreach(UserResource xresource, list) {
 			Resource* resource = groupItem->findResource(xresource.name());
 
-			if ( resource ) {
-				if ( resource->getStatus() != xresource.status().type() ) {
-					manager_->setStatus(resource, xresource.status().type());
-				}
-				if ( resource->getStatusMessage() != xresource.status().status() ) {
-					manager_->setStatusMessage(resource, xresource.status().status());
-				}
-			} else {
-				Resource* resource = new Resource(xresource.name(), xresource.status().priority(), 
+			if ( ! resource ) {
+				resource = new Resource(xresource.name(), xresource.status().priority(), 
 						xresource.status().type(), xresource.status().status());
 				resource->setAccountName(groupItem->getAccountName());
 				manager_->addResource(resource, groupItem);
+			}
+
+			if ( resource->getStatus() != xresource.status().type() ) {
+				manager_->setStatus(resource, xresource.status().type());
+			}
+			if ( resource->getStatusMessage() != xresource.status().status() ) {
+				manager_->setStatusMessage(resource, xresource.status().status());
+			}
+			if ( resource->getClientOS() != xresource.clientOS() or 
+					resource->getClientVersion() != xresource.clientVersion() or
+					resource->getClientName() != xresource.clientName() ) {
+				manager_->setClientInfo(resource, xresource.clientOS(), xresource.clientVersion(), xresource.clientName());
 			}
 
 			names.insert(xresource.name());

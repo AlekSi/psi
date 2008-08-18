@@ -42,5 +42,31 @@ namespace Roster {
 	void Resource::setStatus(const StatusType status) {
 		status_ = status;
 	}
+
+	const QString& Resource::getClientOS() const {
+		return clientOS_;
+	}
+
+	const QString& Resource::getClientVersion() const {
+		return clientVersion_;
+	}
+
+	const QString& Resource::getClientName() const {
+		return clientName_;
+	}
+
+	const QString& Resource::getTune() const {
+		return tune_;
+	}
+
+	void Resource::setTune(const QString& tune) {
+		tune_ = tune;
+	}
+
+	void Resource::setClientInfo(const QString& clientOS, const QString& clientVersion, const QString& clientName) {
+		clientName_ = clientName;
+		clientVersion_ = clientVersion;
+		clientOS_ = clientOS;
+	}
 }
 

@@ -15,6 +15,7 @@ namespace Roster {
 	class StatusIconProvider;
 	class GroupItem;
 	class ViewActionsService;
+	class Resource;
 
 	class Model : public QAbstractItemModel	{
 		Q_OBJECT
@@ -59,6 +60,7 @@ namespace Roster {
 
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;
+			const QString doResourceTip(Resource* resource) const;
 			QVariant foregroundRole(Item* item) const;
 			QVariant backgroundRole(Item* item) const;
 			QVariant decorationRole(Item* item) const;

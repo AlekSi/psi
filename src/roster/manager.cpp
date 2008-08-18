@@ -380,5 +380,10 @@ namespace Roster {
 		emit itemUpdated(contact);
 	}
 
+	void Manager::setClientInfo(Resource* resource, const QString& clientOS, const QString& clientVersion, const QString& clientName) {
+		resource->setClientInfo(clientOS, clientVersion, clientName);
+		emit itemUpdated(resource);
+	}
+
 }
 

@@ -27,6 +27,17 @@
 
 namespace Roster {
 
+	static QString dot_truncate(const QString &in, int clip)
+	{
+		QString s = in;
+		if ( (int)in.length() > clip) {
+			s.truncate(clip);
+			s += "...";
+		}
+
+		return Qt::escape(s);
+	}
+
 	Model::Model(Roster* root) : root_(root), showAvatars_(false), showStatusMessages_(false), statusIconProvider_(NULL) {
 	}
 
@@ -177,7 +188,10 @@ namespace Roster {
 			tip += QString("<icon name=\"%3\"> <b>%1</b> (%2)\n")
 				.arg(resource->getName(), QString::number(resource->getPriority()), statusToText(resource->getStatus()));
 
-			if (! resource->getStatusMessage().isEmpty()) {
+			if ( ! resource->getClientName().isEmpty() ) {
+				tip += QString("Using: %1 %2\n").arg(Qt::escape(resource->getClientName()), dot_truncate(resource->getClientVersion(), 80));
+			}
+			if ( ! resource->getStatusMessage().isEmpty() ) {
 				tip += "<u>Status message</u>\n";
 				tip += Qt::escape(resource->getStatusMessage()) + "\n";
 			}
@@ -194,6 +208,22 @@ namespace Roster {
 
 		tip += "</div>";
 		return tip;
+	}
+
+	const QString Model::doResourceTip(Resource* resource) const {
+/*		QString statusIcon, pgpIcon;
+
+		statusIcon = QString("<icon name=\"%1\">").arg(statusToText(resource->getStatus()));
+		if ( resource->hasPGPKey() ) {
+//			resource->g
+		}
+
+		// icon
+		tip += QString("<icon name=\"%3\"> <b>%1</b> (%2)")
+			.arg(resource->getName(), QString::number(resource->getPriority()), statusToText(resource->getStatus()));
+*/		
+		return "";
+
 	}
 
 	int Model::rowCount(const QModelIndex &parent) const {
