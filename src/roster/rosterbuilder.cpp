@@ -527,6 +527,7 @@ namespace Roster {
 	}
 
 	void RosterBuilder::setSearch(const QString& searchText) {
+		qDebug() << searchText;
 		searchText_ = searchText;
 		rebuild();
 	}

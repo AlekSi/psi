@@ -1352,6 +1352,7 @@ void MainWin::searchClearClicked()
 	d->searchWidget->setVisible(false);
 	d->searchText->clear();
 	cvlist->clearFilter();
+	ri->getRosterBuilder()->setSearch("");
 	if (d->filterActive)
 	{
 		d->getAction("show_offline")->setChecked(d->prefilterShowOffline);
