@@ -285,7 +285,7 @@ namespace Roster {
 			parentItem = root_;
 		}
 
-		if ( row < parentItem->getNbItems() ) {
+		if ( row >= 0 and row < parentItem->getNbItems() ) {
 			return createIndex(row, column, parentItem->getItem(row));
 		}
 
