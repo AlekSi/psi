@@ -686,7 +686,7 @@ namespace Roster {
 		QAction* action = static_cast<QAction*>(sender());
 		QModelIndex index;
 
-		unsigned int id = action->data().value<Item*>()->getId();
+		unsigned int id = action->data().toInt();
 		QModelIndexList indexList = model()->match(model()->index(0, 0, QModelIndex()), IdRole, id, 1, Qt::MatchWrap | Qt::MatchExactly | Qt::MatchRecursive);
 		if ( ! indexList.isEmpty() ) {
 			index = indexList.at(0);
