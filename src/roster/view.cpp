@@ -864,5 +864,9 @@ namespace Roster {
 		}
 	}
 
+	void View::ensureVisible(const QModelIndex& index) {
+		scrollTo(index);
+	}
+
 }
 

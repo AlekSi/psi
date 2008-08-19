@@ -36,6 +36,7 @@ namespace Roster {
 
 		connect(model_, SIGNAL(expand(const QModelIndex&)), view_, SLOT(expand(const QModelIndex&)));
 		connect(model_, SIGNAL(collapse(const QModelIndex&)), view_, SLOT(collapse(const QModelIndex&)));
+		connect(model_, SIGNAL(ensureVisible(const QModelIndex&)), view_, SLOT(ensureVisible(const QModelIndex&)));
 
 		model_->setManager(manager_);
 		view_->setManager(manager_);

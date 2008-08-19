@@ -94,6 +94,9 @@ namespace Roster {
 			void menuDeleteMOTD();
 			void menuManageBookmarks();
 
+			// others
+			void ensureVisible(const QModelIndex& index);
+
 		signals:
 			void searchInput(const QString& text);
 

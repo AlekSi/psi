@@ -450,6 +450,13 @@ namespace Roster {
 			}
 
 			emit dataChanged(index, index);
+
+			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+				if ( contact->getIncomingEvent() and 
+						PsiOptions::instance()->getOption("options.ui.contactlist.ensure-contact-visible-on-event").toBool() ) {
+					emit ensureVisible(index);
+				}
+			}
 		}
 	}
 
@@ -467,6 +474,13 @@ namespace Roster {
 			}
 
 			emit layoutChanged();
+
+			if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+				if ( contact->getIncomingEvent() and 
+						PsiOptions::instance()->getOption("options.ui.contactlist.ensure-item-visible-on-event").toBool() ) {
+					emit ensureVisible(index);
+				}
+			}
 		}
 	}
 

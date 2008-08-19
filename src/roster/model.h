@@ -57,6 +57,7 @@ namespace Roster {
 		signals:
 			void expand(const QModelIndex& index);
 			void collapse(const QModelIndex& index);
+			void ensureVisible(const QModelIndex& index);
 
 		private:
 			QVariant makeToolTip(const QModelIndex& index) const;
