@@ -192,18 +192,21 @@ namespace Roster {
 			} else {
 				if ( contact ) {
 					manager_->removeContact(contact);
+					parent = contact->getParent();
 					delete contact;
 
-					if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(parent) ) {
-						if ( metacontact->getNbItems() == 1 ) {
-							GroupItem* grandparent = metacontact->getParent();
+					if ( parent ) {
+						if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(parent) ) {
+							if ( metacontact->getNbItems() == 1 ) {
+								GroupItem* grandparent = metacontact->getParent();
 
-							Contact* lastContact = dynamic_cast<Contact*>(metacontact->getItems().at(0));
-							manager_->removeContact(lastContact);
-							manager_->removeMetacontact(metacontact);
-							delete metacontact;
+								Contact* lastContact = dynamic_cast<Contact*>(metacontact->getItems().at(0));
+								manager_->removeContact(lastContact);
+								manager_->removeMetacontact(metacontact);
+								delete metacontact;
 
-							manager_->addContact(lastContact, grandparent);
+								manager_->addContact(lastContact, grandparent);
+							}
 						}
 					}
 				}
