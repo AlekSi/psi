@@ -44,7 +44,16 @@ namespace Roster {
 			}
 		}
 
-		services_[group->getAccountName()]->actionSendMessage(jids);
+		if ( group->getAccountName().isEmpty() ) {
+			foreach(RosterActionsService* srv, services_) {
+				if ( srv->isAvailable() ) {
+					services_[group->getAccountName()]->actionSendMessage(jids);
+					break;
+				}
+			}
+		} else {
+			services_[group->getAccountName()]->actionSendMessage(jids);
+		}
 	}
 
 	void ViewActionsService::openChat(Contact* contact) {
@@ -225,11 +234,27 @@ namespace Roster {
 	}
 
 	void ViewActionsService::remove(Group* group) {
-		services_[group->getAccountName()]->actionGroupDelete(group->getGroupPath());
+		if ( group->getAccountName().isEmpty() ) {
+			foreach(RosterActionsService* srv, services_) {
+				if ( srv->isAvailable() ) {
+					srv->actionGroupDelete(group->getGroupPath());
+				}
+			}
+		} else {
+			services_[group->getAccountName()]->actionGroupDelete(group->getGroupPath());
+		}
 	}
 
 	void ViewActionsService::removeAll(Group* group) {
-		services_[group->getAccountName()]->actionGroupDeleteAll(group->getGroupPath());
+		if ( group->getAccountName().isEmpty() ) {
+			foreach(RosterActionsService* srv, services_) {
+				if ( srv->isAvailable() ) {
+					srv->actionGroupDeleteAll(group->getGroupPath());
+				}
+			}
+		} else {
+			services_[group->getAccountName()]->actionGroupDeleteAll(group->getGroupPath());
+		}
 	}
 
 	void ViewActionsService::moveGroup(Group* group, GroupItem* parent) {

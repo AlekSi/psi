@@ -56,6 +56,9 @@ class ConferenceBookmark;
 			virtual void showXmlConsole() = 0;
 			virtual void actionExecuteCommand(const XMPP::Jid& jid, const QString& node = QString()) = 0;
 			virtual void actionInfo(const XMPP::Jid& jid, bool showStatusInfo = true) = 0;
+
+			// we need to know if we can perform any tasks on it
+			virtual bool isAvailable() const = 0;
 	};
 
 //}

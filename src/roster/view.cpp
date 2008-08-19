@@ -159,14 +159,26 @@ namespace Roster {
 
 		Q_ASSERT(index.data(Qt::UserRole).canConvert<Item*>());
 		Item* item = index.data(Qt::UserRole).value<Item*>();
-		ViewDataService* dataService = getDataService(item);
+		ViewDataService* dataService = item->getAccountName().isEmpty() ? NULL : getDataService(item);
 
 		if ( selectedIndexes().size() > 1 ) { // multiple items selected
 			qDebug() << "Context menu opened for multiple contacts";
 		} else if ( Group* group = dynamic_cast<Group*>(item) ) { 
+			bool available = false;
+			if ( group->getAccountName().isEmpty() ) { // joined accounts
+				foreach(ViewDataService* ds, dataServices_.values()) {
+					if ( ds->isAvailable() ) {
+						available = true;
+						break;
+					}
+				}
+			} else {
+				available = dataService->isAvailable();
+			}
+
 			menu->addAction(menuActions_["sendToGroup"]);
 			menu->addAction(menuActions_["rename"]);
-			menuActions_["rename"]->setEnabled( (!isSpecial(group)) and dataService->isAvailable() );
+			menuActions_["rename"]->setEnabled( (!isSpecial(group)) and available );
 			menu->addSeparator();
 			menu->addAction(menuActions_["removeGroup"]);
 			menu->addAction(menuActions_["removeGroupAll"]);
