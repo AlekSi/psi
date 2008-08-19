@@ -28,6 +28,10 @@ namespace Roster {
 	void Manager::removeContact(Contact* contact) {
 		removeItem(contact);
 
+		if ( ! contact->getParent() ) {
+			return;
+		}
+
 		if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(contact->getParent()) ) {
 			if ( metacontact->getNbItems() ) {
 				Item* item = metacontact->getItems().at(0);
@@ -79,6 +83,7 @@ namespace Roster {
 
 		GroupItem* parent = item->getParent();
 		parent->removeItem(item);
+		item->setParent(NULL);
 
 		emit itemRemoved(item);
 
