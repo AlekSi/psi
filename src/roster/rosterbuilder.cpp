@@ -414,6 +414,10 @@ namespace Roster {
 			}
 		}
 
+		if ( srv->getIncomingEvent(xitem->jid()) and 
+				PsiOptions::instance()->getOption("options.ui.contactlist.ensure-contact-visible-on-event").toBool() ) {
+			return true;
+		}
 		if ( xgroup == "Hidden" and (itemFilter_ & FILTER_HIDDEN) ) {
 			return false;
 		}
@@ -421,10 +425,6 @@ namespace Roster {
 			return true;
 		}
 
-		if ( srv->getIncomingEvent(xitem->jid()) and 
-				PsiOptions::instance()->getOption("options.ui.contactlist.ensure-contact-visible-on-event").toBool() ) {
-			return true;
-		}
 
 		foreach(UserResource xres, xitem->userResourceList()) {
 			if ( xres.status().type() == STATUS_ONLINE or xres.status().type() == STATUS_CHAT ) {
