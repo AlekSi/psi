@@ -7,6 +7,10 @@
 
 #include "globals.h"
 
+namespace XMPP {
+	class Subscription;
+}
+
 namespace Roster {
 	class Group;
 	class Contact;
@@ -52,6 +56,7 @@ namespace Roster {
 			void setStatus(Account* account, const StatusType status);
 			void setHasPGPKey(Contact* contact, const bool h);
 			void setHasManualAvatar(Contact* contact, const bool h);
+			void setSubscription(Contact* contact, const XMPP::Subscription& subscription);
 
 			void copyContact(Contact* contact, GroupItem* group);
 			void moveContact(Contact* contact, GroupItem* group);

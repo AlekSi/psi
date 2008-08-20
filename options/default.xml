@@ -337,6 +337,15 @@
 					<item type="QKeySequence">Ctrl+PgUp</item>
 					<item type="QKeySequence">Ctrl+Shift+Tab</item>
 				</previous-tab>
+				<jump-tab-1 type="QKeySequence" comment="Switch to tab 1">Alt+1</jump-tab-1>
+				<jump-tab-2 type="QKeySequence" comment="Switch to tab 2">Alt+2</jump-tab-2>
+				<jump-tab-3 type="QKeySequence" comment="Switch to tab 3">Alt+3</jump-tab-3>
+				<jump-tab-4 type="QKeySequence" comment="Switch to tab 4">Alt+4</jump-tab-4>
+				<jump-tab-5 type="QKeySequence" comment="Switch to tab 5">Alt+5</jump-tab-5>
+				<jump-tab-6 type="QKeySequence" comment="Switch to tab 6">Alt+6</jump-tab-6>
+				<jump-tab-7 type="QKeySequence" comment="Switch to tab 7">Alt+7</jump-tab-7>
+				<jump-tab-8 type="QKeySequence" comment="Switch to tab 8">Alt+8</jump-tab-8>
+				<jump-tab-9 type="QKeySequence" comment="Switch to tab 9">Alt+9</jump-tab-9>
 				<find type="QKeySequence" comment="Find text">Ctrl+F</find>
 				<send type="QVariantList" comment="Sends the message">
 					<item type="QKeySequence">Return</item>

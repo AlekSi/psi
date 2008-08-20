@@ -6,6 +6,7 @@
 
 #include "groupitem.h"
 #include "globals.h"
+#include "xmpp_rosteritem.h"
 
 namespace Roster {
 	// single contact on roster
@@ -23,6 +24,7 @@ namespace Roster {
 			const EventType getIncomingEvent() const;
 			const bool hasPGPKey() const;
 			const bool hasManualAvatar() const;
+			const XMPP::Subscription getSubscription() const;
 
 			void setName(const QString& name);
 			void setJid(const XMPP::Jid& jid);
@@ -32,6 +34,7 @@ namespace Roster {
 			void setIncomingEvent(const EventType event);
 			void setHasPGPKey(const bool h);
 			void setHasManualAvatar(const bool h);
+			void setSubscription(const XMPP::Subscription& subscription);
 
 		private:
 			QString name_;
@@ -41,6 +44,7 @@ namespace Roster {
 			StatusType status_;
 			EventType incomingEvent_;
 			bool hasPGPKey_, hasManualAvatar_;
+			XMPP::Subscription subscription_;
 	};
 }
 

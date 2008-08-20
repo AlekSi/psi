@@ -390,5 +390,10 @@ namespace Roster {
 		emit itemUpdated(resource);
 	}
 
+	void Manager::setSubscription(Contact* contact, const XMPP::Subscription& subscription) {
+		contact->setSubscription(subscription);
+		emit itemUpdated(contact);
+	}
+
 }
 

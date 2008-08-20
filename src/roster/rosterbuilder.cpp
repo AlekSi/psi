@@ -520,6 +520,9 @@ namespace Roster {
 		if ( contact->getName() != name ) {
 			manager_->renameContact(contact, name);
 		}
+		if ( contact->getSubscription().type() != xitem->subscription().type() ) {
+			manager_->setSubscription(contact, xitem->subscription());
+		}
 
 		updateResources(xitem->userResourceList(), contact);
 	}

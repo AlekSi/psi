@@ -25,6 +25,7 @@
 #include <QSize>
 #include <QMap>
 #include <QPointer>
+#include <QList>
 
 #include "advwidget.h"
 
@@ -129,6 +130,7 @@ private slots:
 	void updateTab(TabbableWidget*);
 	void nextTab();
 	void previousTab();
+	void jumpTab();
 	void tab_aboutToShowMenu(QMenu *menu);
 	void setAsDefaultForChat();
 	void setAsDefaultForMuc();
@@ -147,6 +149,7 @@ private:
 	QAction *act_close_;
 	QAction *act_next_;
 	QAction *act_prev_;
+	QList<QAction*> act_jump_;
 	TabManager *tabManager_;
 	QPointer<TabbableWidget> selectedTab_;
 	bool userManagement_;

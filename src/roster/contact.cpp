@@ -82,5 +82,15 @@ namespace Roster {
 	void Contact::setHasManualAvatar(const bool h) {
 		hasManualAvatar_ = h;
 	}
+
+	const XMPP::Subscription Contact::getSubscription() const {
+		return subscription_;
+	}
+
+	void Contact::setSubscription(const XMPP::Subscription& subscription) {
+		subscription_ = subscription;
+	}
+
+
 }
 

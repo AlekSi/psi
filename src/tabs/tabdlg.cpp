@@ -167,6 +167,14 @@ TabDlg::TabDlg(TabManager* tabManager, QSize size, TabDlgDelegate *delegate)
 	addAction(act_next_);
 	connect(act_next_,SIGNAL(activated()), SLOT(nextTab()));
 
+	for (int i = 0; i < 9; i++) {
+		QAction* action = new QAction(this);
+		connect(action, SIGNAL(activated()), SLOT(jumpTab()));
+		action->setData(i);
+		act_jump_.append(action);
+		addAction(action);
+	}
+
 	setShortcuts();
 
 	if (size.isValid()) {
@@ -201,6 +209,9 @@ void TabDlg::setShortcuts()
 	act_close_->setShortcuts(ShortcutManager::instance()->shortcuts("common.close"));
 	act_prev_->setShortcuts(ShortcutManager::instance()->shortcuts("chat.previous-tab"));
 	act_next_->setShortcuts(ShortcutManager::instance()->shortcuts("chat.next-tab"));
+	for (int i = 0; i < 9; i++) {
+		act_jump_[i]->setShortcuts(ShortcutManager::instance()->shortcuts(QString("chat.jump-tab-%1").arg(QString::number(i+1))));
+	}
 }
 
 void TabDlg::resizeEvent(QResizeEvent *e)
@@ -572,6 +583,13 @@ void TabDlg::previousTab()
 	if ( page < 0 )
 		page = tabWidget_->count() - 1;
 	tabWidget_->setCurrentPage( page );
+}
+
+void TabDlg::jumpTab()
+{
+	int page = static_cast<QAction*>(sender())->data().toInt();
+	if ( page >= 0 and page < tabWidget_->count() )
+		tabWidget_->setCurrentPage( page );
 }
 
 void TabDlg::closeCurrentTab()
