@@ -12,6 +12,19 @@
 #include "notinlist.h"
 
 namespace Roster {
+		
+	static inline int rankStatus(int status) {
+		switch (status) {
+			case STATUS_CHAT : return 0;
+			case STATUS_ONLINE : return 1;
+			case STATUS_AWAY : return 2;
+			case STATUS_XA : return 3;
+			case STATUS_DND : return 4;
+			case STATUS_INVISIBLE: return 5;
+			default: return 6;
+		}
+		return 0;
+	}
 
 	void Manager::renameContact(Contact* contact, QString newName) {
 		contact->setName(newName);
@@ -246,34 +259,34 @@ namespace Roster {
 			}
 		} else if ( dynamic_cast<const Group*>(item2) ) {
 			return false;
-		} else if ( const Transport* t1 = dynamic_cast<const Transport*>(item1) ) {
-			if ( const Transport* t2 = dynamic_cast<const Transport*>(item2) ) {
-				return t1->getName().toLower() < t2->getName().toLower();
-			} else {
-				return false;
-			}
-		} else if ( dynamic_cast<const Transport*>(item2) ) {
-			return true;
-		} else if ( const Metacontact* m1 = dynamic_cast<const Metacontact*>(item1) ) {
-			if ( const Contact* c2 = dynamic_cast<const Contact*>(item2) ) {
-				return (m1->getStatus() < c2->getStatus()) or (m1->getStatus() == c2->getStatus() and m1->getName().toLower() < c2->getName().toLower());
-			} else if ( const Metacontact* m2 = dynamic_cast<const Metacontact*>(item2) ) {
-				return (m1->getStatus() < m2->getStatus()) or (m1->getStatus() == m2->getStatus() and m1->getName().toLower() < m2->getName().toLower());
-			}
-		} else if ( const Contact* c1 = dynamic_cast<const Contact*>(item1) ) {
-			if ( const Contact* c2 = dynamic_cast<const Contact*>(item2) ) {
-				return (c1->getStatus() < c2->getStatus()) or (c1->getStatus() == c2->getStatus() and c1->getName().toLower() < c2->getName().toLower());
-			} else if ( const Metacontact* m2 = dynamic_cast<const Metacontact*>(item2) ) {
-				return (c1->getStatus() < m2->getStatus()) or (c1->getStatus() == m2->getStatus() and c1->getName().toLower() < m2->getName().toLower());
-			}
 		} else if ( const Resource* r1 = dynamic_cast<const Resource*>(item1) ) {
 			if ( const Resource* r2 = dynamic_cast<const Resource*>(item2) ) {
 				return (r1->getPriority() > r2->getPriority()) or (r1->getPriority() == r2->getPriority() and r1->getStatus() < r2->getStatus());
 			}
-		} 
+		} else {
+			StatusType status1, status2;
+			QString name1, name2;
+			if ( const Contact* contact = dynamic_cast<const Contact*>(item1) )	{
+				status1 = contact->getStatus();
+				name1 = contact->getName();
+			} else if ( const Metacontact* metacontact = dynamic_cast<const Metacontact*>(item1) ) {
+				status1 = metacontact->getStatus();
+				name1 = metacontact->getName();
+			}
 
-		qDebug() << "Oops, this should never happen";
-		return false;
+			if ( const Contact* contact = dynamic_cast<const Contact*>(item2) )	{
+				status2 = contact->getStatus();
+				name2 = contact->getName();
+			} else if ( const Metacontact* metacontact = dynamic_cast<const Metacontact*>(item2) ) {
+				status2 = metacontact->getStatus();
+				name2 = metacontact->getName();
+			}
+
+			if ( rankStatus(status1) == rankStatus(status2) ) {
+				return name1 < name2;
+			}
+			return rankStatus(status1) < rankStatus(status2);
+		}
 	}	
 
 	void Manager::addTransport(Transport* transport, GroupItem* groupItem) {
@@ -325,20 +338,6 @@ namespace Roster {
 				} else {
 					contact->setStatusMessage("");
 					contact->setStatus(STATUS_OFFLINE);
-				}
-			} else if ( Transport* transport = dynamic_cast<Transport*>(resource->getParent()) ) {
-				if ( transport->getNbItems() > 1 ) {
-					Resource* r = static_cast<Resource*>(contact->getItems().at(1));
-					transport->setStatus(r->getStatus());
-				} else {
-					transport->setStatus(STATUS_OFFLINE);
-				}
-			} else if ( Self* self = dynamic_cast<Self*>(resource->getParent()) ) {
-				if ( self->getNbItems() > 1 ) {
-					Resource* r = static_cast<Resource*>(contact->getItems().at(1));
-					self->setStatus(r->getStatus());
-				} else {
-					self->setStatus(STATUS_OFFLINE);
 				}
 			}
 		}
