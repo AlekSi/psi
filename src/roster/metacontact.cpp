@@ -46,4 +46,19 @@ namespace Roster {
 		return incomingEvent_;
 	}
 
+	// FIXME: doesn't really belong here and should have a bit more logic
+	Contact* Metacontact::getTopContact() const {
+		if ( items_.isEmpty() ) {
+			return NULL;
+		}
+
+		Item* item = items_.at(0);
+		if ( Contact* contact = dynamic_cast<Contact*>(item) ) {
+			return contact;
+		}
+
+		return NULL;
+	}
+
 }
+

@@ -366,12 +366,21 @@ namespace Roster {
 				menu->addMenu(adminMenu);
 				adminMenu->setEnabled(dataService->isAvailable());
 			}
-
 		} else if ( dynamic_cast<Resource*>(item) ) {
 			menu->addAction(menuActions_["openChat"]);
 			menu->addAction(menuActions_["sendMessage"]);
 			menu->addAction(menuActions_["whiteboard"]);
 			menu->addAction(menuActions_["executeCommand"]);
+		} else if ( dynamic_cast<Metacontact*>(item) ) {
+			if ( contact->getIncomingEvent() ) {
+				menu->addAction(menuActions_["recvEvent"]);
+				menu->addSeparator();
+			}
+			if ( PsiOptions::instance()->getOption("options.ui.message.enabled").toBool() ) {
+				menu->addAction(menuActions_["sendMessage"]);
+			}
+			menu->addAction(menuActions_["openChat"]);
+			menu->addAction(menuActions_["sendFile"]);
 		}
 
 		foreach(QAction* action, menuActions_.values()) {
@@ -402,7 +411,13 @@ namespace Roster {
 		} else if ( Resource* resource = dynamic_cast<Resource*>(item) ) {
 			qDebug() << "Default action triggered on resource" << resource->getName();
 		} else if ( Metacontact* metacontact = dynamic_cast<Metacontact*>(item) ) {
-			qDebug() << "Default action triggered on metacontact" << metacontact->getName();
+			if ( metacontact->getIncomingEvent() ) {
+				actionsService_->recvEvent(metacontact);
+			} else if ( PsiOptions::instance()->getOption("options.messages.default-outgoing-message-type").toString() == "message") {
+				actionsService_->sendMessage(metacontact);
+			} else {
+				actionsService_->openChat(metacontact);
+			}
 		}
 	}
 
@@ -449,6 +464,8 @@ namespace Roster {
 			actionsService_->sendMessage(resource);
 		} else if ( Group* group = getActionItem<Group*>() ) {
 			actionsService_->sendMessage(group);
+		} else if ( Metacontact* metacontact = getActionItem<Metacontact*>() ) {
+			actionsService_->sendMessage(metacontact);
 		}
 	}
 
@@ -506,6 +523,8 @@ namespace Roster {
 	void View::menuSendFile() {
 		if ( Contact* contact = getActionItem<Contact*>() ) {
 			actionsService_->sendFile(contact);
+		} else if ( Metacontact* metacontact = getActionItem<Metacontact*>() ) {
+			actionsService_->sendMessage(metacontact);
 		}
 	}
 
@@ -539,6 +558,8 @@ namespace Roster {
 			actionsService_->openChat(contact);
 		} else if ( Resource* resource = getActionItem<Resource*>() ) {
 			actionsService_->openChat(resource);
+		} else if ( Metacontact* metacontact = getActionItem<Metacontact*>() ) {
+			actionsService_->openChat(metacontact);
 		}
 	}
 
@@ -547,6 +568,8 @@ namespace Roster {
 			actionsService_->openWhiteboard(contact);
 		} else if ( Resource* resource = getActionItem<Resource*>() ) {
 			actionsService_->openWhiteboard(resource);
+		} else if ( Metacontact* metacontact = getActionItem<Metacontact*>() ) {
+			actionsService_->openWhiteboard(metacontact);
 		}
 	}
 

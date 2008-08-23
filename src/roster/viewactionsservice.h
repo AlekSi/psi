@@ -18,6 +18,7 @@ namespace Roster {
 	class Group;
 	class GroupItem;
 	class NotInList;
+	class Metacontact;
 
 	class ViewActionsService : public QObject {
 		Q_OBJECT
@@ -84,6 +85,14 @@ namespace Roster {
 			void openWhiteboard(Resource* resource);
 			void sendMessage(Resource* resource);
 			void executeCommand(Resource* resource);
+
+			// metacontact actions
+			void sendMessage(Metacontact* metacontact);
+			void openChat(Metacontact* metacontact);
+			void sendFile(Metacontact* metacontact);
+			void openWhiteboard(Metacontact* metacontact);
+			void recvEvent(Metacontact* metacontact);
+
 	
 		private:
 			QMap<QString, RosterActionsService*> services_;

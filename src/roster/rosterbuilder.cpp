@@ -24,7 +24,7 @@ namespace Roster {
 																		root_(root), 
 																		manager_(manager), 
 																		joinedAccounts_(false), 
-																		joinByName_(false),
+																		joinByName_(true),
 																		itemFilter_(FILTER_ALL)	{
 	}
 

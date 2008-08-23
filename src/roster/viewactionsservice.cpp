@@ -11,6 +11,7 @@
 #include "metacontact.h"
 #include "groupitem.h"
 #include "notinlist.h"
+#include "metacontact.h"
 
 namespace Roster {
 
@@ -271,4 +272,32 @@ namespace Roster {
 		services_[nil->getAccountName()]->actionAuth(nil->getJid());
 	}
 
+	// metacontact
+	void ViewActionsService::sendMessage(Metacontact* metacontact) {
+		sendMessage(metacontact->getTopContact());
+	}
+
+	void ViewActionsService::openChat(Metacontact* metacontact) {
+		openChat(metacontact->getTopContact());
+	}
+
+	void ViewActionsService::sendFile(Metacontact* metacontact) {
+		sendFile(metacontact->getTopContact());
+	}
+
+	void ViewActionsService::openWhiteboard(Metacontact* metacontact) {
+		openWhiteboard(metacontact->getTopContact());
+	}
+
+	void ViewActionsService::recvEvent(Metacontact* metacontact) {
+		foreach(Item* item, metacontact->getItems()) {
+			Contact* contact = static_cast<Contact*>(item);
+			if ( contact->getIncomingEvent() ) {
+				services_[contact->getAccountName()]->actionRecvEvent(contact->getJid());
+				return;
+			}
+		}
+	}
+
 }
+

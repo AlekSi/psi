@@ -10,6 +10,7 @@
 class PsiEvent;
 
 namespace Roster {
+	class Contact;
 
 	class Metacontact : public GroupItem {
 		public:
@@ -26,6 +27,8 @@ namespace Roster {
 			void setStatusMessage(const QString& statusMessage);
 			void setStatus(const StatusType status);
 			void setIncomingEvent(const EventType event);
+
+			Contact* getTopContact() const;
 
 		private:
 			QString name_;
