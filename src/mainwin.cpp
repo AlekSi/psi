@@ -547,6 +547,8 @@ void MainWin::registerAction( IconAction* action )
 
 			if ( aName == "show_avatars" ) {
 				action->setChecked(PsiOptions::instance()->getOption("options.ui.contactlist.show-avatars").toBool());
+			} else if ( aName == "slim_contacts" ) {
+				action->setChecked(PsiOptions::instance()->getOption("options.ui.contactlist.slim-contacts").toBool());
 			}
 			//else if ( aName == "foobar" )
 			//	;

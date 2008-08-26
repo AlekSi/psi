@@ -38,7 +38,7 @@ namespace Roster {
 		return Qt::escape(s);
 	}
 
-	Model::Model(Roster* root) : root_(root), showAvatars_(false), showStatusMessages_(false), statusIconProvider_(NULL) {
+	Model::Model(Roster* root) : root_(root), showAvatars_(false), showStatusMessages_(false), slimContacts_(false), statusIconProvider_(NULL) {
 	}
 
 	QVariant Model::data(const QModelIndex &index, int role) const {
