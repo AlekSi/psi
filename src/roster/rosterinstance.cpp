@@ -12,6 +12,7 @@
 #include "delegate.h"
 #include "psidataservice.h"
 #include "viewactionsservice.h"
+#include "psioptions.h"
 
 #include "psiaccount.h"
 
@@ -95,6 +96,21 @@ namespace Roster {
 		view_->unregisterAccount(acname);
 
 		accountAdded(acc);
+	}
+
+	void RosterInstance::setShowAvatars(bool showAvatars) {
+		PsiOptions::instance()->setOption("options.ui.contactlist.show-avatars", showAvatars);
+		model_->setShowAvatars(showAvatars);
+	}
+
+	void RosterInstance::setShowStatusMessages(bool showStatusMessages) {
+		PsiOptions::instance()->setOption("options.ui.contactlist.show-status-messages", showStatusMessages);
+		model_->setShowStatusMessages(showStatusMessages);
+	}
+
+	void RosterInstance::setSlimContacts(bool slimContacts) {
+		PsiOptions::instance()->setOption("options.ui.contactlist.slim-contacts", slimContacts);
+		model_->setSlimContacts(slimContacts);
 	}
 
 }

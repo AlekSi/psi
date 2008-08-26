@@ -252,7 +252,7 @@ QWidget *OptionsTabAppearanceGeneral::widget()
 	//QWhatsThis::add(d->ck_avatarsChatdlg,
 	//	tr("Toggles displaying of avatars in the chat dialog"));
 
-	if (PsiOptions::instance()->getOption("options.ui.contactlist.status-messages.single-line").toBool()) {
+	if (PsiOptions::instance()->getOption("options.ui.contactlist.slim-contacts").toBool()) {
 		d->tl_cStatus->hide();
 		d->pb_cStatus->hide();
 	}

@@ -31,6 +31,10 @@ namespace Roster {
 			void accountRemoved(PsiAccount* acc);
 			void accountUpdated(PsiAccount* acc);
 
+			void setShowAvatars(bool showAvatars);
+			void setShowStatusMessages(bool showStatusMessages);
+			void setSlimContacts(bool slimContacts);
+
 		private:
 			View* view_;
 			Manager* manager_;

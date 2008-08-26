@@ -151,6 +151,9 @@ void PsiActionList::Private::createMainWin()
 		IconAction *joinAccounts = new IconAction(tr("Join accounts"), "psi/addContact", tr("Join accounts"), 0, viewGroups, 0, true);
 		joinAccounts->setWhatsThis(tr("Toggles joined accounts view"));
 
+		IconAction *slimContacts = new IconAction(tr("Slim Contacts"), "psi/statusmsg", tr("Slim Contacts"), 0, viewGroups, 0, true);
+		slimContacts->setWhatsThis(tr("Toggles slim contacts view"));
+
 		ActionNames actions[] = {
 			{ "view_groups",  viewGroups  },
 			{ "show_offline", showOffline },
@@ -161,6 +164,7 @@ void PsiActionList::Private::createMainWin()
 			{ "show_avatars", showAvatars },
 			{ "show_statusmsg", showStatusMsg },
 			{ "join_accounts", joinAccounts },
+			{ "slim_contacts", slimContacts },
 			{ "", 0 }
 		};
 

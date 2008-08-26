@@ -45,6 +45,7 @@ namespace Roster {
 		public slots:
 			void setShowAvatars(bool showAvatars);
 			void setShowStatusMessages(bool showStatusMessages);
+			void setSlimContacts(bool slimContacts);
 
 			void itemUpdated(Item* item);
 			void itemAdded(Item* item);
@@ -68,7 +69,7 @@ namespace Roster {
 
 			Roster* root_;
 			Manager* manager_;
-			bool showAvatars_, showStatusMessages_;
+			bool showAvatars_, showStatusMessages_, slimContacts_;
 			StatusIconProvider* statusIconProvider_;
 			ViewActionsService* actionsService_;
 	};

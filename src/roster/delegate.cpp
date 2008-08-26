@@ -8,6 +8,7 @@
 
 #include "delegate.h"
 #include "model.h"
+#include "psioptions.h"
 
 /* FILE TODO:
  * + add more magic numbers
@@ -17,6 +18,8 @@
 namespace Roster {
 
 	void Delegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const {
+		bool slimContact = PsiOptions::instance()->getOption("options.ui.contactlist.slim-contacts").toBool();
+
 		painter->save();
 		painter->setClipping(false);
 
@@ -38,15 +41,17 @@ namespace Roster {
 		rect.adjust(20, 0, 0, 0);
 
 		/* avatar (if present) */
+		int size = slimContact ? 18 : 32;
+
 		if ( ! index.data(AvatarRole).value<QIcon>().isNull() ) {
-			QRect avatarRect(QPoint(rect.right()-32, rect.top()), QSize(32, 34));
+			QRect avatarRect(QPoint(rect.right()-size, rect.top()), QSize(size, size+2)); // +2 to leave 1 pixel space between avatars
 			index.data(AvatarRole).value<QIcon>().paint(painter, avatarRect, Qt::AlignVCenter | Qt::AlignHCenter);
-			rect.adjust(0, 0, -32, 0);
+			rect.adjust(0, 0, -size, 0);
 		}
 
 		/* name */
 		QRect textRect(rect);
-		if ( ! index.data(StatusMessageRole).toString().isEmpty() ) {
+		if ( ! index.data(StatusMessageRole).toString().isEmpty() and ! slimContact ) {
 			textRect.setHeight(16);
 			rect.adjust(0, 16, 0, 0);
 		}
@@ -59,11 +64,19 @@ namespace Roster {
 		if ( ! index.data(StatusMessageRole).toString().isEmpty() ) {
 			QFont statusFont;
 			statusFont.setItalic(true);
-			statusFont.setPointSize(8);
-
 			QFontMetrics statusFm(statusFont);
 			QRect statusRect(rect);
-			QString status = statusFm.elidedText(index.data(StatusMessageRole).toString(), Qt::ElideRight, statusRect.width());
+			QString statusText = index.data(StatusMessageRole).toString();
+
+			if ( slimContact ) {
+				statusRect = rect;
+				statusRect.setLeft(rect.left() + fm.width(name));
+				statusText = QString(" (%1)").arg(statusText);
+			} else {
+				statusFont.setPointSize(8);
+			}
+
+			QString status = statusFm.elidedText(statusText, Qt::ElideRight, statusRect.width());
 			painter->setFont(statusFont);
 			painter->drawText(statusRect, Qt::AlignVCenter, status);
 		}

@@ -395,6 +395,7 @@ MainWin::MainWin(bool _onTop, bool _asTool, PsiCon* psi, const char* name, Roste
 	viewMenu->insertSeparator();
 	d->getAction("show_statusmsg")->addTo(viewMenu);
 	d->getAction("show_avatars")->addTo(viewMenu);
+	d->getAction("slim_contacts")->addTo(viewMenu);
 	viewMenu->insertSeparator();
 	d->getAction("join_accounts")->addTo(viewMenu);
 
@@ -481,8 +482,9 @@ void MainWin::registerAction( IconAction* action )
 		{ "show_self",    toggled, cvlist, SLOT( setShowSelf(bool) ) },
 		{ "show_self",    toggled, ri->getRosterBuilder(), SLOT( setShowSelf(bool) ) },
 		{ "show_statusmsg", toggled, cvlist, SLOT( setShowStatusMsg(bool) ) },
-		{ "show_statusmsg", toggled, ri->getModel(), SLOT( setShowStatusMessages(bool) ) },
-		{ "show_avatars", toggled, ri->getModel(), SLOT( setShowAvatars(bool) ) },
+		{ "show_statusmsg", toggled, ri, SLOT( setShowStatusMessages(bool) ) },
+		{ "show_avatars", toggled, ri, SLOT( setShowAvatars(bool) ) },
+		{ "slim_contacts", toggled, ri, SLOT( setSlimContacts(bool) ) },
 		{ "join_accounts", toggled, ri->getRosterBuilder(), SLOT( setJoinedAccounts(bool) ) },
 
 		{ "button_options", activated, this, SIGNAL( doOptions() ) },
@@ -542,6 +544,10 @@ void MainWin::registerAction( IconAction* action )
 			if ( aName == "menu_play_sounds" ) {
 				action->setChecked(PsiOptions::instance()->getOption("options.ui.notifications.sounds.enable").toBool());
 			}
+
+			if ( aName == "show_avatars" ) {
+				action->setChecked(PsiOptions::instance()->getOption("options.ui.contactlist.show-avatars").toBool());
+			}
 			//else if ( aName == "foobar" )
 			//	;
 		}
@@ -569,7 +575,7 @@ void MainWin::registerAction( IconAction* action )
 			connect( reverseactionlist[i].sender, reverseactionlist[i].signal, action, reverseactionlist[i].slot );
 
 			if (aName == "show_statusmsg") {
-				action->setChecked( PsiOptions::instance()->getOption("options.ui.contactlist.status-messages.show").toBool() );
+				action->setChecked( PsiOptions::instance()->getOption("options.ui.contactlist.show-status-messages").toBool() );
 			}
 			else
 				action->setChecked( reverseactionlist[i].checked );

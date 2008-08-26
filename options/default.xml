@@ -107,10 +107,9 @@
 			<contactlist comment="Contact list options">
 				<auto-delete-unlisted comment="Automatically remove an unlisted contact from the contact list if it does not have any pending messages anymore" type="bool">false</auto-delete-unlisted>
 				<opacity comment="Opacity percentage of the contact list" type="int">100</opacity>
-				<status-messages comment="Status messages for contacts">
-					<single-line comment="Show status messages on the same line as the nickname" type="bool">true</single-line>
-					<show comment="Show status messages" type="bool">false</show>
-				</status-messages>
+				<show-status-messages comment="Show status messages" type="bool">false</show-status-messages>
+				<show-avatars comment="Show avatars on contact list" type="bool">false</show-avatars>
+				<slim-contacts comment="Show slim contacts (small avatars, single-line status messages)" type="bool">false</slim-contacts>
 				<tooltip comment="Display options for the contact list tooltips">
 					<avatar comment="Display avatar" type="bool">true</avatar>
 					<client-version comment="Display client version information" type="bool">true</client-version>

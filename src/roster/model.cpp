@@ -88,7 +88,9 @@ namespace Roster {
 				return metacontact->getStatusMessage();
 			}
 		} else if ( role == Qt::SizeHintRole ) { // size of item
-			if ( !index.data(AvatarRole).value<QIcon>().isNull() ) {
+			if ( slimContacts_ ) {
+				return QSize(1, 20);
+			} else if ( !index.data(AvatarRole).value<QIcon>().isNull() ) {
 				return QSize(1, 34);
 			} else if ( !index.data(StatusMessageRole).toString().isEmpty() ) {
 				return QSize(1, 34);
@@ -408,6 +410,11 @@ namespace Roster {
 
 	void Model::setShowAvatars(bool showAvatars) {
 		showAvatars_ = showAvatars;
+		emit layoutChanged();
+	}
+
+	void Model::setSlimContacts(bool slimContacts) {
+		slimContacts_ = slimContacts;
 		emit layoutChanged();
 	}
 
