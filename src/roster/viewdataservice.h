@@ -8,6 +8,8 @@ class ConferenceBookmark;
 	
 	class ViewDataService {
 		public:
+			virtual ~ViewDataService() { }
+
 			virtual bool isAvailable() const = 0;
 			virtual bool hasPep() const = 0;
 			virtual QList<ConferenceBookmark> conferences() = 0;
