@@ -54,7 +54,9 @@ namespace Roster {
 			void menuRemoveAuthFrom();
 			void menuRerequestAuthFrom();
 			void menuResendAuthTo();
+#ifdef WHITEBOARDING
 			void menuOpenWhiteboard();
+#endif
 			void menuInvite();
 			void menuAssignKey();
 			void menuUnassignKey();

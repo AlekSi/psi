@@ -17,13 +17,17 @@ class ConferenceBookmark;
 	class RosterActionsService {
 
 		public:
+			virtual ~RosterActionsService() { }
+
 			virtual void actionSendMessage(const XMPP::Jid& jid) = 0;
 			virtual void actionOpenChat(const XMPP::Jid& jid) = 0;
 			virtual void actionOpenChatSpecific(const XMPP::Jid& jid) = 0;
 			virtual void actionSendFile(const XMPP::Jid& jid) = 0;
 			virtual void actionRemove(const XMPP::Jid& jid) = 0;
 			virtual void actionHistory(const XMPP::Jid& jid) = 0;
+#ifdef WHITEBOARDING
 			virtual void actionOpenWhiteboard(const XMPP::Jid& jid) = 0;
+#endif
 			virtual void actionAuth(const XMPP::Jid& jid) = 0;
 			virtual void actionAuthRequest(const XMPP::Jid& jid) = 0;
 			virtual void actionAuthRemove(const XMPP::Jid& jid) = 0;
@@ -49,7 +53,6 @@ class ConferenceBookmark;
 			virtual void actionGroupDelete(const QString& group) = 0;
 			virtual void actionGroupDeleteAll(const QString& group) = 0;
 
-			// FIXME: change this here and in PsiAccount
 			virtual void openAddUserDlg() = 0;
 			virtual void modify() = 0;
 			virtual void changeStatus(int) = 0;

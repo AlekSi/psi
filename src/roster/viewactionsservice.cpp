@@ -77,9 +77,11 @@ namespace Roster {
 		services_[contact->getAccountName()]->actionInfo(contact->getJid());
 	}
 
+#ifdef WHITEBOARDING
 	void ViewActionsService::openWhiteboard(Contact* contact) {
 		services_[contact->getAccountName()]->actionOpenWhiteboard(contact->getJid());
 	}
+#endif
 
 	void ViewActionsService::resendAuthTo(Contact* contact) {
 		services_[contact->getAccountName()]->actionAuth(contact->getJid());
@@ -148,10 +150,12 @@ namespace Roster {
 		services_[resource->getAccountName()]->actionSendMessage(jid);
 	}
 
+#ifdef WHITEBOARDING
 	void ViewActionsService::openWhiteboard(Resource* resource) {
 		XMPP::Jid jid = static_cast<Contact*>(resource->getParent())->getJid().withResource(resource->getName());
 		services_[resource->getAccountName()]->actionOpenWhiteboard(jid);
 	}
+#endif
 
 	void ViewActionsService::executeCommand(Resource* resource) {
 		XMPP::Jid jid = static_cast<Contact*>(resource->getParent())->getJid().withResource(resource->getName());
@@ -285,9 +289,11 @@ namespace Roster {
 		sendFile(metacontact->getTopContact());
 	}
 
+#ifdef WHITEBOARDING
 	void ViewActionsService::openWhiteboard(Metacontact* metacontact) {
 		openWhiteboard(metacontact->getTopContact());
 	}
+#endif
 
 	void ViewActionsService::recvEvent(Metacontact* metacontact) {
 		foreach(Item* item, metacontact->getItems()) {

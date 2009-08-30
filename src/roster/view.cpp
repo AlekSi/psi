@@ -88,7 +88,9 @@ namespace Roster {
 			{"hideResources", tr("Hide resources"), SLOT(menuHideResources()), ""},
 			{"showResources", tr("Show resources"), SLOT(menuShowResources()), ""},
 			{"userInfo", tr("User &info"), SLOT(menuUserInfo()), "psi/vCard"},
+#ifdef WHITEBOARDING
 			{"whiteboard", tr("Open a &whiteboard"), SLOT(menuOpenWhiteboard()), "psi/whiteboard"},
+#endif
 			{"rename", tr("Re&name"), SLOT(menuRename()), ""},
 			{"resendAuthTo", tr("Resend authorization to"), SLOT(menuResendAuthTo()), ""},
 			{"rerequestAuthFrom", tr("Rerequest authorization from"), SLOT(menuRerequestAuthFrom()), ""},
@@ -200,7 +202,9 @@ namespace Roster {
 				menu->addAction(menuActions_["sendMessage"]);
 			}
 			menu->addAction(menuActions_["openChat"]);
+#ifdef WHITEBOARDING
 			menu->addAction(menuActions_["whiteboard"]);
+#endif
 			if ( PsiOptions::instance()->getOption("options.ui.menu.contact.active-chats").toBool() ) {
 				// Missing action: active chats
 			}
@@ -369,7 +373,9 @@ namespace Roster {
 		} else if ( dynamic_cast<Resource*>(item) ) {
 			menu->addAction(menuActions_["openChat"]);
 			menu->addAction(menuActions_["sendMessage"]);
+#ifdef WHITEBOARDING
 			menu->addAction(menuActions_["whiteboard"]);
+#endif
 			menu->addAction(menuActions_["executeCommand"]);
 		} else if ( dynamic_cast<Metacontact*>(item) ) {
 			if ( contact->getIncomingEvent() ) {
@@ -563,6 +569,7 @@ namespace Roster {
 		}
 	}
 
+#ifdef WHITEBOARDING
 	void View::menuOpenWhiteboard() {
 		if ( Contact* contact = getActionItem<Contact*>() ) {
 			actionsService_->openWhiteboard(contact);
@@ -572,6 +579,7 @@ namespace Roster {
 			actionsService_->openWhiteboard(metacontact);
 		}
 	}
+#endif
 
 	void View::menuResendAuthTo() {
 		if ( Contact* contact = getActionItem<Contact*>() ) {

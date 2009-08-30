@@ -37,7 +37,9 @@ namespace Roster {
 			void removeContact(Contact* contact);
 			void showHistory(Contact* contact); 
 			void userInfo(Contact* contact);
+#ifdef WHITEBOARDING
 			void openWhiteboard(Contact* contact);
+#endif
 			void resendAuthTo(Contact* contact);
 			void rerequestAuthFrom(Contact* contact);
 			void removeAuthFrom(Contact* contact);
@@ -82,7 +84,9 @@ namespace Roster {
 
 			// resource actions
 			void openChat(Resource* resource);
+#ifdef WHITEBOARDING
 			void openWhiteboard(Resource* resource);
+#endif
 			void sendMessage(Resource* resource);
 			void executeCommand(Resource* resource);
 
@@ -90,7 +94,9 @@ namespace Roster {
 			void sendMessage(Metacontact* metacontact);
 			void openChat(Metacontact* metacontact);
 			void sendFile(Metacontact* metacontact);
+#ifdef WHITEBOARDING
 			void openWhiteboard(Metacontact* metacontact);
+#endif
 			void recvEvent(Metacontact* metacontact);
 
 	
