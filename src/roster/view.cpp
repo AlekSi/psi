@@ -738,7 +738,8 @@ namespace Roster {
 		if ( ! indexList.isEmpty() ) {
 			QModelIndex index = indexList.at(0);
 			if ( index.isValid() ) {
-				Item* item = index.data(ItemRole).value<Item*>();
+				QVariant data = index.data(ItemRole);
+				Item* item = qVariantValue<Item*>(data);
 				return dynamic_cast<T>(item);
 			}
 		}
