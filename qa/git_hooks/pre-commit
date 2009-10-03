@@ -1,0 +1,118 @@
+#!/usr/bin/env ruby
+#
+# This hook is called by git-commit with no arguments.
+# The hook should exit with non-zero status after issuing
+# an appropriate message if it wants to stop the commit.
+#
+
+#$DEBUG = true
+$KCODE = 'u'
+
+def skip(message)
+	puts("* " + message + " Check skipped.")
+end
+
+def error(message)
+	abort("! " + message + "\nCommit aborted.")
+end
+
+
+# what we are going to commit?
+diff = `git diff-index --unified=0 -M --cached HEAD`
+files = Hash.new
+path = ''
+in_data = false
+diff.each do |line|
+	# that's a start of output for a new file
+	if line =~ /^diff --git a\/.* b\/(.*)$/
+		in_data = false
+		path = $1
+		files[path] = Array.new
+		next
+	end
+
+	# this marks a start of data
+	if line =~ /^@@ .* @@/
+		in_data = true
+		next
+	end
+
+	# add lines introduced by commit
+	if in_data and line[0,1] == '+'
+		files[path] << line[1, line.size-1]
+	end
+end
+files.delete_if { |path, lines| lines.empty? }
+
+
+# for test
+if $DEBUG
+	require 'pp'
+	pp files
+end
+
+
+# Enforce lowercase-only/uppercase-only file names.
+files.each_key do |path|
+	file = File.basename(path)
+	if (file =~ /[a-z]/) and (file =~ /[A-Z]/)
+		error("Filename #{file} contains both uppercase and lowercase letters. " +
+				"Please use uppercase only for README, TODO, etc. and lowercase only for everything else.")
+		# TODO edit wiki, add link there
+	end
+end
+
+
+# This code checks tabs and spaces.
+files.each do |path, diff|
+	errors = Array.new
+	diff.each do |line|
+		line.chomp!
+		next if line.empty?
+		errors << "'#{line}'" if (line =~ /^\t* +/) or (line =~ /[ \t]+$/)
+	end
+	error("Your changes in file #{path} introduces trailing whitespaces or/and leading spaces in lines:\n" +
+			errors.join("\n")) unless errors.empty?
+end
+
+
+# Check coding style with astyle.
+# TODO Doesn't works as expected with this workflow:
+#  - edit file.cpp to create version 1
+#  - git add file.cpp
+#  - edit file.cpp again to create version 2
+#  - git commit (without -a)
+# Commit will include version 1, but astyle will parse version 2.
+if ENV['SKIP_ASTYLE']
+	skip "SKIP_ASTYLE defined."
+else
+	(`astyle --version 2>&1`) =~ /^Artistic Style Version 1\.(\d+)$/
+	ASTYLE_MINOR_VERSION = $1
+	if ASTYLE_MINOR_VERSION.nil?
+		skip "Can't locate astyle. Please get it at http://astyle.sourceforge.net/."
+	else
+		if ASTYLE_MINOR_VERSION.to_i != 23
+			skip "Please update astyle to version 1.#{ASTYLE_MINOR_VERSION}."
+		else
+			files.each_key do |file|
+				astyled_file = file + '.astyled'
+				next unless file.end_with?('.h') or file.end_with?('.cpp')
+				output = `astyle --options=qa/astyle.conf < #{file} > #{astyled_file}`
+				error("Unexpected astyle output: #{output}") unless output.empty?
+				diff = `git diff --no-index #{file} #{astyled_file}`
+				if diff.split($/).size == 1	# only 'diff --git a/file.cpp b/file.cpp.astyled'
+					File.delete astyled_file
+				else
+					error("Possible coding style error. Diff:\n\n" + diff +
+							"\nPlease fix it manually or replace #{file} with #{astyled_file}." +
+							"\nIf you belive that is a bug in astyle or our config, " +
+							"report it to us (please!), then define SKIP_ASTYLE enviroment variable and try again.")
+					# TODO edit wiki, add link there
+				end
+			end
+		end
+	end
+end
+
+# all checks passed
+exit 0

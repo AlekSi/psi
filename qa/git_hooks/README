@@ -1,0 +1,3 @@
+cd .git
+rm -fr hooks
+ln -s ../qa/git_hooks/ hooks
