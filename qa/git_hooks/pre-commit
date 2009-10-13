@@ -100,7 +100,7 @@ else
 				output = `astyle --options=qa/astyle.conf < #{file} > #{astyled_file}`
 				error("Unexpected astyle output: #{output}") unless output.empty?
 				diff = `git diff --no-index #{file} #{astyled_file}`
-				if diff.split($/).size == 1	# only 'diff --git a/file.cpp b/file.cpp.astyled'
+				if diff.split($/).size <= 1	# only 'diff --git a/file.cpp b/file.cpp.astyled' or nothing
 					File.delete astyled_file
 				else
 					error("Possible coding style error. Diff:\n\n" + diff +
