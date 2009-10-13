@@ -96,7 +96,7 @@ else
 		else
 			files.each_key do |file|
 				astyled_file = file + '.astyled'
-				next unless file.end_with?('.h') or file.end_with?('.cpp')
+				next unless (file =~ /.h$/) or (file =~ /.cpp$/)
 				output = `astyle --options=qa/astyle.conf < #{file} > #{astyled_file}`
 				error("Unexpected astyle output: #{output}") unless output.empty?
 				diff = `git diff --no-index #{file} #{astyled_file}`
